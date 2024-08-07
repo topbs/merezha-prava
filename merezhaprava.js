@@ -295,8 +295,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   $( document ).ready(function() {
-      $(".phone").mask("389999999999?");
-      $(".contact_phone").mask("389999999999?");
+      $(".phone").mask("380999999999?");
+      $(".contact_phone").mask("380999999999?");
       $('.mask-date').mask('99.99.9999');
       $('.mask-date').mask('99.99.9999 99:99');
   });
