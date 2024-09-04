@@ -168,7 +168,11 @@ document.addEventListener("DOMContentLoaded", function () {
     "skladannya-mirovoyi-ugodi-u-spravah-pro-podil-mayna": "a19953c5-2e11-4d99-a900-f4d7b7b98fde",
     "viznannya-osobi-nediiezdatnoyu-ta-vstanovlennya-nad-neyu-opiki": "ebc14156-a984-4b40-be3c-794b39ae0aba",
     "mitni-spori": "b0df8c5f-0dec-4862-9407-564fc95735cf",
-    "simeyni-spori": "8c24f8f8-12d6-4efd-9eb8-d43e24407142"
+    "simeyni-spori": "8c24f8f8-12d6-4efd-9eb8-d43e24407142",
+    "advokat-ka-kriminalne-pravo-odesa": "7577fa5d-dc80-4457-8202-38c76353a44b",
+    "yurist-ka-viyskove-pravo": "73d01b15-128b-4449-a70b-6b689261c4ef",
+    "yuriskonsult-ka-civilni-pensiyi": "830e8e3c-9161-4aeb-89da-2695bb92c9f4",
+    "molodshiy-a-yurist-ka": "79c0ccdd-cd9d-4f02-95cc-60b077e76da9"
   };
 
   $('#bigForm,#wf-form--5,#wf-form--2').on('submit', function () {
@@ -301,5 +305,21 @@ document.addEventListener("DOMContentLoaded", function () {
       $('.mask-date').mask('99.99.9999');
       $('.mask-date').mask('99.99.9999 99:99');
   });
+  
+  var canonicalTags = document.querySelectorAll('link[rel="canonical"]');
+
+    canonicalTags.forEach(function(canonicalTag) {
+      var currentUrl = new URL(canonicalTag.href);
+      var cleanUrl = currentUrl.origin + currentUrl.pathname;
+
+      canonicalTag.href = cleanUrl;
+    });
+
+    if (canonicalTags.length === 0) {
+      var newCanonicalTag = document.createElement('link');
+      newCanonicalTag.rel = "canonical";
+      newCanonicalTag.href = window.location.origin + window.location.pathname;
+      document.head.appendChild(newCanonicalTag);
+    }
 
 });
