@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "yurist-ka-viyskove-pravo": "73d01b15-128b-4449-a70b-6b689261c4ef",
     "yuriskonsult-ka-civilni-pensiyi": "830e8e3c-9161-4aeb-89da-2695bb92c9f4",
     "molodshiy-a-yurist-ka": "79c0ccdd-cd9d-4f02-95cc-60b077e76da9",
-    "ofis-menedzher": "e5893777-695a-4b01-91ea-86c8d8bc8b46",
+    "ofis-menedzher": "4fae5026-6c4a-4110-888a-085954a8c498",
     "hr-menedzher": "ce81a178-c1db-41bf-bccf-0ff57d0f0a06",
     "specialist-sluzhbi-bezpeki": "6e1e5586-a917-4707-8336-a6b60bf83bb2",
     "kerivnik-yuridichnogo-viddilu": "fa821c97-f6eb-4721-8c96-d0e6618b822f",
