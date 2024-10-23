@@ -22,20 +22,20 @@ document.addEventListener("DOMContentLoaded", function () {
     "dopomoga-kadrovim-silovikam": "aea2b99c-79a3-47a2-873e-c8e6a81c51b8",
     "civilni-pensiyi": "0bf6584a-7d88-415b-bd73-592f77962db2",
     "administrativni-pravoporushennya": "2e932e05-65a9-4328-95e2-57db7b8a4529",
-    about: "709087de-8c7e-499b-8339-1d888221588f",
+    "about": "709087de-8c7e-499b-8339-1d888221588f",
     "our-lawyers": "def9cf91-3d35-43d5-a3a6-4a755c76c993",
     "judicial-practice": "4e73b810-1925-4729-88f1-154a534318d3",
-    vacancies: "085d4e70-7fe8-41e4-aebb-54cc64f81ebd",
-    events: "118ffd87-e5fd-473b-8f67-8d3e5f307d2f",
+    "vacancies": "085d4e70-7fe8-41e4-aebb-54cc64f81ebd",
+    "events": "118ffd87-e5fd-473b-8f67-8d3e5f307d2f",
     "legal-blog": "be40118b-5b19-487d-82c0-f3ba887cea25",
     "publications-msm": "97948602-9eae-4880-973b-6f43f997ddd8",
-    partnership: "23c0e46f-f9cc-44f3-a154-0a3f1e38fe09",
-    reviews: "408eba72-40d6-4b41-a838-412b38e5422f",
-    services: "260bcbb3-0ede-4131-8f4f-c682397c519f",
+    "partnership": "23c0e46f-f9cc-44f3-a154-0a3f1e38fe09",
+    "reviews": "408eba72-40d6-4b41-a838-412b38e5422f",
+    "services": "260bcbb3-0ede-4131-8f4f-c682397c519f",
     "trudove-pravo": "95e1ae5c-6750-495e-b9a9-81d53a6b1f71",
     "zhitlove-pravo": "c4d72f04-7643-4481-8c9e-95b0d343e8a4",
     "spadkove-pravo": "178fa4e0-9101-4a6a-9937-b80adfcfa8c8",
-    neruhomist: "5fee97a7-3923-4abc-94da-e8ea649921ce",
+    "neruhomist": "5fee97a7-3923-4abc-94da-e8ea649921ce",
     "kreditni-spori": "5c00ef03-d6ca-4665-879d-6e91b37bd72d",
     "advokat-dlya-biznesu": "3b402c2f-63be-4e55-8466-2a86066be3b0",
     "oskarzhennya-rezultativ-perevirok": "488d2092-25bc-4d7c-a26c-7819799e4de0",
@@ -54,15 +54,15 @@ document.addEventListener("DOMContentLoaded", function () {
     "andriy-kirilenko": "01cfe194-1e78-44be-a53d-8aed4110ae96",
     "vladislav-mandrik": "6a15a3d8-992b-4ab2-b13a-99561f2855ff",
     "andriy-dzis": "f0deabb0-5c5e-4ab0-b0b6-a8a580640cb8",
-    yuriskonsulti: "71c6ff48-1d0a-4b9e-ac05-9e414bb752a1",
+    "yuriskonsulti": "71c6ff48-1d0a-4b9e-ac05-9e414bb752a1",
     "robota-dlya-yuristiv": "fb57b57c-1fee-4443-bfe7-cc1e89192038",
     "ofis-menedzheri": "0ec291f7-04c2-4120-829d-0affffaee13e",
-    marketologi: "d24f2e02-a4e3-4fe0-b7c4-3074e3757d0c",
+    "marketologi": "d24f2e02-a4e3-4fe0-b7c4-3074e3757d0c",
     "pomichniki-advokativ": "d3cf3693-6476-44fe-abc9-a9c833eed154",
-    zhurnalisti: "1c31cb5d-fa0b-478a-988d-3b5f89be7786",
+    "zhurnalisti": "1c31cb5d-fa0b-478a-988d-3b5f89be7786",
     "informuvannya-kliientiv": "54063e14-3aa4-4d5e-8c75-a772f95d5455",
     "yuriskonsult-kadrovi-siloviki": "6398d2ba-1165-49d0-8202-d228ecec9169",
-    targetolog: "c1f88a34-9590-41e4-8832-596e82c863bc",
+    "targetolog": "c1f88a34-9590-41e4-8832-596e82c863bc",
     "mobing-v-ukrayini-zakonni-sposobi-protistoyannya":
       "2487a837-e741-40c6-915b-219b1ee02c39",
     "daruvannya-ta-spadkuvannya-u-shlyubi-sho-vazhlivo-znati":
@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "59a641ce-8c5d-4e56-bf48-540eea99223a",
     "sistemniy-administrator": "16ca7ba2-100b-49bf-a8ba-d04017f1249d",
     "yuriskonsult-viyskovi-pensiyi": "65449001-1125-4e12-80cd-aa3acff7a61c",
-    yuriskonsult: "039e7a9d-ebc4-49c3-bfcb-bb02f635cb1c",
+    "yuriskonsult": "039e7a9d-ebc4-49c3-bfcb-bb02f635cb1c",
   };
 
   $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function () {
@@ -364,7 +364,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "Трудові спори": "95e1ae5c-6750-495e-b9a9-81d53a6b1f71",
       "Адвокат по ДТП": "9252a2c5-2a95-400f-bed9-38e2c8419882",
       "Спадкове право": "178fa4e0-9101-4a6a-9937-b80adfcfa8c8",
-      Нерухомість: "5fee97a7-3923-4abc-94da-e8ea649921ce",
+      "Нерухомість": "5fee97a7-3923-4abc-94da-e8ea649921ce",
       "Кредитні спори": "5c00ef03-d6ca-4665-879d-6e91b37bd72d",
       "Адвокат для бізнесу": "3b402c2f-63be-4e55-8466-2a86066be3b0",
       "Митні спори": "b0df8c5f-0dec-4862-9407-564fc95735cf",
@@ -863,15 +863,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         markers.push(marker);
       }
-      document.getElementById("city").addEventListener("change", function () {
-        const selectedCity = this.value;
-        const addressField = document.getElementById("address");
-        addressField.value = cities[selectedCity].address || "";
-        if (selectedCity) {
-          const cityInfo = cities[selectedCity];
-          map.setCenter({ lat: cityInfo.lat, lng: cityInfo.lng });
-          map.setZoom(12);
-        }
+      const tabLinks = document.querySelectorAll('.w-tab-link');
+      tabLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          const selectedCity = this.getAttribute('data-w-tab');
+          const addressField = document.getElementById('address');
+          if (selectedCity) {
+            const cityInfo = cities[selectedCity];
+            addressField.value = cityInfo.address;
+            map.setCenter({ lat: cityInfo.lat, lng: cityInfo.lng });
+            map.setZoom(12);
+          }
+        });
       });
     }
   }
