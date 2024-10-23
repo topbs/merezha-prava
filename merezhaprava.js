@@ -795,6 +795,24 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     ];
 
+    function loadScript(url) {
+      return new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = url;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+      });
+    }
+    
+    loadScript('https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap')
+      .then(() => {
+          console.log('Google Maps API loaded');
+      })
+      .catch(err => {
+          console.error('error loading Google Maps API:', err);
+      });
+
     window.initMap = function() {
       const cities = {
         Київ: {
