@@ -805,7 +805,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
     
-    loadScript('https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap')
+    loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyDzCyxnQDtfzhcI_O_187nVGIiu4gMaSAw&callback=initMap')
       .then(() => {
           console.log('Google Maps API loaded');
       })
