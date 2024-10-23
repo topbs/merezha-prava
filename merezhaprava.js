@@ -870,7 +870,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const addressField = document.getElementById('address');
           if (selectedCity) {
             const cityInfo = cities[selectedCity];
-            addressField.value = cityInfo.address;
+            addressField.textContent  = cityInfo.address;
             map.setCenter({ lat: cityInfo.lat, lng: cityInfo.lng });
             map.setZoom(12);
           }
