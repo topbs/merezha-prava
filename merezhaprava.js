@@ -299,6 +299,15 @@ document.addEventListener("DOMContentLoaded", function () {
       redirectUrl: "https://merezha-prava.ua/success",
     };
 
+    var emailData = {
+      name: document.querySelector('.contact_name').value,
+      phone: document.querySelector('.contact_phone').value,
+      city: document.querySelector('.contact_address').value,
+      url: window.location.href,
+      utm: getUTMParams()
+    }
+    sendEmail(emailData);
+
     function createObjectConsult() {
       landing.createObjectFromLanding(consultFormConfig);
     }
@@ -341,6 +350,15 @@ document.addEventListener("DOMContentLoaded", function () {
         "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
       redirectUrl: "https://merezha-prava.ua/success",
     };
+
+    var emailData = {
+      name: document.querySelector('.contact_name').value,
+      phone: document.querySelector('.contact_phone').value,
+      city: document.querySelector('.contact_address').value,
+      url: window.location.href,
+      utm: getUTMParams()
+    }
+    sendEmail(emailData);
 
     function createObject() {
       landing.createObjectFromLanding(popUpFormConfig);
@@ -431,5 +449,33 @@ document.addEventListener("DOMContentLoaded", function () {
     document.head.appendChild(newCanonicalTag);
   }
 
+  function getUTMParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      utm_source: params.get('utm_source') || '',
+      utm_medium: params.get('utm_medium') || '',
+      utm_campaign: params.get('utm_campaign') || '',
+      utm_term: params.get('utm_term') || '',
+      utm_content: params.get('utm_content') || ''
+    };
+  }
+
+  function sendEmail(emailData) {
+    fetch("https://topb.pp.ua/merezhaprava/mail", { 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(emailData)
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log("Дані успішно надіслано");
+      } else {
+        console.log("Помилка під час надсилання даних");
+      }
+    })
+    .catch(error => console.error("Помилка мережі:", error));
+  }
   
 });
