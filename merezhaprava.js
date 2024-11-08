@@ -299,13 +299,14 @@ document.addEventListener("DOMContentLoaded", function () {
       redirectUrl: "https://merezha-prava.ua/success",
     };
 
+    const form = $(this);
     var emailData = {
-      name: document.querySelector('#contact_name') ? document.querySelector('#contact_name').value : '',
-      phone: document.querySelector('#contact_phone') ? document.querySelector('#contact_phone').value : '',
-      city: document.querySelector('#contact_address') ? document.querySelector('#contact_address').value : '',
-      url: window.location.href,
-      utm: getUTMParams()
+      name: form.find('.contact_name').val() || '',
+      phone: form.find('.contact_phone').val() || '',
+      city: form.find('.contact_address').val() || '',
+      url: window.location.href
     }
+    emailData = { ...emailData, ...getUTMParams() };
     sendEmail(emailData);
 
     function createObjectConsult() {
@@ -351,13 +352,14 @@ document.addEventListener("DOMContentLoaded", function () {
       redirectUrl: "https://merezha-prava.ua/success",
     };
 
+    const form = $(this);
     var emailData = {
-      name: document.querySelector('#contact_name') ? document.querySelector('#contact_name').value : '',
-      phone: document.querySelector('#contact_phone') ? document.querySelector('#contact_phone').value : '',
-      city: document.querySelector('#contact_address') ? document.querySelector('#contact_address').value : '',
-      url: window.location.href,
-      utm: getUTMParams()
+      name: form.find('.contact_name').val() || '',
+      phone: form.find('.contact_phone').val() || '',
+      city: form.find('.contact_address').val() || '',
+      url: window.location.href
     }
+    emailData = { ...emailData, ...getUTMParams() };
     sendEmail(emailData);
 
     function createObject() {
