@@ -352,9 +352,9 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     var emailData = {
-      name: document.querySelector('.contact_name').value,
-      phone: document.querySelector('.contact_phone').value,
-      city: document.querySelector('.contact_address').value,
+      name: document.querySelector('#contact_name') ? document.querySelector('#contact_name').value : '',
+      phone: document.querySelector('#contact_phone') ? document.querySelector('#contact_phone').value : '',
+      city: document.querySelector('#contact_address') ? document.querySelector('#contact_address').value : '',
       url: window.location.href,
       utm: getUTMParams()
     }
