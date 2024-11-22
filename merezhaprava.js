@@ -277,6 +277,10 @@ document.addEventListener("DOMContentLoaded", function () {
     "sistemniy-administrator": "16ca7ba2-100b-49bf-a8ba-d04017f1249d",
     "yuriskonsult-viyskovi-pensiyi": "65449001-1125-4e12-80cd-aa3acff7a61c",
     "yuriskonsult": "039e7a9d-ebc4-49c3-bfcb-bb02f635cb1c",
+    "youtube-prodyuser": "6682ecec-b73d-4c74-9719-4da65d5a96a2",
+    "pr-menedzher": "ea43cb97-9816-4a1b-81da-fd23dcb6681d",
+    "finansoviy-menedzher": "1924e125-c5c1-4f2d-a127-e0f86b13c194",
+    "pomichnik-sistemnogo-administratora": "ffea8f0e-9c05-4e4e-a851-37fd4f28116b",
   };
 
   $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function () {
