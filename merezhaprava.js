@@ -281,6 +281,8 @@ document.addEventListener("DOMContentLoaded", function () {
     "pr-menedzher": "ea43cb97-9816-4a1b-81da-fd23dcb6681d",
     "finansoviy-menedzher": "1924e125-c5c1-4f2d-a127-e0f86b13c194",
     "pomichnik-sistemnogo-administratora": "ffea8f0e-9c05-4e4e-a851-37fd4f28116b",
+    "buhgalter-ka-z-pervinnoyi-dokumentaciyi-odesa": "a3abb967-9059-4f6d-bd93-9ad88af89a7d",
+    "yurist-korporativnogo-upravlinnya": "37ee54b1-b0ba-405b-9da8-e6de89805d58",
   };
 
   $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function () {
