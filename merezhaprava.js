@@ -358,6 +358,19 @@ document.addEventListener("DOMContentLoaded", function () {
       redirectUrl: "https://merezha-prava.ua/success",
     };
 
+    function setUTMSource() {
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      if (!urlParams.has("utm_source")) {
+        urlParams.set("utm_source", "сайт поп-ап");
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        
+        window.history.replaceState({}, "", newUrl);
+      }
+    }
+    setUTMSource();
+    
+
     const form = $(this);
     var emailData = {
       name: form.find('.contact_name').val() || '',
@@ -366,6 +379,9 @@ document.addEventListener("DOMContentLoaded", function () {
       url: window.location.href
     }
     emailData = { ...emailData, ...getUTMParams() };
+    if (!emailData.utm_source) {
+      emailData.utm_source = "сайт поп-ап";
+    }
     sendEmail(emailData);
 
     function createObject() {
