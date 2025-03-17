@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "yurist-korporativnogo-upravlinnya": "37ee54b1-b0ba-405b-9da8-e6de89805d58",
   };
 
-  $("#bigForm,#wf-form--5,#wf-form--2,#wf-form").on("submit", function () {
+  $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function () {
     var consultFormConfig = {
       fields: {
         Name: ".contact_name", // Имя посетителя, заполнившего форму
