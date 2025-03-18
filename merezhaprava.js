@@ -352,13 +352,13 @@ document.addEventListener("DOMContentLoaded", function () {
     setUTMSource();
     let popUpFormConfig = {
       fields: {
-        Name: "#popUpName", // Имя посетителя, заполнившего форму
-        MobilePhone: "#popUpPhone", // Телефон посетителя
+        Name: "#popUpTimeName", // Имя посетителя, заполнившего форму
+        MobilePhone: "#popUpTimePhone", // Телефон посетителя
         BpmRef: ".current-url",
       },
       contactFields: {
-        FullName: "#popUpName", // Name of a contact
-        Phone: "#popUpPhone", // Contact's mobile phone
+        FullName: "#popUpTimeName", // Name of a contact
+        Phone: "#popUpTimePhone", // Contact's mobile phone
         BpmRef: ".current-url",
       },
       customFields: {},
