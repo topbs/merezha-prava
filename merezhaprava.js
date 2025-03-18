@@ -338,8 +338,8 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   });
 
-  $("#popUpForm,#wf-form-").on("submit", function () {
-    function setUTMSource() {
+  $("#popUpForm,#wf-form-,#popup-time").on("submit", function () {
+    function setUTMSource() { 
       const urlParams = new URLSearchParams(window.location.search);
       
       if (!urlParams.has("utm_source")) {
