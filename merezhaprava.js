@@ -338,7 +338,111 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   });
 
-  $("#popUpForm,#wf-form-,#popup-time").on("submit", function () {
+  $("#popUpForm,#wf-form-").on("submit", function () {
+    function setUTMSource() { 
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      if (!urlParams.has("utm_source")) {
+        urlParams.set("utm_source", "сайт поп-ап");
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        
+        window.history.replaceState({}, "", newUrl);
+      }
+    }
+    setUTMSource();
+    let popUpFormConfig = {
+      fields: {
+        Name: "#popUpName", // Имя посетителя, заполнившего форму
+        MobilePhone: "#popUpPhone", // Телефон посетителя
+        BpmRef: ".current-url",
+      },
+      contactFields: {
+        FullName: "#popUpName", // Name of a contact
+        Phone: "#popUpPhone", // Contact's mobile phone
+        BpmRef: ".current-url",
+      },
+      customFields: {},
+      landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
+      serviceUrl:
+        "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      redirectUrl: "https://merezha-prava.ua/success",
+    };
+
+    const form = $(this);
+    var emailData = {
+      name: form.find('.contact_name').val() || '',
+      phone: form.find('.contact_phone').val() || '',
+      city: form.find('.contact_address').val() || '',
+      url: window.location.href
+    }
+    emailData = { ...emailData, ...getUTMParams() };
+    if (!emailData.utm_source) {
+      emailData.utm_source = "сайт поп-ап";
+    }
+    sendEmail(emailData);
+
+    function createObject() {
+      landing.createObjectFromLanding(popUpFormConfig);
+      console.log("object created");
+    }
+
+    function initLanding() {
+      landing.initLanding(popUpFormConfig);
+    }
+    const category = document.getElementById("field-12");
+    let categoryValue;
+    const directionToLandingIdMapping = {
+      "Військові пенсії": "1d894163-a8f9-4f22-b545-22a28ed40699",
+      "Цивільні пенсії": "0bf6584a-7d88-415b-bd73-592f77962db2",
+      "Допомога військовослужбовцям": "aea2b99c-79a3-47a2-873e-c8e6a81c51b8",
+      "Адміністративні правопорушення": "2e932e05-65a9-4328-95e2-57db7b8a4529",
+      "Сімейні спори": "8c24f8f8-12d6-4efd-9eb8-d43e24407142",
+      "Житлові питання": "c4d72f04-7643-4481-8c9e-95b0d343e8a4",
+      "Оскарження результатів перевірок":
+        "488d2092-25bc-4d7c-a26c-7819799e4de0",
+      "Трудові спори": "95e1ae5c-6750-495e-b9a9-81d53a6b1f71",
+      "Адвокат по ДТП": "9252a2c5-2a95-400f-bed9-38e2c8419882",
+      "Спадкове право": "178fa4e0-9101-4a6a-9937-b80adfcfa8c8",
+      "Нерухомість": "5fee97a7-3923-4abc-94da-e8ea649921ce",
+      "Кредитні спори": "5c00ef03-d6ca-4665-879d-6e91b37bd72d",
+      "Адвокат для бізнесу": "3b402c2f-63be-4e55-8466-2a86066be3b0",
+      "Митні спори": "b0df8c5f-0dec-4862-9407-564fc95735cf",
+      "Інші питання": "3c3873d8-df0c-418f-b71d-467996689ae3",
+    };
+
+    function categoryUpdate() {
+      const newSelectedValue = category.value;
+      if (newSelectedValue !== categoryValue) {
+        categoryValue = newSelectedValue;
+        console.log("Змінено вибір на:", categoryValue);
+        const landingId =
+          directionToLandingIdMapping[categoryValue] || defaultLandingId;
+        popUpFormConfig.landingId = landingId;
+      }
+      console.log("Категорія яка була вибрана: ", categoryValue);
+    }
+    categoryUpdate;
+    console.log("landingID після апдейту: ", popUpFormConfig.landingId);
+
+    function addLink() {
+      const currentUrl = window.location.href;
+      console.log(currentUrl);
+
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.className = "current-url";
+      hiddenInput.value = currentUrl;
+
+      document.querySelector("#popUpForm,#wf-form-").appendChild(hiddenInput);
+      console.log("Приховане посилання було створено:", currentUrl);
+    }
+
+    addLink();
+    createObject();
+    return false;
+  });
+
+  $("#popup-time").on("submit", function () {
     function setUTMSource() { 
       const urlParams = new URLSearchParams(window.location.search);
       
@@ -410,11 +514,6 @@ document.addEventListener("DOMContentLoaded", function () {
       "Митні спори": "b0df8c5f-0dec-4862-9407-564fc95735cf",
       "Інші питання": "3c3873d8-df0c-418f-b71d-467996689ae3",
     };
-
-    // if (window.location.pathname.includes("blog-posts")) {
-    //   window.landingId = blogPostsLandingId;
-    //   console.log(`ID лендінгу змінено на ID конкретного допису в блозі: ${blogPostsLandingId}`);
-    // }
 
     function categoryUpdate() {
       const newSelectedValue = category.value;
