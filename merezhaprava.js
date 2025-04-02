@@ -582,7 +582,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function sendEmail(emailData) {
-    fetch("https://api.topb.pp.ua/merezhaprava/mail", { 
+    fetch("https://api.topb.dev/merezhaprava/mail", { 
       method: "POST",
       headers: {
         "Content-Type": "application/json"
