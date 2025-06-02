@@ -554,21 +554,21 @@ document.addEventListener("DOMContentLoaded", function () {
     $(".mask-date").mask("99.99.9999 99:99");
   });
 
-  var canonicalTags = document.querySelectorAll('link[rel="canonical"]');
+  // var canonicalTags = document.querySelectorAll('link[rel="canonical"]');
 
-  canonicalTags.forEach(function (canonicalTag) {
-    var currentUrl = new URL(canonicalTag.href);
-    var cleanUrl = currentUrl.origin + currentUrl.pathname;
+  // canonicalTags.forEach(function (canonicalTag) {
+  //   var currentUrl = new URL(canonicalTag.href);
+  //   var cleanUrl = currentUrl.origin + currentUrl.pathname;
 
-    canonicalTag.href = cleanUrl;
-  });
+  //   canonicalTag.href = cleanUrl;
+  // });
 
-  if (canonicalTags.length === 0) {
-    var newCanonicalTag = document.createElement("link");
-    newCanonicalTag.rel = "canonical";
-    newCanonicalTag.href = window.location.origin + window.location.pathname;
-    document.head.appendChild(newCanonicalTag);
-  }
+  // if (canonicalTags.length === 0) {
+  //   var newCanonicalTag = document.createElement("link");
+  //   newCanonicalTag.rel = "canonical";
+  //   newCanonicalTag.href = window.location.origin + window.location.pathname;
+  //   document.head.appendChild(newCanonicalTag);
+  // }
 
   function getUTMParams() {
     const params = new URLSearchParams(window.location.search);
