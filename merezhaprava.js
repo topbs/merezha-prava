@@ -475,9 +475,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const form = $(this);
     var emailData = {
-      name: form.find('.contact_name').val() || '',
-      phone: form.find('.contact_phone').val() || '',
-      city: form.find('.contact_address').val() || '',
+      name: form.find('#popUpTimeName').val() || '',
+      phone: form.find('#popUpTimePhone').val() || '',
+      category: form.find('#field-14').val() || '',
       url: window.location.href
     }
     emailData = { ...emailData, ...getUTMParams() };
