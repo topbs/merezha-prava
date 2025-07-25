@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "pomichnik-sistemnogo-administratora": "ffea8f0e-9c05-4e4e-a851-37fd4f28116b",
     "buhgalter-ka-z-pervinnoyi-dokumentaciyi-odesa": "a3abb967-9059-4f6d-bd93-9ad88af89a7d",
     "yurist-korporativnogo-upravlinnya": "37ee54b1-b0ba-405b-9da8-e6de89805d58",
-    "advokat": "241083f8-2181-4260-9665-08d8d0ee6e35",
+    "advokat": "4236d051-1242-45ef-8a65-0e88646e7610",
   };
 
   $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function () {
