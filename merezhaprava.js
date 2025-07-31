@@ -1,5 +1,95 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("loaded");
+  
+  function saveUTMParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmParams = {};
+    let hasUTMParams = false;
+    
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+      if (urlParams.has(param)) {
+        utmParams[param] = urlParams.get(param);
+        hasUTMParams = true;
+      }
+    });
+    
+    if (hasUTMParams) {
+      const utmData = {
+        params: utmParams,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('utmParams', JSON.stringify(utmData));
+      console.log('UTM параметри збережені:', utmParams);
+    }
+  }
+  
+  function cleanExpiredUTMParams() {
+    try {
+      const savedData = localStorage.getItem('utmParams');
+      if (savedData) {
+        const utmData = JSON.parse(savedData);
+        const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000; // 30 днів в мілісекундах
+
+        // Якщо дані старше 30 днів, видаляємо їх
+        if (utmData.timestamp && (Date.now() - utmData.timestamp > thirtyDaysInMs)) {
+          localStorage.removeItem('utmParams');
+          console.log('Застарілі UTM параметри видалені');
+        }
+      }
+    } catch (error) {
+      console.error('Помилка при перевірці UTM параметрів:', error);
+      localStorage.removeItem('utmParams'); // Видаляємо пошкоджені дані
+    }
+  }
+
+  // Перевіряємо і очищаємо застарілі UTM параметри
+  cleanExpiredUTMParams();
+
+  // Зберігаємо UTM параметри при завантаженні сторінки
+  saveUTMParams();
+
+  // Додаємо UTM параметри до всіх внутрішніх посилань
+  function addUTMToInternalLinks() {
+    try {
+      const savedData = localStorage.getItem('utmParams');
+      if (!savedData) return;
+      
+      const utmData = JSON.parse(savedData);
+      const utmParams = utmData.params || utmData; // Підтримка старого і нового формату
+      const currentDomain = window.location.hostname;
+
+      // Отримуємо всі посилання на сторінці
+      const links = document.querySelectorAll('a[href]');
+      
+      links.forEach(link => {
+        const href = link.getAttribute('href');
+
+        // Перевіряємо, чи є посилання внутрішнім
+        if (href && (href.startsWith('/') || href.includes(currentDomain)) && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+          try {
+            const url = new URL(href, window.location.origin);
+
+            // Додаємо UTM параметри, якщо їх ще немає
+            Object.keys(utmParams).forEach(param => {
+              if (utmParams[param] && !url.searchParams.has(param)) {
+                url.searchParams.set(param, utmParams[param]);
+              }
+            });
+            
+            link.setAttribute('href', url.toString());
+          } catch (error) {
+            // Ігноруємо помилки для некоректних URL
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Помилка при додаванні UTM параметрів до посилань:', error);
+    }
+  }
+
+  // Додаємо UTM параметри до посилань після завантаження DOM
+  setTimeout(addUTMToInternalLinks, 100);
+  
   const links = document.querySelectorAll('a[rel="open-popup"]');
   links.forEach(function (link) {
     link.addEventListener("click", function (event) {
@@ -572,14 +662,40 @@ document.addEventListener("DOMContentLoaded", function () {
   // }
 
   function getUTMParams() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-      utm_source: params.get('utm_source') || '',
-      utm_medium: params.get('utm_medium') || '',
-      utm_campaign: params.get('utm_campaign') || '',
-      utm_term: params.get('utm_term') || '',
-      utm_content: params.get('utm_content') || ''
+    // Сначала пытаемся получить UTM параметры из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentUTM = {
+      utm_source: urlParams.get('utm_source') || '',
+      utm_medium: urlParams.get('utm_medium') || '',
+      utm_campaign: urlParams.get('utm_campaign') || '',
+      utm_term: urlParams.get('utm_term') || '',
+      utm_content: urlParams.get('utm_content') || ''
     };
+    
+    // Если в URL нет UTM параметров, пытаемся получить их из localStorage
+    const hasCurrentUTM = Object.values(currentUTM).some(value => value !== '');
+    
+    if (!hasCurrentUTM) {
+      try {
+        const savedData = localStorage.getItem('utmParams');
+        if (savedData) {
+          const utmData = JSON.parse(savedData);
+          const utmParams = utmData.params || utmData; // Поддержка старого и нового формата
+          
+          return {
+            utm_source: utmParams.utm_source || '',
+            utm_medium: utmParams.utm_medium || '',
+            utm_campaign: utmParams.utm_campaign || '',
+            utm_term: utmParams.utm_term || '',
+            utm_content: utmParams.utm_content || ''
+          };
+        }
+      } catch (error) {
+        console.error('Ошибка при получении UTM параметров из localStorage:', error);
+      }
+    }
+    
+    return currentUTM;
   }
 
   function sendEmail(emailData) {
