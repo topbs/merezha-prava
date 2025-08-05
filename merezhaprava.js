@@ -28,10 +28,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const savedData = localStorage.getItem('utmParams');
       if (savedData) {
         const utmData = JSON.parse(savedData);
-        const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000; // 30 днів в мілісекундах
+        const oneDayInMs = 24 * 60 * 60 * 1000; // 1 день в мілісекундах
 
-        // Якщо дані старше 30 днів, видаляємо їх
-        if (utmData.timestamp && (Date.now() - utmData.timestamp > thirtyDaysInMs)) {
+        // Якщо дані старше 1 дня, видаляємо їх
+        if (utmData.timestamp && (Date.now() - utmData.timestamp > oneDayInMs)) {
           localStorage.removeItem('utmParams');
           console.log('Застарілі UTM параметри видалені');
         }
