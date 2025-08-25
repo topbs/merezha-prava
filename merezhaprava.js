@@ -1,6 +1,17 @@
+class Main {
+  constructor() {
+    
+  }
+
+  init(string) {
+    console.log(string);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("loaded");
-  
+  window.main = new Main();
+  main.init("main js loaded");
+
   function saveUTMParams() {
     const urlParams = new URLSearchParams(window.location.search);
     const utmParams = {};

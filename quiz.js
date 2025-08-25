@@ -2695,7 +2695,7 @@ const quizData = [
     "3.1": "Звільнився",
     "3.1.1": "",
     "3.1.2": "",
-    "3.1.3": "14.02.2025 - С",
+    "3.1.3": "14.02.2025 - 0",
     "3.2": "18 - 25",
     "3.3": ["Контракт", "Мобілізований"],
     "3.4": ["ЗСУ", "СЗРУ", "ГУР", "ДКВС", "ДПтС", "ДССТ", "ДФС", "Космічна агенція", "Нацгвірдія", "СБУ", "Службу держспецзв'язку", "ССО", "УДО", "ДСНС","ДПСУ"],
@@ -2722,7 +2722,7 @@ const quizData = [
     "3.1": "Звільнився",
     "3.1.1": "",
     "3.1.2": "",
-    "3.1.3": "14.02.2025 - С",
+    "3.1.3": "14.02.2025 - 0",
     "3.2": "18 - 25",
     "3.3": ["Контракт", "Мобілізований"],
     "3.4": "Нацполіція",
@@ -2877,12 +2877,24 @@ const quizData = [
   },
 ]
 
+class Quiz {
+  constructor() {
+    
+  }
+
+  init(string) {
+    console.log(string);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+  window.quiz = new Quiz();
+
   let consultant = false;
   if (window.location.pathname.includes('consultant')) {
     consultant = true;
   }
-  consultant ? console.log('quiz for consultant loaded') : console.log('quiz for client loaded');
+  consultant ? window.quiz.init('quiz js for consultant loaded') : window.quiz.init('quiz js for client loaded');
 
   const whoAreYou = document.getElementById('WhoAreYou');
 
