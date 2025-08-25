@@ -3122,6 +3122,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!serviceAnswers || serviceAnswers === "") {
       return true;
     }
+
+    if (questionKey === '3.4') {
+      console.log('Checking 3.4:', {
+        serviceAnswers: serviceAnswers,
+        userAnswer: userAnswer,
+        isServiceArray: Array.isArray(serviceAnswers),
+        includes: Array.isArray(serviceAnswers) ? serviceAnswers.includes(userAnswer) : serviceAnswers === userAnswer
+      });
+    }
     
     // Специальная обработка для числовых диапазонов
     if (['1.3', '1.5', '2.4', '2.8', '2.9.1'].includes(questionKey)) {
@@ -3134,7 +3143,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Специальная обработка для дат
-    if (['1.4', '2.2.4', '2.3', '3.1'].includes(questionKey)) {
+    if (['1.4', '2.2.4', '2.3', '3.1.1'].includes(questionKey)) {
       return checkDateRange(serviceAnswers, userAnswer);
     }
 
