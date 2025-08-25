@@ -2938,7 +2938,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const q39 = document.getElementById('presenceInjury');
   const q310 = document.getElementById('stayeTreatment');
   const q311 = document.getElementById('CompensationMulti');
-  const q312 = document.getElementById('CompensationMulti');
+  const q312 = document.getElementById('Treatment-after-injury');
   const q313 = document.getElementById('courtDecisionsPpayments');
   const q314 = document.getElementById('certificate-VLK');
   const q315 = document.getElementById('illegalActivity');
