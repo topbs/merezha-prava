@@ -2887,6 +2887,7 @@ class Quiz {
   }
 }
 
+window.Quiz = Quiz;
 document.addEventListener('DOMContentLoaded', function() {
   window.quiz = new Quiz();
 

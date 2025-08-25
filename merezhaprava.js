@@ -8,6 +8,7 @@ class Main {
   }
 }
 
+window.Main = Main;
 document.addEventListener("DOMContentLoaded", function () {
   window.main = new Main();
   main.init("main js loaded");
