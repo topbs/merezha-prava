@@ -133,7 +133,7 @@ const quizData = [
     "1.8": ""
   },
   {
-    "name": "Повернення 2000 грн. до військової пенсії ",
+    "name": "Повернення 2000 грн. до військової пенсії",
     "nameConsultant": "Повернення 2000 грн. до військової пенсії",
     "slug": "povernennya-2-000-grn-socialnoyi-dopomogi",
     "whoAreYou": "1",
