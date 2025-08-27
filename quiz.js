@@ -117,7 +117,7 @@ const quizData = [
     "1.8": ""
   },
   {
-    "name": "Збільшення пенсії за рахунок прожиткового мінімуму (2 судових процеси)",
+    "name": "Збільшення пенсії за рахунок прожиткового мінімуму",
     "nameConsultant": "Збільшення пенсії за рахунок прожиткового мінімуму",
     "slug": "zbilshennya-pensiyi-za-rahunok-prozhitkovogo-minimumu-takozh-u-z-vtratoyu-goduvalnika",
     "whoAreYou": "1",
@@ -133,7 +133,7 @@ const quizData = [
     "1.8": ""
   },
   {
-    "name": "Повернення надбавки 2000 грн до пенсії військовослужбовцям",
+    "name": "Повернення 2000 грн. до військової пенсії ",
     "nameConsultant": "Повернення 2000 грн. до військової пенсії",
     "slug": "povernennya-2-000-grn-socialnoyi-dopomogi",
     "whoAreYou": "1",
