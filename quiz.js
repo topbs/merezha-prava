@@ -3436,7 +3436,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Специальная обработка для множественного выбора
-    if (['1.7', '3.11', '3.12', '3.15'].includes(questionKey)) {
+    if (['1.7', '2.15', '2.16', '2.17', '2.18', '3.11', '3.12', '3.15'].includes(questionKey)) {
       return checkMultipleSelect(serviceAnswers, userAnswer);
     }
     
@@ -3454,6 +3454,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function filterServices() {
     // Получаем значения для множественного выбора
     const q17Values = q17 ? Array.from(q17.selectedOptions).map(o => o.value) : [];
+    const q215Values = q215 ? Array.from(q215.selectedOptions).map(o => o.value) : [];
+    const q216Values = q216 ? Array.from(q216.selectedOptions).map(o => o.value) : [];
+    const q217Values = q217 ? Array.from(q217.selectedOptions).map(o => o.value) : [];
+    const q218Values = q218 ? Array.from(q218.selectedOptions).map(o => o.value) : [];
     const q311Values = q311 ? Array.from(q311.selectedOptions).map(o => o.value) : [];
     const q312Values = q312 ? Array.from(q312.selectedOptions).map(o => o.value) : [];
     const q315Values = q315 ? Array.from(q315.selectedOptions).map(o => o.value) : [];
@@ -3490,10 +3494,10 @@ document.addEventListener('DOMContentLoaded', function() {
       '2.12.1': q2121?.value || '',
       '2.13': q213?.value || '',
       '2.14': q214?.value || '',
-      '2.15': q215?.value || '',
-      '2.16': q216?.value || '',
-      '2.17': q217?.value || '',
-      '2.18': q218?.value || '',
+      '2.15': q215Values,
+      '2.16': q216Values,
+      '2.17': q217Values,
+      '2.18': q218Values,
       '2.19': q219?.value || '',
       '3.1': q31?.value || '',
       '3.1.1': q31_1?.value || '',
