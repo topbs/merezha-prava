@@ -1088,7 +1088,7 @@ const quizData = [
     "2.19": "",
   },
   {
-    "name": "Зарахування стажу з особливо шкідливими або особливо важкими умовами праці",
+    "name": "Зарахування стажу з особливо шкідливими або особливо важкими умовами праці для призначення пенсії",
     "nameConsultant": "Зарахування стажу в пенсію за віком на пільгових умовах (Призначення)",
     "slug": "zarahuvannya-stazhu-v-osoblivo-shkidlivimi-abo-osoblivo-vazhkimi-umovami-praci",
     "whoAreYou": "2",
@@ -1119,7 +1119,7 @@ const quizData = [
     "2.19": "",
   },
   {
-    "name": "Зарахування стажу з особливо шкідливими або особливо важкими умовами праці",
+    "name": "Зарахування стажу з особливо шкідливими або особливо важкими умовами праці для призначення пенсії",
     "nameConsultant": "Зарахування стажу в пенсію за віком на пільгових умовах (Призначення)",
     "slug": "zarahuvannya-stazhu-v-osoblivo-shkidlivimi-abo-osoblivo-vazhkimi-umovami-praci",
     "whoAreYou": "2",
@@ -1150,7 +1150,7 @@ const quizData = [
     "2.19": "",
   },
   {
-    "name": "Зарахування стажу з особливо шкідливими або особливо важкими умовами праці",
+    "name": "Зарахування стажу з особливо шкідливими або особливо важкими умовами праці для перерахунку пенсії",
     "nameConsultant": "Зарахування стажу в пенсію за віком на пільгових умовах (Перерахунок)",
     "slug": "zarahuvannya-stazhu-v-osoblivo-shkidlivimi-abo-osoblivo-vazhkimi-umovami-praci",
     "whoAreYou": "2",
@@ -1181,7 +1181,7 @@ const quizData = [
     "2.19": "",
   },
   {
-    "name": "Зарахування стажу з особливо шкідливими або особливо важкими умовами праці",
+    "name": "Зарахування стажу з особливо шкідливими або особливо важкими умовами праці для перерахунку пенсії",
     "nameConsultant": "Зарахування стажу в пенсію за віком на пільгових умовах (Перерахунок)",
     "slug": "zarahuvannya-stazhu-v-osoblivo-shkidlivimi-abo-osoblivo-vazhkimi-umovami-praci",
     "whoAreYou": "2",
@@ -3383,23 +3383,39 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!birthDate) return null;
     
     const today = new Date();
-    const birth = parseDate(birthDate);
-    if (!birth) return null;
+    let birth;
     
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
+    // Если передан только год (формат YYYY)
+    if (/^\d{4}$/.test(birthDate)) {
+      const year = parseInt(birthDate);
+      // Для года рождения считаем возраст проще
+      return today.getFullYear() - year;
+    } else {
+      // Если передана полная дата (формат DD.MM.YYYY)
+      birth = parseDate(birthDate);
+      if (!birth) return null;
+      
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+      
+      return age;
     }
-    
-    return age;
   }
 
   // функция для проверки возрастного диапазона
   function checkAgeRange(serviceAgeRange, userBirthDate) {
-    if (!serviceAgeRange || serviceAgeRange === "" || !userBirthDate) {
+    // если в услуге не указан возрастной диапазон, подходит любой возраст
+    if (!serviceAgeRange || serviceAgeRange === "") {
       return true;
+    }
+    
+    // если в услуге указан возрастной диапазон, но пользователь не ввел дату рождения - не подходит
+    if (!userBirthDate || userBirthDate === "") {
+      return false;
     }
     
     const userAge = calculateAge(userBirthDate);
