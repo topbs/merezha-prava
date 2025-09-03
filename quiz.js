@@ -3700,6 +3700,8 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log(`Matching services: ${filteredServices.length}`);
       console.log('Filtered services:', filteredServices);
       console.log('=== END OF QUIZ DEBUGGING ===\n');
+    } else {
+      console.log('Filtered services:', filteredServices);
     }
 
     let filteredServiceNames;
