@@ -1363,7 +1363,7 @@ const quizData = [
     "2.15": "",
     "2.16": "Щодо перерахунку пенсії",
     "2.17": "",
-    "2.18": "Не враховано понаднормові роки в стаж",
+    "2.18": ["Не враховано понаднормові роки в стаж", "Не отримував(ла) письмову відмову"],
     "2.19": "",
   },
   {
@@ -1394,7 +1394,7 @@ const quizData = [
     "2.15": "",
     "2.16": "Щодо перерахунку пенсії",
     "2.17": "",
-    "2.18": "Не враховано понаднормові роки в стаж",
+    "2.18": ["Не враховано понаднормові роки в стаж", "Не отримував(ла) письмову відмову"],
     "2.19": "",
   },
   {
@@ -1537,7 +1537,7 @@ const quizData = [
     "2.5": "",
     "2.6": "Жінка",
     "2.7": "Не переходив(ла)",
-    "2.8": "30-50",
+    "2.8": "30 - 50",
     "2.9": ["Освіта", "Медицина", "Соціальний захист"],
     "2.9.1": "",
     "2.10": "",
@@ -1568,7 +1568,7 @@ const quizData = [
     "2.5": "",
     "2.6": "Чоловік",
     "2.7": "Не переходив(ла)",
-    "2.8": "35-50",
+    "2.8": "35 - 50",
     "2.9": ["Освіта", "Медицина", "Соціальний захист"],
     "2.9.1": "",
     "2.10": "",
@@ -3543,27 +3543,51 @@ document.addEventListener('DOMContentLoaded', function() {
       '4.6': q46?.value || ''
     };
 
-    console.log('User answers:', answers);
+    // === відладка ===
+    // const DEBUG_MODE = true;
+    const DEBUG_MODE = false;
+    
+    if (DEBUG_MODE) {
+      console.log('=== DETAILED DEBUG ===');
+      console.log('User answers:', answers);
+    } else {
+      console.log('User answers:', answers);
+    }
 
-    // сначала скрываем все услуги
+    // спочатку скриваємо всі послуги
     services.forEach(service => {
       service.style.display = 'none';
     });
 
-    // фильтруем услуги по всем условиям
+    // фільтруємо послуги на основі відповідей
     const filteredServices = quizData.filter(service => {
-      // проверяем основное условие whoAreYou
+      if (DEBUG_MODE) {
+        console.log(`\n🔍 Checking service: "${service.name}"`);
+        console.log(`Consultant: "${service.nameConsultant}"`);
+      }
+      
+      // перевіряємо основну умову - whoAreYou
       if (service.whoAreYou && service.whoAreYou !== answers.whoAreYou) {
+        if (DEBUG_MODE) {
+          console.log(`❌ whoAreYou doesnt match: service requires "${service.whoAreYou}", but user has "${answers.whoAreYou}"`);
+        }
         return false;
       }
 
-      // если whoAreYou не указан в услуге, показываем всем
+      // якщо whoAreYou не вказано - показуємо всім
       if (!service.whoAreYou) {
+        if (DEBUG_MODE) {
+          console.log(`✅ whoAreYou not specified in the service - suitable for everyone`);
+        }
         return true;
       }
 
+      if (DEBUG_MODE) {
+        console.log(`✅ whoAreYou matches: "${answers.whoAreYou}"`);
+      }
+
       let questionKeys = [];
-      // проверяем дополнительные вопросы только если они есть в услуге
+      // перевіряємо додаткові питання, якщо вони є в послузі
       if (answers.whoAreYou === "1") {
         questionKeys = ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.6.1', '1.6.2', '1.7', '1.8'];
       } else if (answers.whoAreYou === "2") {
@@ -3575,25 +3599,59 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       const hasAnyQuestion = questionKeys.some(key => service.hasOwnProperty(key));
-      
-      // если нет ни одного соответствующего вопроса, услуга не подходит
+
+      // якщо немає жодного відповідного питання, послуга не підходить
       if (!hasAnyQuestion) {
+        if (DEBUG_MODE) {
+          console.log(`❌ there are no questions for this category in service "${answers.whoAreYou}"`);
+        }
         return false;
       }
 
-      // проверяем соответствие всех присутствующих вопросов
+      if (DEBUG_MODE) {
+        console.log(`📋 Checking specific questions:`);
+      }
+
+      // перевіряємо відповідність усіх присутніх питань
       for (let key of questionKeys) {
         if (service.hasOwnProperty(key)) {
-          if (!checkAnswerMatch(service[key], answers[key], key)) {
+          const serviceValue = service[key];
+          const userValue = answers[key];
+          const matches = checkAnswerMatch(serviceValue, userValue, key);
+          
+          if (DEBUG_MODE) {
+            const serviceStr = JSON.stringify(serviceValue);
+            const userStr = JSON.stringify(userValue);
+            
+            if (matches) {
+              console.log(`   ✅ ${key}: service=${serviceStr} user=${userStr} - MATCHES`);
+            } else {
+              console.log(`   ❌ ${key}: service=${serviceStr} user=${userStr} - DOES NOT MATCH`);
+            }
+          }
+          
+          if (!matches) {
+            if (DEBUG_MODE) {
+              console.log(`❌ Service NOT SUITABLE due to question ${key}`);
+            }
             return false;
           }
         }
       }
 
+      if (DEBUG_MODE) {
+        console.log(`✅ ALL CONDITIONS MET - service IS SUITABLE`);
+      }
       return true;
     });
 
-    console.log('Filtered services:', filteredServices);
+    if (DEBUG_MODE) {
+      console.log(`\n📊 FILTERING RESULTS:`);
+      console.log(`Total services in database: ${quizData.length}`);
+      console.log(`Matching services: ${filteredServices.length}`);
+      console.log('Filtered services:', filteredServices);
+      console.log('=== END OF QUIZ DEBUGGING ===\n');
+    }
 
     let filteredServiceNames;
     if (consultant) {
