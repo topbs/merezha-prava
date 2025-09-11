@@ -3202,6 +3202,7 @@ const quizData = [
   },
 ]
 
+// MARK: Code
 class Quiz {
   constructor() {
     
@@ -3297,31 +3298,31 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!serviceRange || serviceRange === "" || !userValue) {
       return true;
     }
-    
-    // Убираем пробелы из userValue и парсим как число
+
+    // прибираємо пробіли з userValue і парсимо як число
     const cleanUserValue = userValue.toString().replace(/\s+/g, '');
     const userNum = parseFloat(cleanUserValue);
     if (isNaN(userNum)) return false;
     
-    // Проверяем различные форматы
+    // перевіряємо різні формати
     if (serviceRange.includes(" - ")) {
-      // Формат "10 - 30"
+      // формат "10 - 30"
       const [min, max] = serviceRange.split(" - ").map(s => parseFloat(s.trim()));
       return userNum >= min && userNum <= max;
     } else if (serviceRange.startsWith(">=")) {
-      // Формат ">=100"
+      // формат ">=100"
       const min = parseFloat(serviceRange.substring(2));
       return userNum >= min;
     } else if (serviceRange.startsWith("<=")) {
-      // Формат "<=100"
+      // формат "<=100"
       const max = parseFloat(serviceRange.substring(2));
       return userNum <= max;
     } else if (serviceRange.startsWith(">")) {
-      // Формат ">100"
+      // формат ">100"
       const min = parseFloat(serviceRange.substring(1));
       return userNum > min;
     } else if (serviceRange.startsWith("<")) {
-      // Формат "<100"
+      // формат "<100"
       const max = parseFloat(serviceRange.substring(1));
       return userNum < max;
     }
@@ -3329,20 +3330,20 @@ document.addEventListener('DOMContentLoaded', function() {
     return false;
   }
 
-  // функция для проверки даты
+  // функція для перевірки дати
   function checkDateRange(serviceDateRange, userDate) {
     if (!serviceDateRange || serviceDateRange === "" || !userDate) {
       return true;
     }
-    
-    // Преобразуем дату пользователя в объект Date
+
+    // перетворюємо дату користувача в об'єкт Date
     const userDateObj = parseDate(userDate);
     if (!userDateObj) return false;
     
     if (serviceDateRange.includes(" - ")) {
       const [startStr, endStr] = serviceDateRange.split(" - ").map(s => s.trim());
       
-      // Проверяем начальную дату
+      // перевіряємо початкову дату
       if (startStr !== "0") {
         const startDate = parseDate(startStr);
         if (startDate && userDateObj < startDate) {
@@ -3350,7 +3351,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
       
-      // Проверяем конечную дату
+      // перевіряємо кінцеву дату
       if (endStr !== "0") {
         const endDate = parseDate(endStr);
         if (endDate && userDateObj > endDate) {
@@ -3364,28 +3365,28 @@ document.addEventListener('DOMContentLoaded', function() {
     return false;
   }
 
-  // функция для проверки специального случая "сегодня минус 90 дней" для вопроса 3.1.3
+  // функція для перевірки спеціального випадку "сьогодні мінус 90 днів" для питання 3.1.3
   function checkDateRangeFor313(serviceDateRange, userDate) {
     if (!serviceDateRange || serviceDateRange === "" || !userDate) {
       return true;
     }
     
-    // Если это строка с описанием логики для 3.1.3
+    // якщо це спеціальний випадок "≥ (сьогодні − 90 дней)"
     if (serviceDateRange.includes("≥ (сьогодні − 90 дней)")) {
       const userDateObj = parseDate(userDate);
       const todayMinus90 = getTodayMinus90Days();
       
       if (!userDateObj) return false;
       
-      // Проверяем, что дата пользователя больше или равна "сегодня минус 90 дней"
+      // перевіряємо, що дата користувача більша або дорівнює "сегодня минус 90 дней"
       return userDateObj >= todayMinus90;
     }
     
-    // Обычная проверка диапазона дат
+    // звичайна перевірка діапазону дат
     return checkDateRange(serviceDateRange, userDate);
   }
 
-  // функция для вычисления даты "сегодня минус 90 дней"
+  // функція для обчислення дати "сегодня минус 90 дней"
   function getTodayMinus90Days() {
     const today = new Date();
     const minus90Days = new Date(today);
@@ -3393,7 +3394,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return minus90Days;
   }
 
-  // функция для парсинга даты в формате DD.MM.YYYY
+  // функція для парсинга дати в форматі DD.MM.YYYY
   function parseDate(dateStr) {
     if (!dateStr || dateStr === "0") return null;
 
@@ -3405,41 +3406,41 @@ document.addEventListener('DOMContentLoaded', function() {
     if (parts.length !== 3) return null;
     
     const day = parseInt(parts[0]);
-    const month = parseInt(parts[1]) - 1; // месяцы в JS начинаются с 0
+    const month = parseInt(parts[1]) - 1; // місяці в JS починаються з 0
     const year = parseInt(parts[2]);
     
     return new Date(year, month, day);
   }
 
-  // функция для проверки множественного выбора
+  // функція для перевірки множинного вибору
   function checkMultipleSelect(serviceOptions, userSelectedValues) {
     if (!serviceOptions || serviceOptions === "" || !userSelectedValues || userSelectedValues.length === 0) {
       return true;
     }
-    
-    // Если serviceOptions - массив, проверяем пересечение
+
+    // Якщо serviceOptions - масив, перевіряємо перетин
     if (Array.isArray(serviceOptions)) {
       return userSelectedValues.some(value => serviceOptions.includes(value));
     }
-    
-    // Если serviceOptions - строка, проверяем вхождение
+
+    // Якщо serviceOptions - рядок, перевіряємо входження
     return userSelectedValues.includes(serviceOptions);
   }
 
-  // функция для расчета возраста из даты рождения
+  // функція для обчислення віку з дати народження
   function calculateAge(birthDate) {
     if (!birthDate) return null;
     
     const today = new Date();
     let birth;
-    
-    // Если передан только год (формат YYYY)
+
+    // Якщо передано тільки рік (формат YYYY)
     if (/^\d{4}$/.test(birthDate)) {
       const year = parseInt(birthDate);
-      // Для года рождения считаем возраст проще
+      // Для року народження рахуємо вік простіше
       return today.getFullYear() - year;
     } else {
-      // Если передана полная дата (формат DD.MM.YYYY)
+      // Якщо передана повна дата (формат DD.MM.YYYY)
       birth = parseDate(birthDate);
       if (!birth) return null;
       
@@ -3454,43 +3455,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // функция для проверки возрастного диапазона
+  // функція для перевірки вікового діапазону
   function checkAgeRange(serviceAgeRange, userBirthDate) {
-    // если в услуге не указан возрастной диапазон, подходит любой возраст
+    // якщо в послузі не вказано віковий діапазон, підходить будь-який вік
     if (!serviceAgeRange || serviceAgeRange === "") {
       return true;
     }
-    
-    // если в услуге указан возрастной диапазон, но пользователь не ввел дату рождения - не подходит
+
+    // якщо в послузі вказано віковий діапазон, але користувач не ввів дату народження - не підходить
     if (!userBirthDate || userBirthDate === "") {
       return false;
     }
     
     const userAge = calculateAge(userBirthDate);
     if (userAge === null) return false;
-    
-    // Используем ту же логику, что и для числовых диапазонов
+
+    // використовуємо ту ж логіку, що і для числових діапазонів
     return checkNumberRange(serviceAgeRange, userAge.toString());
   }
 
-  // функция для проверки соответствия ответов
+  // функція для перевірки відповідності відповідей
   function checkAnswerMatch(serviceAnswers, userAnswer, questionKey) {
-    // если в услуге не указан ответ (пустая строка), подходит любой ответ
+    // якщо в послузі не вказано відповідь (пустий рядок), підходить будь-яка відповідь
     if (!serviceAnswers || serviceAnswers === "") {
       return true;
     }
-    
-    // Специальная обработка для числовых диапазонов
+
+    // спеціальна обробка для числових діапазонів
     if (['1.3', '1.5', '2.4', '2.8', '2.9.1'].includes(questionKey)) {
       return checkNumberRange(serviceAnswers, userAnswer);
     }
 
-    // Специальная обработка для возрастных диапазонов (дата рождения)
+    // спеціальна обробка для вікових діапазонів (дата народження)
     if (['2.5', '3.2'].includes(questionKey)) {
       return checkAgeRange(serviceAnswers, userAnswer);
     }
-    
-    // Специальная обработка для дат
+
+    // спеціальна обробка для дат
     if (['1.4', '2.2.4', '2.3', '3.1.1'].includes(questionKey)) {
       return checkDateRange(serviceAnswers, userAnswer);
     }
@@ -3499,24 +3500,24 @@ document.addEventListener('DOMContentLoaded', function() {
       return checkDateRangeFor313(serviceAnswers, userAnswer);
     }
 
-    // Специальная обработка для множественного выбора
+    // спеціальна обробка для множинного вибору
     if (['1.7', '2.15', '2.16', '2.17', '2.18', '3.11', '3.12', '3.15'].includes(questionKey)) {
       return checkMultipleSelect(serviceAnswers, userAnswer);
     }
-    
-    // если это массив ответов, проверяем вхождение
+
+    // якщо це масив відповідей, перевіряємо входження
     if (Array.isArray(serviceAnswers)) {
       return serviceAnswers.includes(userAnswer);
     }
-    
-    // если это строка, проверяем точное совпадение
+
+    // якщо це строка, перевіряємо точне співпадіння
     return serviceAnswers === userAnswer;
   }
 
   var answers;
-  // функция фильтрации услуг
+  // функція фільтрації послуг
   function filterServices() {
-    // Получаем значения для множественного выбора
+    // отримуємо значення для множинного вибору
     const q17Values = q17 ? Array.from(q17.selectedOptions).map(o => o.value) : [];
     const q215Values = q215 ? Array.from(q215.selectedOptions).map(o => o.value) : [];
     const q216Values = q216 ? Array.from(q216.selectedOptions).map(o => o.value) : [];
@@ -3704,6 +3705,15 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('Filtered services:', filteredServices);
     }
 
+    let hiddenServicesEl = document.getElementById('services');
+    if (!hiddenServicesEl) {
+      hiddenServicesEl = document.createElement('input');
+      hiddenServicesEl.type = 'hidden';
+      hiddenServicesEl.id = 'services';
+      document.body.appendChild(hiddenServicesEl);
+    }
+    hiddenServicesEl.value = filteredServices.map(s => `"${consultant ? s.nameConsultant : s.name}"`).join(',');
+
     let filteredServiceNames;
     if (consultant) {
       filteredServiceNames = filteredServices.map(service => service.nameConsultant);
@@ -3711,7 +3721,7 @@ document.addEventListener('DOMContentLoaded', function() {
       filteredServiceNames = filteredServices.map(service => service.name);
     }
 
-    // показываем соответствующие DOM элементы
+    // показуємо відповідні DOM елементи
     services.forEach(service => {
       const h3Element = service.querySelector('h3.qwiz-service_h3');
       if (h3Element && filteredServiceNames.includes(h3Element.textContent.trim())) {
@@ -3720,7 +3730,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // добавляем обработчики событий для всех вопросов
+  // додаємо обробники подій для всіх запитань
   [whoAreYou, q11, q12, q13, q14, q15, q16, q161, q162, q17, q18, q21, q22, q221, q222, q223, q224, q23, q24, q25, q26, q27, q28, q29, q291, q292, q210, q211, q212, q2121, q213, q214, q215, q216, q217, q219, q31, q31_1, q31_2, q31_3, q32, q33, q34, q35, q36, q37, q38, q39, q310, q311, q312, q313, q314, q315, q41, q411, q42, q43, q44, q45, q46].forEach(element => {
     if (element) {
       element.addEventListener('change', filterServices);
@@ -3735,28 +3745,222 @@ document.addEventListener('DOMContentLoaded', function() {
   [send1, send2, send3, send4].forEach(button => {
     button.addEventListener('click', () => {
       console.log(`Button "send" clicked with answers:`, answers);
+
+      const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
+      if (filteredServices === '') {
+        if (answers.whoAreYou === "1") {
+          document.querySelector('.step1-5').style.display = 'flex';
+          setTimeout(() => {
+            document.querySelector('.step1-4').style.display = 'none';
+          }, 1);
+        } else if (answers.whoAreYou === "2") {
+          document.querySelector('.step2-8').style.display = 'flex';
+          setTimeout(() => {
+            document.querySelector('.step2-7').style.display = 'none';
+          }, 1);
+        } else if (answers.whoAreYou === "3") {
+          document.querySelector('.step3-7').style.display = 'flex';
+          setTimeout(() => {
+            document.querySelector('.step3-6').style.display = 'none';
+          }, 1);
+        } else if (answers.whoAreYou === "4") {
+          document.querySelector('.step4-5').style.display = 'flex';
+          setTimeout(() => {
+            document.querySelector('.step4-4').style.display = 'none';
+          }, 1);
+        }
+      }
+
+      // функція для перетворення масивів в рядки для CRM
+      function convertArraysToStrings(elementIds) {
+        elementIds.forEach(id => {
+          const element = document.getElementById(id);
+          if (element && element.selectedOptions) {
+            const values = Array.from(element.selectedOptions).map(o => `"${o.value}"`);
+
+            // створюємо або оновлюємо приховане поле для відправки в CRM
+            let hiddenField = document.getElementById(`${id}-hidden`);
+            if (!hiddenField) {
+              hiddenField = document.createElement('input');
+              hiddenField.type = 'hidden';
+              hiddenField.id = `${id}-hidden`;
+              document.body.appendChild(hiddenField);
+            }
+            hiddenField.value = values.join(',');
+          }
+        });
+      }
+
+      // перетворюємо масиви множинного вибору в рядки
+      convertArraysToStrings([
+        'AdditionalPayments', // 1.7
+        'documentsAvailability', // 2.15
+        'Actual-pension-issue', // 2.16
+        'Getting-surcarges', // 2.17
+        'rejecting-PFU', // 2.18
+        'CompensationMulti', // 3.11
+        'Treatment-after-injury', // 3.12
+        'illegalActivity' // 3.15
+      ]);
+
       document.cookie = `quizAnswers=${encodeURIComponent(JSON.stringify(answers))}; path=/; max-age=86400`;
       document.cookie = `whoAreYou=${encodeURIComponent(answers.whoAreYou)}; path=/; max-age=86400`;
+
       if (answers.whoAreYou === "1") {
         console.log('sending form with answers for "Військовий пенсіонер"');
+        document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name").value)}; path=/; max-age=86400`;
+        document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephone").value)}; path=/; max-age=86400`;
+        if (document.querySelector("#nameConsult1")) {
+          document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult1").value)}; path=/; max-age=86400`;
+        }
+
+        formConfig = {
+          fields: {
+            Name: "#name",
+            MobilePhone: "#Telephone",
+            "Consultant": "#nameConsult1",
+            "WhatTypeOfPensionDoYouReceive": "#TypePension",
+            "SelectServiceStructureAtRetirement": "#StructuraWork",
+            "SpecifyYourPensionAmount": "#PensionSize",
+            "WhenWasYourPensionAssigned": "#pensionDate",
+            "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
+            "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
+            "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
+            "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
+            "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
+            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
+            "Services": "#services",
+          },
+          contactFields: {
+            FullName: "#name",
+            Phone: "#Telephone",
+          },
+          customFields: { },
+          landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+          serviceUrl:
+            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+        };
       } else if (answers.whoAreYou === "2") {
         console.log('sending form with answers for "Цивільний пенсіонер"');
+        document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name--ivyl").value)}; path=/; max-age=86400`;
+        document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#TelephoneCivyl").value)}; path=/; max-age=86400`;
+        if (document.querySelector("#nameConsult2")) {
+          document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult2").value)}; path=/; max-age=86400`;
+        }
+
+        formConfig = {
+          fields: {
+            Name: "#name--ivyl",
+            MobilePhone: "#TelephoneCivyl",
+            "Consultant": "#nameConsult2",
+            "WhatIsYourCurrentPensionStatus": "#PensionStatusCyvil",
+            "WhatTypeOfPensionDoYouReceive": "#PensionTypeCyvil",
+            "WhoWasTheBreadwinnerAtTheTimeOfDeath": "#WhoBreadwinner",
+            "WhatWasTheCauseOfBreadwinnersDeath": "#CauseDeath",
+            "InWhichStructureDidTheBreadwinnerServe": "#StructuraWorkMilitary",
+            "WhenWasTheBreadwinnersPensionAssigned": "#pensionDateBreadwinner",
+            "WhenWasYourPensionLastAssigned": "#pensionDateLast",
+            "SpecifyYourPensionAmount": "#PensionSizeCyvil",
+            "SpecifyYourYearOfBirth": "#yearBirth1",
+            "WhatIsYourGender": "#Gender",
+            "DidYouSwitchFromOneTypeOfPensionToAnother": "#ChangePension",
+            "WhatIsYourTotalWorkExperience": "#workExperience",
+            "WhatIsYourProfessionalOrWorkExperience": "#professionalExperience",
+            "HowManyYearsOfCivilServiceExperienceDoYouHave": "#lengthPublicCyvil",
+            "WereYouOnSimplifiedTaxSystem": "#simplifiedSystem",
+            "DoYouHaveWorkExperienceAbroad": "#ExperienceAbroad",
+            "AreYouCurrentlyEmployed": "#workNowZaKordonom",
+            "DoYouHaveChernobylCertificate": "#ChornoblCertificate",
+            "WhatTypeOfCertificateDoYouHave": "#Type-Chornobl-sertificate",
+            "DoYouHaveCombatantStatus": "#StatusUBD",
+            "AreYouAnHeirOfAPensioner": "#heir",
+            "WhichOfTheFollowingDocumentsDoYouHave": "#documentsAvailability-hidden",
+            "WhatPensionIssueIsRelevantToYouOrForWhichYouAlreadyAppliedToPFU": "#Actual-pension-issue-hidden",
+            "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#Getting-surcarges-hidden",
+            "HaveYouReceivedRefusalsFromPFU": "#rejecting-PFU-hidden",
+            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#existence-judicial-decision",
+            "Services": "#services",
+          },
+          contactFields: {
+            FullName: "#name--ivyl",
+            Phone: "#TelephoneCivyl",
+          },
+          customFields: { },
+          landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+          serviceUrl:
+            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+        };
       } else if (answers.whoAreYou === "3") {
         console.log('sending form with answers for "Військовослужбовець"');
+        document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-mylitary").value)}; path=/; max-age=86400`;
+        document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephonemylitary").value)}; path=/; max-age=86400`;
+        if (document.querySelector("#nameConsult3")) {
+          document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult3").value)}; path=/; max-age=86400`;
+        }
+
+        formConfig = {
+          fields: {
+            Name: "#name-mylitary",
+            MobilePhone: "#Telephonemylitary",
+            "Consultant": "#nameConsult3",
+            "AreYouStillInServiceOrDischarged": "#Presence-in-military-service",
+            "SpecifyServiceStartDate": "#DateStartMilitary",
+            "DoYouHaveDifficultiesWithDischargeIfNeeded": "#Difficulties-with-dismissal",
+            "SpecifyServiceEndDate": "#DateFinishMilitary",
+            "SpecifyDateOfBirth": "#DateBirth",
+            "SelectFormOfService": "#Form-of-military-service",
+            "SelectServiceStructure": "#StructuraMilitary1",
+            "DoYouHaveUnusedVacationDays": "#unusedVacationDays",
+            "DoYouHaveCombatantStatus": "#Status-UBD",
+            "DidYouParticipateDirectlyInCombat": "#combat-participation",
+            "DoYouHaveDisabilityOrPercentageOfWorkCapacityLoss": "#Establishment-of-disability",
+            "WhatWasTheCauseOfDisabilityOrLossOfWorkCapacity": "#cause-of-disability",
+            "DidYouReceiveInjuryDuringServiceOrRelatedToService": "#presenceInjury",
+            "WereYouTreatedInHealthcareInstitutionsAfterInjury": "#stayeTreatment",
+            "WhatPaymentsDidYouReceiveFromEmployerUponDischarge": "#CompensationMulti-hidden",
+            "DidYouReceiveRegularPaymentsFromEmployerByCourtDecisionInLastSixMonths": "#Treatment-after-injury-hidden",
+            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#courtDecisionsPpayments",
+            "DoYouHaveVlkOrEkopfoMedicalCertificateThatYouWantToAppeal": "#certificate-VLK",
+            "DidYouHaveOffensesDuringService": "#illegalActivity-hidden",
+            "Services": "#services",
+          },
+          contactFields: {
+            FullName: "#name-mylitary",
+            Phone: "#Telephonemylitary",
+          },
+          customFields: { },
+          landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+          serviceUrl:
+            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+        };
       } else if (answers.whoAreYou === "4") {
         console.log('sending form with answers for "Родич військовослужбовця"');
+        document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-family").value)}; path=/; max-age=86400`;
+        document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephonefamily").value)}; path=/; max-age=86400`;
+        if (document.querySelector("#nameConsult4")) {
+          document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult4").value)}; path=/; max-age=86400`;
+        }
 
         formConfig = {
           fields: {
             Name: "#name-family",
             MobilePhone: "#Telephonefamily",
+            "Consultant": "#nameConsult4",
+            "WhoAreYouToTheServiceman": "#family-connection",
+            "DoYouHaveCourtEstablishedFactOfCohabitationWithTheDeceasedServicemanWithoutMarriageRegistration": "#FACT-of-cohabitation",
+            "WhatHappenedToTheServiceman": "#What-happened",
+            "InWhichStructureDidHeServe": "#StructuraMilitaryRelative",
+            "ServicemanIsMissingButThereAreReasonsToBelieveHeDied": "#Killed-or-missin",
+            "DoYouHaveDocumentaryProofOfServicemanDeath": "#documentary-proof-of-death",
+            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#payments-from-government-agencies",
+            "Services": "#services",
           },
           contactFields: {
             FullName: "#name-family",
             Phone: "#Telephonefamily",
           },
-          customFields: {},
-          landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
+          customFields: { },
+          landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
           serviceUrl:
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
@@ -3770,13 +3974,186 @@ document.addEventListener('DOMContentLoaded', function() {
         // emailData = { ...emailData, ...getUTMParams() };
         // sendEmail(emailData);
 
-        createObjectConsult(formConfig);
       }
+      createObjectConsult(formConfig);
     });
   });
 
+  const next1_2 = document.querySelector('#variant1 .step1-2 .next');
+  next1_2.addEventListener('click', () => {
+    const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
+    if (document.cookie.includes('whoAreYou=3') && document.cookie.includes('customerName=')) {
+      console.log('customerName cookie found, skipping form, proceeding to services, sending form with answers for "Військовий пенсіонер"');
+
+      document.querySelector('#name').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      document.querySelector('#Telephone').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      if (document.querySelector("#nameConsult1")) {
+        document.querySelector('#nameConsult1').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      }
+
+      if (filteredServices == '') {
+        console.log('No services found for the given answers, showing "No services" message');
+        document.querySelector('.step1-5').style.display = 'flex';
+        setTimeout(() => {
+          document.querySelector('.step1-2').style.display = 'none';
+          document.querySelector('.step1-3').style.display = 'none';
+        }, 1);
+      } else {
+        console.log('Services found for the given answers, proceeding to services');
+        document.querySelector('.step1-4').style.display = 'flex';
+        setTimeout(() => {
+          document.querySelector('.step1-2').style.display = 'none';
+          document.querySelector('.step1-3').style.display = 'none';
+        }, 1);
+      }
+      document.querySelector('.step1-4 .next').style.display = 'none';
+
+      formConfig = {
+        fields: {
+          Name: "#name",
+          MobilePhone: "#Telephone",
+          "Consultant": "#nameConsult1",
+          "WhatTypeOfPensionDoYouReceive": "#TypePension",
+          "SelectServiceStructureAtRetirement": "#StructuraWork",
+          "SpecifyYourPensionAmount": "#PensionSize",
+          "WhenWasYourPensionAssigned": "#pensionDate",
+          "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
+          "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
+          "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
+          "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
+          "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
+          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
+          "Services": "#services",
+        },
+        contactFields: {
+          FullName: "#name",
+          Phone: "#Telephone",
+        },
+        customFields: { },
+        landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      };
+
+      createObjectConsult(formConfig);
+    } 
+  });
+  const next1_4 = document.querySelector('#variant1 .step1-4 .next');
+  next1_4.addEventListener('click', (event) => {
+    if (document.cookie.includes('whoAreYou=1')) {
+      event.preventDefault();
+      console.log('customerName cookie NOT found, proceeding');
+      setTimeout(() => {
+        document.querySelector('.step1-4').style.display = 'none';
+        document.querySelector('.step1-5').style.display = 'none';
+        document.querySelector('.step1-6').style.display = 'flex';
+      }, 1);
+    }
+  });
+  const back1_4 = document.querySelector('#variant1 .step1-4 .back');
+  back1_4.addEventListener('click', (event) => {
+    if (document.cookie.includes('customerName=')) {
+      event.preventDefault();
+      document.querySelector('.step1-2').style.display = 'flex';
+      setTimeout(() => {
+        document.querySelector('.step1-3').style.display = 'none';
+        document.querySelector('.step1-4').style.display = 'none';
+      }, 1);
+    }
+  });
+  
+
+  const next3_4 = document.querySelector('#variant3 .step3-4 .next');
+  next3_4.addEventListener('click', () => {
+    const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
+    if (document.cookie.includes('whoAreYou=1') && document.cookie.includes('customerName=')) {
+      console.log('customerName cookie found, skipping form, proceeding to services, sending form with answers for "Військовослужбовець"');
+
+      document.querySelector('#name-military').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      document.querySelector('#Telephone-military').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      if (document.querySelector("#nameConsult3")) {
+        document.querySelector('#nameConsult3').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      }
+
+      if (filteredServices == '') {
+        document.querySelector('.step3-7').style.display = 'flex';
+        setTimeout(() => {
+          document.querySelector('.step3-4').style.display = 'none';
+          document.querySelector('.step3-5').style.display = 'none';
+        }, 1);
+      } else {
+        document.querySelector('.step3-6').style.display = 'flex';
+        setTimeout(() => {
+          document.querySelector('.step3-4').style.display = 'none';
+          document.querySelector('.step3-5').style.display = 'none';
+        }, 1);
+      }
+      document.querySelector('.step3-6 .next').style.display = 'none';
+
+      formConfig = {
+        fields: {
+          Name: "#name-mylitary",
+          MobilePhone: "#Telephonemylitary",
+          "Consultant": "#nameConsult3",
+          "AreYouStillInServiceOrDischarged": "#Presence-in-military-service",
+          "SpecifyServiceStartDate": "#DateStartMilitary",
+          "DoYouHaveDifficultiesWithDischargeIfNeeded": "#Difficulties-with-dismissal",
+          "SpecifyServiceEndDate": "#DateFinishMilitary",
+          "SpecifyDateOfBirth": "#DateBirth",
+          "SelectFormOfService": "#Form-of-military-service",
+          "SelectServiceStructure": "#StructuraMilitary1",
+          "DoYouHaveUnusedVacationDays": "#unusedVacationDays",
+          "DoYouHaveCombatantStatus": "#Status-UBD",
+          "DidYouParticipateDirectlyInCombat": "#combat-participation",
+          "DoYouHaveDisabilityOrPercentageOfWorkCapacityLoss": "#Establishment-of-disability",
+          "WhatWasTheCauseOfDisabilityOrLossOfWorkCapacity": "#cause-of-disability",
+          "DidYouReceiveInjuryDuringServiceOrRelatedToService": "#presenceInjury",
+          "WereYouTreatedInHealthcareInstitutionsAfterInjury": "#stayeTreatment",
+          "WhatPaymentsDidYouReceiveFromEmployerUponDischarge": "#CompensationMulti-hidden",
+          "DidYouReceiveRegularPaymentsFromEmployerByCourtDecisionInLastSixMonths": "#Treatment-after-injury-hidden",
+          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#courtDecisionsPpayments",
+          "DoYouHaveVlkOrEkopfoMedicalCertificateThatYouWantToAppeal": "#certificate-VLK",
+          "DidYouHaveOffensesDuringService": "#illegalActivity-hidden",
+          "Services": "#services",
+        },
+        contactFields: {
+          FullName: "#name-mylitary",
+          Phone: "#Telephonemylitary",
+        },
+        customFields: { },
+        landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      };
+
+      createObjectConsult(formConfig);
+    } 
+  });
+  const next3_6 = document.querySelector('#variant3 .step3-6 .next');
+  next3_6.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (document.cookie.includes('whoAreYou=3')) {
+      setTimeout(() => {
+        document.querySelector('.step3-6').style.display = 'none';
+        document.querySelector('.step3-7').style.display = 'none';
+        document.querySelector('.step3-8').style.display = 'flex';
+      }, 1);
+    }
+  });
+  const back3_6 = document.querySelector('#variant3 .step3-6 .back');
+  back3_6.addEventListener('click', (event) => {
+    if (document.cookie.includes('customerName=')) {
+      event.preventDefault();
+      document.querySelector('.step3-4').style.display = 'flex';
+      setTimeout(() => {
+        document.querySelector('.step3-5').style.display = 'none';
+        document.querySelector('.step3-6').style.display = 'none';
+      }, 1);
+    }
+  });
+
   function createObjectConsult(formConfig) {
-    landing.createObjectFromLanding(formConfig);
+    landing.createObjectFromLanding(formConfig); // MARK: ПОВЕРНУТИ
   }
   function initLanding(formConfig) {
     landing.initLanding(formConfig);
