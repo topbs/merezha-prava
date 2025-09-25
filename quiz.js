@@ -3746,6 +3746,22 @@ document.addEventListener('DOMContentLoaded', function() {
     button.addEventListener('click', () => {
       console.log(`Button "send" clicked with answers:`, answers);
 
+      if (answers.whoAreYou === "1") {
+        console.log('adding cookie for category 1');
+        document.cookie = `completedCategory1=true; path=/; max-age=86400`;
+      } else if (answers.whoAreYou === "2") {
+        console.log('adding cookie for category 2');
+        document.cookie = `completedCategory2=true; path=/; max-age=86400`;
+      } else if (answers.whoAreYou === "3") {
+        console.log('adding cookie for category 3');
+        document.cookie = `completedCategory3=true; path=/; max-age=86400`;
+      } else if (answers.whoAreYou === "4") {
+        console.log('adding cookie for category 4');
+        document.cookie = `completedCategory4=true; path=/; max-age=86400`;
+      } else {
+        console.log('no valid category selected, no cookie added');
+      }
+
       const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
       if (filteredServices === '') {
         if (answers.whoAreYou === "1") {
@@ -3982,7 +3998,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const next1_2 = document.querySelector('#variant1 .step1-2 .next');
   next1_2.addEventListener('click', () => {
     const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
-    if (document.cookie.includes('whoAreYou=3') && document.cookie.includes('customerName=')) {
+    if (document.cookie.includes('completedCategory3=true') && document.cookie.includes('customerName=')) {
       console.log('customerName cookie found, skipping form, proceeding to services, sending form with answers for "Військовий пенсіонер"');
 
       document.querySelector('#name').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
@@ -4066,11 +4082,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const next3_4 = document.querySelector('#variant3 .step3-4 .next');
   next3_4.addEventListener('click', () => {
     const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
-    if (document.cookie.includes('whoAreYou=1') && document.cookie.includes('customerName=')) {
+    if (document.cookie.includes('completedCategory1=true') && document.cookie.includes('customerName=')) {
       console.log('customerName cookie found, skipping form, proceeding to services, sending form with answers for "Військовослужбовець"');
+      document.cookie = `completedCategory3=true; path=/; max-age=86400`;
 
-      document.querySelector('#name-military').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      document.querySelector('#Telephone-military').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      document.querySelector('#name-mylitary').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      document.querySelector('#Telephonemylitary').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
       if (document.querySelector("#nameConsult3")) {
         document.querySelector('#nameConsult3').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
       }
