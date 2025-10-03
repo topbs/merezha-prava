@@ -703,7 +703,7 @@ document.addEventListener("DOMContentLoaded", function () {
           };
         }
       } catch (error) {
-        console.error('Ошибка при получении UTM параметров из localStorage:', error);
+        console.error('Помилка при отриманні UTM параметрів з localStorage:', error);
       }
     }
     

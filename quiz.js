@@ -4469,6 +4469,42 @@ document.addEventListener('DOMContentLoaded', function() {
     landing.initLanding(formConfig);
   }
 
+  function getUTMParams() {
+    // спочатку намагаємось отримати UTM параметри з URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentUTM = {
+      utm_source: urlParams.get('utm_source') || '',
+      utm_medium: urlParams.get('utm_medium') || '',
+      utm_campaign: urlParams.get('utm_campaign') || '',
+      utm_term: urlParams.get('utm_term') || '',
+      utm_content: urlParams.get('utm_content') || ''
+    };
+    
+    // якщо в URL нема UTM параметрів, намагаємось отримати їх з localStorage
+    const hasCurrentUTM = Object.values(currentUTM).some(value => value !== '');
+    
+    if (!hasCurrentUTM) {
+      try {
+        const savedData = localStorage.getItem('utmParams');
+        if (savedData) {
+          const utmData = JSON.parse(savedData);
+          const utmParams = utmData.params || utmData; // підтримка старого і нового формату
+          
+          return {
+            utm_source: utmParams.utm_source || '',
+            utm_medium: utmParams.utm_medium || '',
+            utm_campaign: utmParams.utm_campaign || '',
+            utm_term: utmParams.utm_term || '',
+            utm_content: utmParams.utm_content || ''
+          };
+        }
+      } catch (error) {
+        console.error('Помилка при отриманні UTM параметрів з localStorage:', error);
+      }
+    }
+    
+    return currentUTM;
+  }
   function sendEmail(emailData) {
     fetch("https://api.topb.dev/merezhaprava/mail", { 
       method: "POST",
