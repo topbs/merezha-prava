@@ -587,7 +587,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!emailData.utm_source) {
       emailData.utm_source = "сайт поп-ап";
     }
-    sendEmail(emailData);
+    sendEmail(emailData); 
 
     function createObject() {
       landing.createObjectFromLanding(popUpFormConfig);

@@ -4075,6 +4075,17 @@ document.addEventListener('DOMContentLoaded', function() {
           serviceUrl:
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
+
+        var emailData = {
+          name: document.querySelector('#name').value || '',
+          phone: document.querySelector('#Telephone').value || '',
+          url: window.location.href
+        }
+        emailData = { ...emailData, ...getUTMParams() };
+        if (!emailData.utm_source) {
+          emailData.utm_source = "квіз сайт";
+        }
+        sendEmail(emailData); 
       } else if (answers.whoAreYou === "2") {
         console.log('sending form with answers for "Цивільний пенсіонер"');
         document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name--ivyl").value)}; path=/; max-age=86400`;
@@ -4125,6 +4136,17 @@ document.addEventListener('DOMContentLoaded', function() {
           serviceUrl:
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
+
+        var emailData = {
+          name: document.querySelector('#name--ivyl').value || '',
+          phone: document.querySelector('#TelephoneCivyl').value || '',
+          url: window.location.href
+        }
+        emailData = { ...emailData, ...getUTMParams() };
+        if (!emailData.utm_source) {
+          emailData.utm_source = "квіз сайт";
+        }
+        sendEmail(emailData); 
       } else if (answers.whoAreYou === "3") {
         console.log('sending form with answers for "Військовослужбовець"');
         document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-mylitary").value)}; path=/; max-age=86400`;
@@ -4170,6 +4192,17 @@ document.addEventListener('DOMContentLoaded', function() {
           serviceUrl:
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
+
+        var emailData = {
+          name: document.querySelector('#name-mylitary').value || '',
+          phone: document.querySelector('#Telephonemylitary').value || '',
+          url: window.location.href
+        }
+        emailData = { ...emailData, ...getUTMParams() };
+        if (!emailData.utm_source) {
+          emailData.utm_source = "квіз сайт";
+        }
+        sendEmail(emailData); 
       } else if (answers.whoAreYou === "4") {
         console.log('sending form with answers for "Родич військовослужбовця"');
         document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-family").value)}; path=/; max-age=86400`;
@@ -4202,15 +4235,16 @@ document.addEventListener('DOMContentLoaded', function() {
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
 
-        // var emailData = {
-        //   name: form.find('.contact_name').val() || '',
-        //   phone: form.find('.contact_phone').val() || '',
-        //   city: form.find('.contact_address').val() || '',
-        //   url: window.location.href
-        // }
-        // emailData = { ...emailData, ...getUTMParams() };
-        // sendEmail(emailData);
-
+        var emailData = {
+          name: document.querySelector('#name-family').value || '',
+          phone: document.querySelector('#Telephonefamily').value || '',
+          url: window.location.href
+        }
+        emailData = { ...emailData, ...getUTMParams() };
+        if (!emailData.utm_source) {
+          emailData.utm_source = "квіз сайт";
+        }
+        sendEmail(emailData);
       }
       createObjectConsult(formConfig);
     });
@@ -4244,6 +4278,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1);
       }
       document.querySelector('.step1-4 .next').style.display = 'none';
+      document.querySelector('.step1-5 .next').style.display = 'none';
 
       formConfig = {
         fields: {
@@ -4273,6 +4308,17 @@ document.addEventListener('DOMContentLoaded', function() {
       };
 
       createObjectConsult(formConfig);
+
+      var emailData = {
+        name: document.querySelector('#name').value || '',
+        phone: document.querySelector('#Telephone').value || '',
+        url: window.location.href
+      }
+      emailData = { ...emailData, ...getUTMParams() };
+      if (!emailData.utm_source) {
+        emailData.utm_source = "квіз сайт";
+      }
+      sendEmail(emailData);
     } 
   });
   const next1_4 = document.querySelector('#variant1 .step1-4 .next');
@@ -4295,6 +4341,18 @@ document.addEventListener('DOMContentLoaded', function() {
       setTimeout(() => {
         document.querySelector('.step1-3').style.display = 'none';
         document.querySelector('.step1-4').style.display = 'none';
+      }, 1);
+    }
+  });
+  const back1_5 = document.querySelector('#variant1 .step1-5 .back');
+  back1_5.addEventListener('click', (event) => {
+    if (document.cookie.includes('customerName=')) {
+      event.preventDefault();
+      document.querySelector('.step1-2').style.display = 'flex';
+      setTimeout(() => {
+        document.querySelector('.step1-3').style.display = 'none';
+        document.querySelector('.step1-4').style.display = 'none';
+        document.querySelector('.step1-5').style.display = 'none';
       }, 1);
     }
   });
@@ -4327,6 +4385,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1);
       }
       document.querySelector('.step3-6 .next').style.display = 'none';
+      document.querySelector('.step3-7 .next').style.display = 'none';
 
       formConfig = {
         fields: {
@@ -4367,6 +4426,17 @@ document.addEventListener('DOMContentLoaded', function() {
       };
 
       createObjectConsult(formConfig);
+
+      var emailData = {
+        name: document.querySelector('#name-mylitary').value || '',
+        phone: document.querySelector('#Telephonemylitary').value || '',
+        url: window.location.href
+      }
+      emailData = { ...emailData, ...getUTMParams() };
+      if (!emailData.utm_source) {
+        emailData.utm_source = "квіз сайт";
+      }
+      sendEmail(emailData);
     } 
   });
   const next3_6 = document.querySelector('#variant3 .step3-6 .next');
@@ -4397,5 +4467,23 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   function initLanding(formConfig) {
     landing.initLanding(formConfig);
+  }
+
+  function sendEmail(emailData) {
+    fetch("https://api.topb.dev/merezhaprava/mail", { 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(emailData)
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log("Дані успішно надіслано");
+      } else {
+        console.log("Помилка під час надсилання даних");
+      }
+    })
+    .catch(error => console.error("Помилка мережі:", error));
   }
 });
