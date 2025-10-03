@@ -1859,7 +1859,7 @@ const quizData = [
     "2.2.3": "",
     "2.2.4": "",
     "2.3": "",
-    "2.4": ">=23610",
+    "2.4": "",
     "2.5": "",
     "2.6": "",
     "2.7": "",
@@ -1876,7 +1876,7 @@ const quizData = [
     "2.15": "Довідка про заробітну плату за 1986–1990 роки в зоні ліквідації",
     "2.16": "Щодо перерахунку пенсії",
     "2.17": "",
-    "2.18": ["Не отримував(ла) відмов ПФУ", "Не враховано довідку про з/п 1986-1990 років в зоні ліквідації"],
+    "2.18": ["Не отримував(ла) відмов ПФУ", "Не отримував(ла) письмову відмову", "Не враховано довідку про з/п 1986-1990 років в зоні ліквідації"],
     "2.19": "",
   },
 
@@ -3267,7 +3267,7 @@ const quizData = [
     "3.10": "",
     "3.11": "",
     "3.12": "",
-    "3.13": "Так",
+    "3.13": "",
     "3.14": "",
     "3.15": "",
     "3.16": "",
@@ -3294,7 +3294,7 @@ const quizData = [
     "3.10": "",
     "3.11": "",
     "3.12": "",
-    "3.13": "Так",
+    "3.13": "",
     "3.14": "",
     "3.15": "",
     "3.16": "",
@@ -3321,7 +3321,7 @@ const quizData = [
     "3.10": "",
     "3.11": "",
     "3.12": "",
-    "3.13": "Так",
+    "3.13": "",
     "3.14": "",
     "3.15": "",
     "3.16": "",
@@ -3431,6 +3431,14 @@ document.addEventListener('DOMContentLoaded', function() {
   consultant ? window.quiz.init('quiz js for consultant loaded') : window.quiz.init('quiz js for client loaded');
 
   const whoAreYou = document.getElementById('WhoAreYou');
+  // fill whoAreYou option based on query whoareyou
+  const urlParams = new URLSearchParams(window.location.search);
+  const whoareyouParam = urlParams.get('whoareyou');
+  if (whoareyouParam) {
+    whoAreYou.value = whoareyouParam;
+    const event = new Event('change');
+    whoAreYou.dispatchEvent(event);
+  }
 
   const q11 = document.getElementById('TypePension');
   const q12 = document.getElementById('StructuraWork');
