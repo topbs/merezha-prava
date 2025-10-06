@@ -4252,6 +4252,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const next1_2 = document.querySelector('#variant1 .step1-2 .next');
   next1_2.addEventListener('click', () => {
+    filterServices();
+
     const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
     if (document.cookie.includes('completedCategory3=true') && document.cookie.includes('customerName=')) {
       console.log('customerName cookie found, skipping form, proceeding to services, sending form with answers for "Військовий пенсіонер"');
@@ -4319,10 +4321,86 @@ document.addEventListener('DOMContentLoaded', function() {
         emailData.utm_source = "квіз сайт";
       }
       sendEmail(emailData);
-    } 
+    } else if (document.cookie.includes('completedCategory1=true') && document.cookie.includes('customerName=')) {
+      if (document.cookie.includes('completedCategory3=true')) {
+        document.querySelector('.step1-4 .next').style.display = 'none';
+        document.querySelector('.step1-5 .next').style.display = 'none';
+      }
+      if (filteredServices === '') {
+        console.log('No services found, will show step 1.5 after form submission');
+        setTimeout(() => {
+          document.querySelector('.step1-5').style.display = 'flex';
+          document.querySelector('.step1-2').style.display = 'none';
+          document.querySelector('.step1-3').style.display = 'none';
+        }, 1);
+      } else {
+        console.log('Services found, will show step 1.4 after form submission');
+        setTimeout(() => {
+          document.querySelector('.step1-4').style.display = 'flex';
+          document.querySelector('.step1-2').style.display = 'none';
+          document.querySelector('.step1-3').style.display = 'none';
+        }, 1);
+
+      }
+      document.getElementById('name').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      document.getElementById('Telephone').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+
+      formConfig = {
+      fields: {
+        Name: "#name",
+        MobilePhone: "#Telephone",
+        "Consultant": "#nameConsult1",
+        "WhatTypeOfPensionDoYouReceive": "#TypePension",
+        "SelectServiceStructureAtRetirement": "#StructuraWork",
+        "SpecifyYourPensionAmount": "#PensionSize",
+        "WhenWasYourPensionAssigned": "#pensionDate",
+        "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
+        "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
+        "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
+        "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
+        "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
+        "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
+        "Services": "#services",
+      },
+      contactFields: {
+        FullName: "#name",
+        Phone: "#Telephone",
+      },
+      customFields: { },
+      landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+      serviceUrl:
+        "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+    };
+
+    createObjectConsult(formConfig);
+
+    var emailData = {
+      name: document.querySelector('#name').value || '',
+      phone: document.querySelector('#Telephone').value || '',
+      url: window.location.href
+    }
+    emailData = { ...emailData, ...getUTMParams() };
+    if (!emailData.utm_source) {
+      emailData.utm_source = "квіз сайт";
+    }
+    sendEmail(emailData);
+
+    }
   });
   const next1_4 = document.querySelector('#variant1 .step1-4 .next');
   next1_4.addEventListener('click', (event) => {
+    if (document.cookie.includes('whoAreYou=1')) {
+      event.preventDefault();
+      console.log('customerName cookie NOT found, proceeding');
+      setTimeout(() => {
+        document.querySelector('.step1-4').style.display = 'none';
+        document.querySelector('.step1-5').style.display = 'none';
+        document.querySelector('.step1-6').style.display = 'flex';
+      }, 1);
+    }
+  });
+  const next1_5 = document.querySelector('#variant1 .step1-5 .next');
+  next1_5.addEventListener('click', (event) => {
     if (document.cookie.includes('whoAreYou=1')) {
       event.preventDefault();
       console.log('customerName cookie NOT found, proceeding');
