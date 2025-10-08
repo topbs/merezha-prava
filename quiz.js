@@ -3424,6 +3424,13 @@ window.Quiz = Quiz;
 document.addEventListener('DOMContentLoaded', function() {
   window.quiz = new Quiz();
 
+  let landingId = "dc9418f5-8988-4138-b841-8c822ab09010";
+  if (window.location.href.includes('consultant')) {
+    landingId = "117e9ed1-f8ab-4026-80ae-48d831619a6a";
+  } else {
+    landingId = "dc9418f5-8988-4138-b841-8c822ab09010";
+  }
+
   let consultant = false;
   if (window.location.pathname.includes('consultant')) {
     consultant = true;
@@ -4071,7 +4078,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Phone: "#Telephone",
           },
           customFields: { },
-          landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+          landingId: landingId,
           serviceUrl:
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
@@ -4132,7 +4139,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Phone: "#TelephoneCivyl",
           },
           customFields: { },
-          landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+          landingId: landingId,
           serviceUrl:
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
@@ -4188,7 +4195,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Phone: "#Telephonemylitary",
           },
           customFields: { },
-          landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+          landingId: landingId,
           serviceUrl:
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
@@ -4230,7 +4237,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Phone: "#Telephonefamily",
           },
           customFields: { },
-          landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+          landingId: landingId,
           serviceUrl:
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
@@ -4304,7 +4311,7 @@ document.addEventListener('DOMContentLoaded', function() {
           Phone: "#Telephone",
         },
         customFields: { },
-        landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+        landingId: landingId,
         serviceUrl:
           "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
       };
@@ -4367,7 +4374,7 @@ document.addEventListener('DOMContentLoaded', function() {
         Phone: "#Telephone",
       },
       customFields: { },
-      landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+      landingId: landingId,
       serviceUrl:
         "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
     };
@@ -4498,7 +4505,7 @@ document.addEventListener('DOMContentLoaded', function() {
           Phone: "#Telephonemylitary",
         },
         customFields: { },
-        landingId: "dc9418f5-8988-4138-b841-8c822ab09010",
+        landingId: landingId,
         serviceUrl:
           "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
       };
