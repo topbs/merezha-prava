@@ -4271,20 +4271,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#nameConsult1').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
       }
 
-      if (filteredServices == '') {
-        console.log('No services found for the given answers, showing "No services" message');
-        document.querySelector('.step1-5').style.display = 'flex';
+      if (window.location.href.includes('consultant')) {
+        document.querySelector('.step1-3').style.display = 'flex';
         setTimeout(() => {
           document.querySelector('.step1-2').style.display = 'none';
-          document.querySelector('.step1-3').style.display = 'none';
         }, 1);
       } else {
-        console.log('Services found for the given answers, proceeding to services');
-        document.querySelector('.step1-4').style.display = 'flex';
-        setTimeout(() => {
-          document.querySelector('.step1-2').style.display = 'none';
-          document.querySelector('.step1-3').style.display = 'none';
-        }, 1);
+        if (filteredServices == '') {
+          console.log('No services found for the given answers, showing "No services" message');
+          document.querySelector('.step1-5').style.display = 'flex';
+          setTimeout(() => {
+            document.querySelector('.step1-2').style.display = 'none';
+            document.querySelector('.step1-3').style.display = 'none';
+          }, 1);
+        } else {
+          console.log('Services found for the given answers, proceeding to services');
+          document.querySelector('.step1-4').style.display = 'flex';
+          setTimeout(() => {
+            document.querySelector('.step1-2').style.display = 'none';
+            document.querySelector('.step1-3').style.display = 'none';
+          }, 1);
+        }
       }
       document.querySelector('.step1-4 .next').style.display = 'none';
       document.querySelector('.step1-5 .next').style.display = 'none';
@@ -4456,18 +4463,26 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#nameConsult3').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
       }
 
-      if (filteredServices == '') {
-        document.querySelector('.step3-7').style.display = 'flex';
+
+      if (window.location.href.includes('consultant')) {
+        document.querySelector('.step3-5').style.display = 'flex';
         setTimeout(() => {
           document.querySelector('.step3-4').style.display = 'none';
-          document.querySelector('.step3-5').style.display = 'none';
         }, 1);
       } else {
-        document.querySelector('.step3-6').style.display = 'flex';
-        setTimeout(() => {
-          document.querySelector('.step3-4').style.display = 'none';
-          document.querySelector('.step3-5').style.display = 'none';
-        }, 1);
+        if (filteredServices == '') {
+          document.querySelector('.step3-7').style.display = 'flex';
+          setTimeout(() => {
+            document.querySelector('.step3-4').style.display = 'none';
+            document.querySelector('.step3-5').style.display = 'none';
+          }, 1);
+        } else {
+          document.querySelector('.step3-6').style.display = 'flex';
+          setTimeout(() => {
+            document.querySelector('.step3-4').style.display = 'none';
+            document.querySelector('.step3-5').style.display = 'none';
+          }, 1);
+        }
       }
       document.querySelector('.step3-6 .next').style.display = 'none';
       document.querySelector('.step3-7 .next').style.display = 'none';
