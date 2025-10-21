@@ -3358,10 +3358,10 @@ const quizData = [
   },
   {
     "name": "Виплата 15 млн грн рідним загиблого бійця",
-    "nameConsultant": "Отримання  ОГД у разі смерті військовослужбовця",
+    "nameConsultant": "Отримання ОГД у разі смерті військовослужбовця",
     "slug": "viplata-15-mln-grn-ridnim-zagiblogo-biycya",
     "whoAreYou": "4",
-    "4.1": ["Батько/мати", "Дитина", "Утриманець (за відсутністю зазначених в цьому переліку інших родичів)", "Рідні брат/сестра", "Онук/онучка (якщо на момент смерті військовослужбовця батьки вже померли)"],
+    "4.1": ["Батько/мати", "Законні дружина/чоловік", "Дитина", "Утриманець (за відсутністю зазначених в цьому переліку інших родичів)", "Рідні брат/сестра", "Онук/онучка (якщо на момент смерті військовослужбовця батьки вже померли)"],
     "4.2": ["Загинув під час несення служби (не в умовах бойових дій)", "Загинув на фронті під час бойових дій"],
     "4.3": ["ЗСУ", "ГУР", "ДКВС", "ДПтС", "ДСНС", "ДССТ", "ДФС", "Космічна агенція", "Нацгвірдія", "СЗРУ", "СБУ", "Служба держспецзв'язку", "ССО", "УДО", "ДПСУ", "Національна поліція", "Міліція"],
     "4.4": "",
@@ -4292,120 +4292,113 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.step1-3').style.display = 'none';
           }, 1);
         }
-        document.querySelector('.step1-4 .next').style.display = 'none';
-        document.querySelector('.step1-5 .next').style.display = 'none';
-
-        formConfig = {
-          fields: {
-            Name: "#name",
-            MobilePhone: "#Telephone",
-            "Consultant": "#nameConsult1",
-            "WhatTypeOfPensionDoYouReceive": "#TypePension",
-            "SelectServiceStructureAtRetirement": "#StructuraWork",
-            "SpecifyYourPensionAmount": "#PensionSize",
-            "WhenWasYourPensionAssigned": "#pensionDate",
-            "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
-            "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
-            "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
-            "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
-            "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
-            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
-            "Services": "#services",
-          },
-          contactFields: {
-            FullName: "#name",
-            Phone: "#Telephone",
-          },
-          customFields: { },
-          landingId: landingId,
-          serviceUrl:
-            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-        };
-
-        createObjectConsult(formConfig);
-
-        var emailData = {
-          name: document.querySelector('#name').value || '',
-          phone: document.querySelector('#Telephone').value || '',
-          url: window.location.href
-        }
-        emailData = { ...emailData, ...getUTMParams() };
-        if (!emailData.utm_source) {
-          emailData.utm_source = "квіз сайт";
-        }
-        sendEmail(emailData);
       }
+      document.querySelector('.step1-4 .next').style.display = 'none';
+      document.querySelector('.step1-5 .next').style.display = 'none';
 
+      formConfig = {
+        fields: {
+          Name: "#name",
+          MobilePhone: "#Telephone",
+          "Consultant": "#nameConsult1",
+          "WhatTypeOfPensionDoYouReceive": "#TypePension",
+          "SelectServiceStructureAtRetirement": "#StructuraWork",
+          "SpecifyYourPensionAmount": "#PensionSize",
+          "WhenWasYourPensionAssigned": "#pensionDate",
+          "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
+          "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
+          "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
+          "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
+          "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
+          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
+          "Services": "#services",
+        },
+        contactFields: {
+          FullName: "#name",
+          Phone: "#Telephone",
+        },
+        customFields: { },
+        landingId: landingId,
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      };
+
+      createObjectConsult(formConfig);
+
+      var emailData = {
+        name: document.querySelector('#name').value || '',
+        phone: document.querySelector('#Telephone').value || '',
+        url: window.location.href
+      }
+      emailData = { ...emailData, ...getUTMParams() };
+      if (!emailData.utm_source) {
+        emailData.utm_source = "квіз сайт";
+      }
+      sendEmail(emailData);
     } else if (document.cookie.includes('completedCategory1=true') && document.cookie.includes('customerName=')) {
       if (document.cookie.includes('completedCategory3=true')) {
         document.querySelector('.step1-4 .next').style.display = 'none';
         document.querySelector('.step1-5 .next').style.display = 'none';
       }
-      if (window.location.href.includes('consultant')) {
-        document.querySelector('.step1-3').style.display = 'flex';
+      if (filteredServices === '') {
+        console.log('No services found, will show step 1.5 after form submission');
         setTimeout(() => {
+          document.querySelector('.step1-5').style.display = 'flex';
           document.querySelector('.step1-2').style.display = 'none';
+          document.querySelector('.step1-3').style.display = 'none';
         }, 1);
       } else {
-        if (filteredServices === '') {
-          console.log('No services found, will show step 1.5 after form submission');
-          setTimeout(() => {
-            document.querySelector('.step1-5').style.display = 'flex';
-            document.querySelector('.step1-2').style.display = 'none';
-            document.querySelector('.step1-3').style.display = 'none';
-          }, 1);
-        } else {
-          console.log('Services found, will show step 1.4 after form submission');
-          setTimeout(() => {
-            document.querySelector('.step1-4').style.display = 'flex';
-            document.querySelector('.step1-2').style.display = 'none';
-            document.querySelector('.step1-3').style.display = 'none';
-          }, 1);
-  
-        }
-        document.getElementById('name').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-        document.getElementById('Telephone').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-  
-        formConfig = {
-          fields: {
-            Name: "#name",
-            MobilePhone: "#Telephone",
-            "Consultant": "#nameConsult1",
-            "WhatTypeOfPensionDoYouReceive": "#TypePension",
-            "SelectServiceStructureAtRetirement": "#StructuraWork",
-            "SpecifyYourPensionAmount": "#PensionSize",
-            "WhenWasYourPensionAssigned": "#pensionDate",
-            "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
-            "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
-            "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
-            "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
-            "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
-            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
-            "Services": "#services",
-          },
-          contactFields: {
-            FullName: "#name",
-            Phone: "#Telephone",
-          },
-          customFields: { },
-          landingId: landingId,
-          serviceUrl:
-            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-        };
-  
-        createObjectConsult(formConfig);
-  
-        var emailData = {
-          name: document.querySelector('#name').value || '',
-          phone: document.querySelector('#Telephone').value || '',
-          url: window.location.href
-        }
-        emailData = { ...emailData, ...getUTMParams() };
-        if (!emailData.utm_source) {
-          emailData.utm_source = "квіз сайт";
-        }
-        sendEmail(emailData);
+        console.log('Services found, will show step 1.4 after form submission');
+        setTimeout(() => {
+          document.querySelector('.step1-4').style.display = 'flex';
+          document.querySelector('.step1-2').style.display = 'none';
+          document.querySelector('.step1-3').style.display = 'none';
+        }, 1);
+
       }
+      document.getElementById('name').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      document.getElementById('Telephone').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+
+      formConfig = {
+      fields: {
+        Name: "#name",
+        MobilePhone: "#Telephone",
+        "Consultant": "#nameConsult1",
+        "WhatTypeOfPensionDoYouReceive": "#TypePension",
+        "SelectServiceStructureAtRetirement": "#StructuraWork",
+        "SpecifyYourPensionAmount": "#PensionSize",
+        "WhenWasYourPensionAssigned": "#pensionDate",
+        "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
+        "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
+        "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
+        "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
+        "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
+        "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
+        "Services": "#services",
+      },
+      contactFields: {
+        FullName: "#name",
+        Phone: "#Telephone",
+      },
+      customFields: { },
+      landingId: landingId,
+      serviceUrl:
+        "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+    };
+
+    createObjectConsult(formConfig);
+
+    var emailData = {
+      name: document.querySelector('#name').value || '',
+      phone: document.querySelector('#Telephone').value || '',
+      url: window.location.href
+    }
+    emailData = { ...emailData, ...getUTMParams() };
+    if (!emailData.utm_source) {
+      emailData.utm_source = "квіз сайт";
+    }
+    sendEmail(emailData);
+
     }
   });
   const next1_4 = document.querySelector('#variant1 .step1-4 .next');
@@ -4490,60 +4483,60 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.step3-5').style.display = 'none';
           }, 1);
         }
-        document.querySelector('.step3-6 .next').style.display = 'none';
-        document.querySelector('.step3-7 .next').style.display = 'none';
-  
-        formConfig = {
-          fields: {
-            Name: "#name-mylitary",
-            MobilePhone: "#Telephonemylitary",
-            "Consultant": "#nameConsult3",
-            "AreYouStillInServiceOrDischarged": "#Presence-in-military-service",
-            "SpecifyServiceStartDate": "#DateStartMilitary",
-            "DoYouHaveDifficultiesWithDischargeIfNeeded": "#Difficulties-with-dismissal",
-            "SpecifyServiceEndDate": "#DateFinishMilitary",
-            "SpecifyDateOfBirth": "#DateBirth",
-            "SelectFormOfService": "#Form-of-military-service",
-            "SelectServiceStructure": "#StructuraMilitary1",
-            "DidYouServeAtNightOrDuringQuarantine": "#night-shift",
-            "DoYouHaveServiceExperienceInTheStateFiscalService": "#experience-in-the-tax-police",
-            "DoYouHaveUnusedVacationDays": "#unusedVacationDays",
-            "DoYouHaveCombatantStatus": "#Status-UBD",
-            "DidYouParticipateDirectlyInCombat": "#combat-participation",
-            "DoYouHaveDisabilityOrPercentageOfWorkCapacityLoss": "#Establishment-of-disability",
-            "WhatWasTheCauseOfDisabilityOrLossOfWorkCapacity": "#cause-of-disability",
-            "DidYouReceiveInjuryDuringServiceOrRelatedToService": "#presenceInjury",
-            "WereYouTreatedInHealthcareInstitutionsAfterInjury": "#stayeTreatment",
-            "WhatPaymentsDidYouReceiveFromEmployerUponDischarge": "#CompensationMulti-hidden",
-            "DidYouReceiveRegularPaymentsFromEmployerByCourtDecisionInLastSixMonths": "#Treatment-after-injury-hidden",
-            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#courtDecisionsPpayments",
-            "DoYouHaveVlkOrEkopfoMedicalCertificateThatYouWantToAppeal": "#certificate-VLK",
-            "DidYouHaveOffensesDuringService": "#illegalActivity-hidden",
-            "Services": "#services",
-          },
-          contactFields: {
-            FullName: "#name-mylitary",
-            Phone: "#Telephonemylitary",
-          },
-          customFields: { },
-          landingId: landingId,
-          serviceUrl:
-            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-        };
-  
-        createObjectConsult(formConfig);
-  
-        var emailData = {
-          name: document.querySelector('#name-mylitary').value || '',
-          phone: document.querySelector('#Telephonemylitary').value || '',
-          url: window.location.href
-        }
-        emailData = { ...emailData, ...getUTMParams() };
-        if (!emailData.utm_source) {
-          emailData.utm_source = "квіз сайт";
-        }
-        sendEmail(emailData);
       }
+      document.querySelector('.step3-6 .next').style.display = 'none';
+      document.querySelector('.step3-7 .next').style.display = 'none';
+
+      formConfig = {
+        fields: {
+          Name: "#name-mylitary",
+          MobilePhone: "#Telephonemylitary",
+          "Consultant": "#nameConsult3",
+          "AreYouStillInServiceOrDischarged": "#Presence-in-military-service",
+          "SpecifyServiceStartDate": "#DateStartMilitary",
+          "DoYouHaveDifficultiesWithDischargeIfNeeded": "#Difficulties-with-dismissal",
+          "SpecifyServiceEndDate": "#DateFinishMilitary",
+          "SpecifyDateOfBirth": "#DateBirth",
+          "SelectFormOfService": "#Form-of-military-service",
+          "SelectServiceStructure": "#StructuraMilitary1",
+          "DidYouServeAtNightOrDuringQuarantine": "#night-shift",
+          "DoYouHaveServiceExperienceInTheStateFiscalService": "#experience-in-the-tax-police",
+          "DoYouHaveUnusedVacationDays": "#unusedVacationDays",
+          "DoYouHaveCombatantStatus": "#Status-UBD",
+          "DidYouParticipateDirectlyInCombat": "#combat-participation",
+          "DoYouHaveDisabilityOrPercentageOfWorkCapacityLoss": "#Establishment-of-disability",
+          "WhatWasTheCauseOfDisabilityOrLossOfWorkCapacity": "#cause-of-disability",
+          "DidYouReceiveInjuryDuringServiceOrRelatedToService": "#presenceInjury",
+          "WereYouTreatedInHealthcareInstitutionsAfterInjury": "#stayeTreatment",
+          "WhatPaymentsDidYouReceiveFromEmployerUponDischarge": "#CompensationMulti-hidden",
+          "DidYouReceiveRegularPaymentsFromEmployerByCourtDecisionInLastSixMonths": "#Treatment-after-injury-hidden",
+          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#courtDecisionsPpayments",
+          "DoYouHaveVlkOrEkopfoMedicalCertificateThatYouWantToAppeal": "#certificate-VLK",
+          "DidYouHaveOffensesDuringService": "#illegalActivity-hidden",
+          "Services": "#services",
+        },
+        contactFields: {
+          FullName: "#name-mylitary",
+          Phone: "#Telephonemylitary",
+        },
+        customFields: { },
+        landingId: landingId,
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      };
+
+      createObjectConsult(formConfig);
+
+      var emailData = {
+        name: document.querySelector('#name-mylitary').value || '',
+        phone: document.querySelector('#Telephonemylitary').value || '',
+        url: window.location.href
+      }
+      emailData = { ...emailData, ...getUTMParams() };
+      if (!emailData.utm_source) {
+        emailData.utm_source = "квіз сайт";
+      }
+      sendEmail(emailData);
     } 
   });
   const next3_6 = document.querySelector('#variant3 .step3-6 .next');
