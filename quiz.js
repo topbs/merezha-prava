@@ -4623,3 +4623,910 @@ document.addEventListener('DOMContentLoaded', function() {
     .catch(error => console.error("Помилка мережі:", error));
   }
 });
+
+// ============================================================================
+// MARK: - UI Components & Form Validation
+// ============================================================================
+
+/**
+ * Модуль ініціалізації Choices.js для мультивибору
+ */
+const MultiSelectModule = (() => {
+  const MULTI_SELECT_IDS = [
+    "CompensationMulti", 
+    "Treatment-after-injury", 
+    "illegalActivity", 
+    "AdditionalPayments", 
+    "documentsAvailability", 
+    "Actual-pension-issue", 
+    "Getting-surcarges", 
+    "rejecting-PFU"
+  ];
+
+  const init = () => {
+    MULTI_SELECT_IDS.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        new Choices(element, {
+          removeItemButton: true,
+          placeholder: true,
+          placeholderValue: 'Оберіть варіанти…',
+          searchEnabled: false,
+          shouldSort: false
+        });
+      }
+    });
+  };
+
+  return { init };
+})();
+
+/**
+ * Модуль валідації телефонів
+ */
+const PhoneValidationModule = (() => {
+  const PHONE_INPUT_IDS = ["Telephone", "TelephoneCivyl", "Telephonemylitary", "Telephonefamily"];
+  const PHONE_PATTERN = /^\+380\d{9}$/;
+
+  const setupPhoneInput = (input) => {
+    if (!input) return;
+
+    const errorMessage = input.parentElement.querySelector(".error-tel");
+
+    input.setAttribute("placeholder", "+380XXXXXXXXX");
+    input.setAttribute("maxlength", "13");
+
+    // Додаємо +380 при фокусі
+    input.addEventListener("focus", () => {
+      if (!input.value.startsWith("+380")) {
+        input.value = "+380";
+      }
+    });
+
+    // Забороняємо видалення +380
+    input.addEventListener("keydown", (e) => {
+      if ((e.key === "Backspace" || e.key === "Delete") && input.selectionStart <= 4) {
+        e.preventDefault();
+      }
+    });
+
+    // Дозволяємо лише цифри після +380
+    input.addEventListener("input", () => {
+      if (!input.value.startsWith("+380")) {
+        input.value = "+380";
+      }
+
+      const digits = input.value.slice(4).replace(/\D/g, "");
+      input.value = "+380" + digits.slice(0, 9);
+
+      input.classList.remove("invalid");
+      if (errorMessage) errorMessage.style.display = "none";
+    });
+
+    // Перевірка на blur
+    input.addEventListener("blur", () => {
+      const isValid = PHONE_PATTERN.test(input.value);
+      if (!isValid) {
+        input.classList.add("invalid");
+        if (errorMessage) errorMessage.style.display = "block";
+      } else {
+        input.classList.remove("invalid");
+        if (errorMessage) errorMessage.style.display = "none";
+      }
+    });
+  };
+
+  const init = () => {
+    PHONE_INPUT_IDS.forEach(id => setupPhoneInput(document.getElementById(id)));
+  };
+
+  return { init };
+})();
+
+/**
+ * Модуль валідації імен
+ */
+const NameValidationModule = (() => {
+  const NAME_FIELD_IDS = ["name-family", "name-mylitary", "name-сivyl", "name"];
+  const NAME_PATTERN = /^[a-zA-Zа-яА-ЯіІїЇєЄґҐ'\- ]{2,}$/;
+
+  const setupNameField = (field) => {
+    if (!field) return;
+
+    const error = field.parentElement.querySelector(".error-name");
+
+    field.addEventListener("input", () => {
+      const value = field.value.trim();
+      const isValid = NAME_PATTERN.test(value);
+
+      if (!isValid) {
+        field.classList.add("invalid");
+        if (error) error.style.display = "block";
+      } else {
+        field.classList.remove("invalid");
+        if (error) error.style.display = "none";
+      }
+    });
+  };
+
+  const init = () => {
+    NAME_FIELD_IDS.forEach(id => setupNameField(document.getElementById(id)));
+  };
+
+  return { init };
+})();
+
+/**
+ * Модуль валідації розміру пенсії
+ */
+const PensionSizeValidationModule = (() => {
+  const formatWithSpaces = (value) => {
+    const digitsOnly = value.replace(/[^\d]/g, "").slice(0, 6);
+    return digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  };
+
+  const init = () => {
+    const inputs = [
+      document.getElementById("PensionSize"),
+      document.getElementById("PensionSizeCyvil")
+    ].filter(Boolean);
+
+    inputs.forEach(input => {
+      input.addEventListener("input", function () {
+        const raw = this.value.replace(/\s/g, "");
+        this.value = formatWithSpaces(raw);
+      });
+    });
+  };
+
+  return { init };
+})();
+
+/**
+ * Модуль валідації року народження
+ */
+const BirthYearValidationModule = (() => {
+  const YEAR_FIELDS = ["yearBirth", "yearBirth1"];
+  const MIN_YEAR = 1930;
+  const MAX_YEAR = 2020;
+
+  const setupYearField = (input) => {
+    if (!input) return;
+
+    input.addEventListener("input", function () {
+      if (this.value.length > 4) {
+        this.value = this.value.slice(0, 4);
+      }
+    });
+
+    input.addEventListener("blur", function () {
+      const year = parseInt(this.value, 10);
+      if (this.value && (year < MIN_YEAR || year > MAX_YEAR)) {
+        this.classList.add("invalid");
+        alert(`Рік народження має бути між ${MIN_YEAR} та ${MAX_YEAR}`);
+      } else {
+        this.classList.remove("invalid");
+      }
+    });
+  };
+
+  const init = () => {
+    YEAR_FIELDS.forEach(id => setupYearField(document.getElementById(id)));
+  };
+
+  return { init };
+})();
+
+/**
+ * Модуль валідації вислуги років
+ */
+const ServiceYearsValidationModule = (() => {
+  const SERVICE_FIELDS = ["YearJob", "workExperience", "lengthPublicCyvil"];
+  const MIN_YEARS = 1;
+  const MAX_YEARS = 50;
+
+  const setupServiceField = (input) => {
+    if (!input) return;
+
+    input.addEventListener("input", function () {
+      this.value = this.value.replace(/[^\d]/g, "");
+
+      if (this.value.length > 2) {
+        this.value = this.value.slice(0, 2);
+      }
+
+      const num = parseInt(this.value);
+      if (!isNaN(num)) {
+        if (num < MIN_YEARS) this.value = MIN_YEARS;
+        if (num > MAX_YEARS) this.value = MAX_YEARS;
+      }
+    });
+  };
+
+  const init = () => {
+    SERVICE_FIELDS.forEach(id => setupServiceField(document.getElementById(id)));
+  };
+
+  return { init };
+})();
+
+/**
+ * Модуль ініціалізації Pikaday для вибору дат
+ */
+const DatePickerModule = (() => {
+  const DATE_FIELD_IDS = [
+    "pensionDate",
+    "pensionDateBreadwinner",
+    "pensionDateLast",
+    "DateStartMilitary",
+    "DateFinishMilitary",
+    "DateBirth"
+  ];
+
+  const PIKADAY_CONFIG = {
+    format: 'DD.MM.YYYY',
+    minDate: new Date(1930, 0, 1),
+    maxDate: new Date(),
+    yearRange: [1930, new Date().getFullYear()],
+    i18n: {
+      previousMonth: 'Попередній',
+      nextMonth: 'Наступний',
+      months: [
+        'Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+        'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'
+      ],
+      weekdays: [
+        'Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота'
+      ],
+      weekdaysShort: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
+    },
+    toString(date, format) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    },
+    parse(dateString, format) {
+      const parts = dateString.split('.');
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parseInt(parts[2], 10);
+      return new Date(year, month, day);
+    }
+  };
+
+  const init = () => {
+    DATE_FIELD_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.value = "";
+        el.setAttribute("autocomplete", "off");
+        el.setAttribute("type", "text");
+        new Pikaday({ ...PIKADAY_CONFIG, field: el });
+      }
+    });
+  };
+
+  return { init };
+})();
+
+// ============================================================================
+// MARK: - Quiz Navigation & Logic
+// ============================================================================
+
+/**
+ * Модуль навігації по квізу
+ */
+const QuizNavigationModule = (() => {
+  const VARIANT_BLOCKS = {
+    "1": null,
+    "2": null,
+    "3": null,
+    "4": null,
+  };
+
+  let currentStep = null;
+  let startBlock = null;
+  let selectWhoAreYou = null;
+  let startButton = null;
+
+  const hideStep = (step) => {
+    if (step) step.style.display = "none";
+  };
+
+  const showStep = (step) => {
+    if (step) step.style.display = "flex";
+  };
+
+  const getNextStep = (current) => {
+    const all = Array.from(current.parentElement.querySelectorAll(".qwiz-step"));
+    const index = all.indexOf(current);
+    return all[index + 1] || null;
+  };
+
+  const getPrevStep = (current) => {
+    const all = Array.from(current.parentElement.querySelectorAll(".qwiz-step"));
+    const index = all.indexOf(current);
+    return all[index - 1] || null;
+  };
+
+  const validateStep = (step) => {
+    const requiredInputs = step.querySelectorAll("[required]:not([type=hidden])");
+    let allValid = true;
+
+    requiredInputs.forEach(input => {
+      const wrapper = input.closest(".question-block, .question-variant_block") || input;
+      const style = window.getComputedStyle(wrapper);
+
+      if (style.display === "none") return;
+
+      const value = input.value?.trim();
+
+      if (!value) {
+        input.classList.add("invalid");
+        allValid = false;
+      } else {
+        input.classList.remove("invalid");
+      }
+    });
+
+    const errorMsg = step.querySelector(".global-error-message");
+    if (!allValid) {
+      if (errorMsg) errorMsg.style.display = "block";
+    } else {
+      if (errorMsg) errorMsg.style.display = "none";
+    }
+
+    return allValid;
+  };
+
+  const handleStartClick = () => {
+    const selectedValue = selectWhoAreYou?.value;
+    if (!selectedValue || !VARIANT_BLOCKS[selectedValue]) return;
+
+    Object.values(VARIANT_BLOCKS).forEach(block => {
+      if (block) block.style.display = "none";
+    });
+
+    const activeBlock = VARIANT_BLOCKS[selectedValue];
+    activeBlock.style.display = "flex";
+
+    currentStep = activeBlock.querySelector(".qwiz-step");
+    showStep(currentStep);
+
+    if (startBlock) {
+      startBlock.style.transition = "opacity 0.4s ease";
+      startBlock.style.opacity = "0";
+      setTimeout(() => startBlock.style.display = "none", 400);
+    }
+  };
+
+  const handleNextClick = () => {
+    if (!currentStep || !validateStep(currentStep)) return;
+
+    const next = getNextStep(currentStep);
+    if (next) {
+      hideStep(currentStep);
+      showStep(next);
+      currentStep = next;
+    }
+  };
+
+  const handleBackClick = () => {
+    const stepsInBlock = Array.from(currentStep.parentElement.querySelectorAll(".qwiz-step"));
+    const isFirstStep = currentStep === stepsInBlock[0];
+
+    if (isFirstStep) {
+      // Повертаємось до StartBlock
+      Object.values(VARIANT_BLOCKS).forEach(block => {
+        if (block) block.style.display = "none";
+      });
+
+      if (startBlock) {
+        startBlock.style.display = "flex";
+        startBlock.style.opacity = "0";
+        setTimeout(() => startBlock.style.opacity = "1", 10);
+      }
+
+      hideStep(currentStep);
+      currentStep = null;
+
+      if (selectWhoAreYou) {
+        selectWhoAreYou.value = "";
+      }
+    } else {
+      const prev = getPrevStep(currentStep);
+      if (prev) {
+        hideStep(currentStep);
+        showStep(prev);
+        currentStep = prev;
+      }
+    }
+  };
+
+  const handleFormSubmit = () => {
+    const quizForm = document.querySelector("#wf-form-WhoAreYou");
+    if (!quizForm) return;
+
+    quizForm.addEventListener("submit", function () {
+      const parent = quizForm.closest(".variant1, .variant2, .variant3, .variant4");
+      if (!parent) return;
+
+      const step3 = parent.querySelector(".step1-3");
+      const step4 = parent.querySelector(".step1-4");
+
+      if (step3 && step4) {
+        hideStep(step3);
+        showStep(step4);
+        currentStep = step4;
+      }
+    });
+  };
+
+  const init = () => {
+    startBlock = document.querySelector(".startblock");
+    selectWhoAreYou = document.querySelector("#WhoAreYou");
+    startButton = document.querySelector("#startTest");
+
+    VARIANT_BLOCKS["1"] = document.getElementById("variant1");
+    VARIANT_BLOCKS["2"] = document.getElementById("variant2");
+    VARIANT_BLOCKS["3"] = document.getElementById("variant3");
+    VARIANT_BLOCKS["4"] = document.getElementById("variant4");
+
+    if (startButton) {
+      startButton.addEventListener("click", handleStartClick);
+    }
+
+    document.querySelectorAll(".button_qwiz.next").forEach(button => {
+      button.addEventListener("click", handleNextClick);
+    });
+
+    document.querySelectorAll(".button_qwiz.back").forEach(button => {
+      button.addEventListener("click", handleBackClick);
+    });
+
+    handleFormSubmit();
+  };
+
+  return { init };
+})();
+
+// ============================================================================
+// MARK: - Conditional Logic for Questions
+// ============================================================================
+
+/**
+ * Модуль умовної логіки для питань
+ */
+const ConditionalLogicModule = (() => {
+  
+  // Чорнобильське посвідчення (питання 6)
+  const setupChernobylQuestion6 = () => {
+    const select = document.querySelector("#AvailabilityChernobylCertificate");
+    const extraBlock = select?.closest(".question-block")?.querySelector(".question-variant_block");
+
+    if (select && extraBlock) {
+      select.addEventListener("change", () => {
+        extraBlock.style.display = select.value === "Так" ? "flex" : "none";
+      });
+    }
+  };
+
+  // Професійний досвід (питання 9)
+  const setupProfessionQuestion9 = () => {
+    const professionSelect = document.querySelector("#professionalExperience");
+    const professionBlock = professionSelect?.closest(".question-block")?.querySelector(".question-variant_block");
+    const simplifiedBlock = document.querySelector("#simplifiedSystem")?.closest(".question-block, .question-variant_block");
+
+    if (professionSelect) {
+      professionSelect.addEventListener("change", () => {
+        const val = professionSelect.value.trim();
+
+        if (val === "Державна служба") {
+          if (professionBlock) professionBlock.style.display = "flex";
+        } else {
+          if (professionBlock) professionBlock.style.display = "none";
+        }
+
+        if (val === "Приватний сектор / підприємець") {
+          if (simplifiedBlock) simplifiedBlock.style.display = "flex";
+        } else {
+          if (simplifiedBlock) simplifiedBlock.style.display = "none";
+        }
+      });
+    }
+  };
+
+  // Наявність посвідчення (питання 12)
+  const setupChernobylQuestion12 = () => {
+    const select = document.querySelector("#ChornoblCertificate");
+    const extraBlock = select?.closest(".question-block")?.querySelector(".question-variant_block");
+
+    if (select && extraBlock) {
+      select.addEventListener("change", () => {
+        extraBlock.style.display = select.value === "Так" ? "flex" : "none";
+      });
+    }
+  };
+
+  // Військовий статус (варіант 3, питання 1)
+  const setupMilitaryStatusQuestion = () => {
+    const militaryStatusSelect = document.querySelector("#Presence-in-military-service");
+    const blockDateStart = document.querySelector("#DateStartMilitary")?.closest(".question-variant_block");
+    const blockDismissalDifficulty = document.querySelector("#Difficulties-with-dismissal")?.closest(".question-variant_block");
+    const blockDateFinish = document.querySelector("#DateFinishMilitary")?.closest(".question-variant_block");
+
+    if (militaryStatusSelect) {
+      militaryStatusSelect.addEventListener("change", () => {
+        const val = militaryStatusSelect.value;
+
+        if (val === "На службі") {
+          if (blockDateStart) blockDateStart.style.display = "flex";
+          if (blockDismissalDifficulty) blockDismissalDifficulty.style.display = "flex";
+          if (blockDateFinish) blockDateFinish.style.display = "none";
+        } else {
+          if (blockDateStart) blockDateStart.style.display = "none";
+          if (blockDismissalDifficulty) blockDismissalDifficulty.style.display = "none";
+          if (blockDateFinish) blockDateFinish.style.display = "flex";
+        }
+      });
+    }
+  };
+
+  // Структура служби (варіант 3, питання 4)
+  const setupServiceStructureQuestion = () => {
+    const structSelect = document.querySelector("#StructuraMilitary1");
+    const structExtraBlock = structSelect?.closest(".question-block")?.querySelector(".question-variant_block");
+
+    if (structSelect && structExtraBlock) {
+      structSelect.addEventListener("change", () => {
+        const val = structSelect.value.trim();
+        if (val === "Міліція" || val === "Національна поліція") {
+          structExtraBlock.style.display = "flex";
+        } else {
+          structExtraBlock.style.display = "none";
+        }
+      });
+    }
+  };
+
+  // Інвалідність (варіант 3, питання 8)
+  const setupDisabilityQuestion = () => {
+    const disabilitySelect = document.querySelector("#Establishment-of-disability");
+    const disabilityExtraBlock = disabilitySelect?.closest(".question-block")?.querySelector(".question-variant_block");
+
+    if (disabilitySelect && disabilityExtraBlock) {
+      disabilitySelect.addEventListener("change", () => {
+        const visibleOptions = [
+          "Інвалідність",
+          "% втрати працездатності",
+          "Подав/планую подавати документи на МСЕК / ЕКОПФО"
+        ];
+        if (visibleOptions.includes(disabilitySelect.value)) {
+          disabilityExtraBlock.style.display = "flex";
+        } else {
+          disabilityExtraBlock.style.display = "none";
+        }
+      });
+    }
+  };
+
+  // Втрата годувальника (варіант 2, питання 2)
+  const setupBreadwinnerQuestion = () => {
+    const pensionTypeCyvil = document.querySelector("#PensionTypeCyvil");
+    const whoBreadwinner = document.querySelector("#WhoBreadwinner");
+    const block2_1 = whoBreadwinner?.closest(".question-variant_block");
+    const block2_2 = document.querySelector("#CauseDeath")?.closest(".question-variant_block");
+    const block2_3 = document.querySelector("#StructuraWorkMilitary")?.closest(".question-variant_block");
+    const block2_4 = document.querySelector("#pensionDateBreadwinner")?.closest(".question-variant_block");
+    const title2_4 = block2_4?.querySelector(".question-title");
+
+    if (pensionTypeCyvil && whoBreadwinner && block2_1 && block2_4) {
+      pensionTypeCyvil.addEventListener("change", () => {
+        const isLoss = pensionTypeCyvil.value === "По втраті годувальника";
+        block2_1.style.display = isLoss ? "flex" : "none";
+
+        if (!isLoss) {
+          if (block2_2) block2_2.style.display = "none";
+          if (block2_3) block2_3.style.display = "none";
+          if (block2_4) block2_4.style.display = "none";
+        }
+      });
+
+      whoBreadwinner.addEventListener("change", () => {
+        const val = whoBreadwinner.value;
+
+        if (val === "Військовослужбовець") {
+          if (block2_2) block2_2.style.display = "flex";
+          if (block2_3) block2_3.style.display = "flex";
+          if (block2_4) block2_4.style.display = "flex";
+          if (title2_4) title2_4.textContent = "Коли було призначено пенсію в зв'язку з втратою годувальника?";
+        } else {
+          if (block2_2) block2_2.style.display = "none";
+          if (block2_3) block2_3.style.display = "none";
+          if (block2_4) block2_4.style.display = "flex";
+          if (title2_4) title2_4.textContent = "Коли було призначено пенсію?";
+        }
+      });
+    }
+  };
+
+  // Родич військовослужбовця (варіант 4, питання 1)
+  const setupFamilyConnectionQuestion = () => {
+    const familyConnection = document.querySelector("#family-connection");
+    const cohabitationBlock = familyConnection?.closest(".question-block")?.querySelector(".question-variant_block");
+
+    if (familyConnection && cohabitationBlock) {
+      familyConnection.addEventListener("change", () => {
+        if (familyConnection.value === "Цивільні дружина/чоловік (співмешканці)") {
+          cohabitationBlock.style.display = "flex";
+        } else {
+          cohabitationBlock.style.display = "none";
+        }
+      });
+    }
+  };
+
+  // Додаткові блоки для пенсій (варіант 2)
+  const setupPensionTypeBlocks = () => {
+    const pensionTypeCyvil = document.querySelector("#PensionTypeCyvil");
+    const dopBlock = document.getElementById("dopBlock");
+    const dopBlock1 = document.getElementById("dopBlock1");
+
+    if (!pensionTypeCyvil || (!dopBlock && !dopBlock1)) return;
+
+    const toggleDopBlocks = (show) => {
+      const display = show ? "flex" : "none";
+      if (dopBlock) dopBlock.style.display = display;
+      if (dopBlock1) dopBlock1.style.display = display;
+    };
+
+    const updateByPensionType = () => {
+      const v = (pensionTypeCyvil.value || "").trim();
+      const isPlaceholder = v === "" || v.toLowerCase().includes("оберіть") || v.toLowerCase().includes("вид пенсії");
+      const shouldShow = !isPlaceholder && v !== "Не отримую";
+      toggleDopBlocks(shouldShow);
+    };
+
+    pensionTypeCyvil.addEventListener("change", updateByPensionType);
+    updateByPensionType();
+  };
+
+  const init = () => {
+    setupChernobylQuestion6();
+    setupProfessionQuestion9();
+    setupChernobylQuestion12();
+    setupMilitaryStatusQuestion();
+    setupServiceStructureQuestion();
+    setupDisabilityQuestion();
+    setupBreadwinnerQuestion();
+    setupFamilyConnectionQuestion();
+    setupPensionTypeBlocks();
+  };
+
+  return { init };
+})();
+
+// ============================================================================
+// MARK: - Progress Tracking
+// ============================================================================
+
+/**
+ * Модуль відстеження прогресу квізу
+ */
+const ProgressTrackingModule = (() => {
+  const VARIANT_IDS = ['variant1', 'variant2', 'variant3', 'variant4'];
+
+  const ANKETA_CLASSES = [
+    '.qwiz-step-anketa.qwiz-step.step1-3',
+    '.qwiz-step-anketa.qwiz-step.step2-6',
+    '.qwiz-step-anketa.qwiz-step.step3-5',
+    '.qwiz-step-anketa.qwiz-step.step4-3'
+  ];
+
+  const POPUP_CLASSES = [
+    '.qwiz-popup.service.qwiz-step.step1-4',
+    '.qwiz-popup.qwiz-step.step1-5',
+    '.qwiz-popup.qwiz-step.step1-6',
+    '.qwiz-popup.service.qwiz-step.step2-7',
+    '.qwiz-popup.qwiz-step.step2-8',
+    '.qwiz-popup.service.qwiz-step.step3-6',
+    '.qwiz-popup.qwiz-step.step3-7',
+    '.qwiz-popup.qwiz-step.step3-8',
+    '.qwiz-popup.service.qwiz-step.step4-4',
+    '.qwiz-popup.step4-5'
+  ];
+
+  const FORBIDDEN_STEPS = [
+    'step1-3', 'step1-4', 'step1-5', 'step1-6',
+    'step2-6', 'step2-7', 'step2-8',
+    'step3-5', 'step3-6', 'step3-7', 'step3-8',
+    'step4-3', 'step4-4', 'step4-5'
+  ];
+
+  const isVisible = (el) =>
+    el && el.offsetParent !== null &&
+    getComputedStyle(el).display !== 'none' &&
+    getComputedStyle(el).visibility !== 'hidden';
+
+  const isFieldValid = (input) => {
+    if (!input || input.disabled) return true;
+    const val = (input.value || '').trim();
+    
+    if (input.type === 'checkbox' || input.type === 'radio') {
+      return input.checked || !!document.querySelector(`input[name="${input.name}"]:checked`);
+    }
+    
+    if (input.id && /^Telephone/.test(input.id)) {
+      return /^\+380\d{9}$/.test(val);
+    }
+    
+    if (input.id && /^name/.test(input.id)) {
+      return /^[a-zA-Zа-яА-ЯіІїЇєЄґҐ'\- ]{2,}$/.test(val);
+    }
+    
+    return val.length > 0;
+  };
+
+  const getVisibleRequired = (variant) => {
+    const reqs = variant.querySelectorAll('[required]:not([type="hidden"])');
+    return Array.from(reqs).filter(el => {
+      const wrapper = el.closest(".question-block, .question-variant_block") || el;
+      return isVisible(wrapper);
+    });
+  };
+
+  const countValid = (fields) => fields.filter(isFieldValid).length;
+
+  const initGlobalProgress = (variant) => {
+    if (!document.querySelector('.quiz-global-progress')) {
+      const globalProgress = document.createElement('div');
+      globalProgress.className = 'quiz-global-progress';
+      globalProgress.innerHTML = `
+        <div class="quiz-global-fill"></div>
+        <div class="quiz-global-text"></div>
+      `;
+      variant.insertBefore(globalProgress, variant.firstChild);
+    }
+  };
+
+  const updateGlobalProgress = (variant) => {
+    const fill = document.querySelector('.quiz-global-fill');
+    const txt = document.querySelector('.quiz-global-text');
+    const globalBox = document.querySelector('.quiz-global-progress');
+
+    const hiddenSteps = [...ANKETA_CLASSES, ...POPUP_CLASSES];
+    const shouldHideBar = hiddenSteps.some(sel => {
+      const step = variant.querySelector(sel);
+      return step && isVisible(step);
+    });
+
+    if (!shouldHideBar) {
+      const allBlocks = Array.from(variant.querySelectorAll(':scope > *')).filter(el =>
+        el.classList.contains('qwiz-step') || /блок/i.test(el.className)
+      );
+
+      const visibleBlocks = allBlocks.filter(isVisible);
+      const total = visibleBlocks.length;
+      const current = visibleBlocks.findIndex(b => b === variant.querySelector('.qwiz-step[style*="flex"]')) + 1;
+      const pct = total ? Math.round((current / total) * 100) : 0;
+
+      if (fill) fill.style.width = pct + '%';
+      if (txt) txt.textContent = total ? `Крок ${current} з ${total}` : '';
+      if (globalBox) globalBox.style.display = 'block';
+    } else {
+      if (fill) fill.style.width = '0%';
+      if (txt) txt.textContent = '';
+      if (globalBox) globalBox.style.display = 'none';
+    }
+  };
+
+  const updateProgress = (variant) => {
+    const bar = variant.querySelector('.quiz-progress-fill');
+    const txt = variant.querySelector('.quiz-progress-text');
+    if (!bar || !txt) return;
+
+    const fields = getVisibleRequired(variant);
+    const total = fields.length;
+    const valid = countValid(fields);
+    const pct = total ? Math.round((valid / total) * 100) : 0;
+
+    bar.style.width = pct + '%';
+    txt.textContent = total ? `Питання ${valid} із ${total}` : '';
+
+    const gmsg = variant.querySelector('.global-error-message');
+    const isStartScreen = variant.querySelector('.startblock');
+    
+    if (isStartScreen && getComputedStyle(isStartScreen).display !== 'none') {
+      if (gmsg) gmsg.style.display = 'none';
+    } else {
+      if (gmsg) gmsg.style.display = pct === 100 ? 'none' : 'block';
+    }
+
+    updateGlobalProgress(variant);
+  };
+
+  const toggleProgressVisibility = () => {
+    document.querySelectorAll('.quiz-progress').forEach(prog => {
+      const step = prog.closest('.qwiz-step');
+      if (step && FORBIDDEN_STEPS.some(cls => step.classList.contains(cls))) {
+        prog.style.display = 'none';
+      } else {
+        prog.style.display = 'block';
+      }
+    });
+  };
+
+  const initVariant = (variant) => {
+    initGlobalProgress(variant);
+
+    if (!variant.querySelector('.quiz-progress')) {
+      const localProgress = document.createElement('div');
+      localProgress.className = 'quiz-progress';
+      localProgress.innerHTML = `
+        <div class="quiz-progress-fill"></div>
+        <div class="quiz-progress-text"></div>
+      `;
+      variant.insertBefore(localProgress, variant.firstChild);
+    }
+
+    variant.querySelectorAll('input, select, textarea').forEach(inp => {
+      ['input', 'change'].forEach(evt => {
+        inp.addEventListener(evt, () => {
+          setTimeout(() => updateProgress(variant), 50);
+        });
+      });
+    });
+
+    variant.querySelectorAll('.button_qwiz.next, .button_qwiz.back').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setTimeout(() => {
+          updateProgress(variant);
+          toggleProgressVisibility();
+        }, 100);
+      });
+    });
+
+    updateProgress(variant);
+    toggleProgressVisibility();
+  };
+
+  const init = () => {
+    const startBtn = document.getElementById('startTest');
+    
+    const startInit = () => {
+      const visibleVariant = VARIANT_IDS
+        .map(id => document.getElementById(id))
+        .find(el => el && isVisible(el));
+      if (visibleVariant) initVariant(visibleVariant);
+    };
+
+    if (startBtn) {
+      startBtn.addEventListener('click', () => setTimeout(startInit, 300));
+    }
+    
+    setTimeout(startInit, 500);
+  };
+
+  return { init };
+})();
+
+// ============================================================================
+// MARK: - Initialization
+// ============================================================================
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Ініціалізація всіх модулів
+  MultiSelectModule.init();
+  PhoneValidationModule.init();
+  NameValidationModule.init();
+  PensionSizeValidationModule.init();
+  BirthYearValidationModule.init();
+  ServiceYearsValidationModule.init();
+  DatePickerModule.init();
+  QuizNavigationModule.init();
+  ConditionalLogicModule.init();
+  ProgressTrackingModule.init();
+  
+  console.log("Quiz modules initialized successfully");
+});
