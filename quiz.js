@@ -4260,307 +4260,57 @@ document.addEventListener('DOMContentLoaded', function() {
   const next1_2 = document.querySelector('#variant1 .step1-2 .next');
   next1_2.addEventListener('click', () => {
     filterServices();
-
-    const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
-    if (document.cookie.includes('completedCategory3=true') && document.cookie.includes('customerName=')) {
-      console.log('customerName cookie found, skipping form, proceeding to services, sending form with answers for "Військовий пенсіонер"');
-
-      document.querySelector('#name').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      document.querySelector('#Telephone').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      if (document.querySelector("#nameConsult1")) {
-        document.querySelector('#nameConsult1').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      }
-
-      if (window.location.href.includes('consultant')) {
-        document.querySelector('.step1-3').style.display = 'flex';
-        setTimeout(() => {
-          document.querySelector('.step1-2').style.display = 'none';
-        }, 1);
-      } else {
-        if (filteredServices == '') {
-          console.log('No services found for the given answers, showing "No services" message');
-          document.querySelector('.step1-5').style.display = 'flex';
-          setTimeout(() => {
-            document.querySelector('.step1-2').style.display = 'none';
-            document.querySelector('.step1-3').style.display = 'none';
-          }, 1);
-        } else {
-          console.log('Services found for the given answers, proceeding to services');
-          document.querySelector('.step1-4').style.display = 'flex';
-          setTimeout(() => {
-            document.querySelector('.step1-2').style.display = 'none';
-            document.querySelector('.step1-3').style.display = 'none';
-          }, 1);
-        }
-      }
-      document.querySelector('.step1-4 .next').style.display = 'none';
-      document.querySelector('.step1-5 .next').style.display = 'none';
-
-      formConfig = {
-        fields: {
-          Name: "#name",
-          MobilePhone: "#Telephone",
-          "Consultant": "#nameConsult1",
-          "WhatTypeOfPensionDoYouReceive": "#TypePension",
-          "SelectServiceStructureAtRetirement": "#StructuraWork",
-          "SpecifyYourPensionAmount": "#PensionSize",
-          "WhenWasYourPensionAssigned": "#pensionDate",
-          "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
-          "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
-          "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
-          "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
-          "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
-          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
-          "Services": "#services",
-        },
-        contactFields: {
-          FullName: "#name",
-          Phone: "#Telephone",
-        },
-        customFields: { },
-        landingId: landingId,
-        serviceUrl:
-          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-      };
-
-      createObjectConsult(formConfig);
-
-      var emailData = {
-        name: document.querySelector('#name').value || '',
-        phone: document.querySelector('#Telephone').value || '',
-        url: window.location.href
-      }
-      emailData = { ...emailData, ...getUTMParams() };
-      if (!emailData.utm_source) {
-        emailData.utm_source = "квіз сайт";
-      }
-      sendEmail(emailData);
-    } else if (document.cookie.includes('completedCategory1=true') && document.cookie.includes('customerName=')) {
-      if (document.cookie.includes('completedCategory3=true')) {
-        document.querySelector('.step1-4 .next').style.display = 'none';
-        document.querySelector('.step1-5 .next').style.display = 'none';
-      }
-      if (filteredServices === '') {
-        console.log('No services found, will show step 1.5 after form submission');
-        setTimeout(() => {
-          document.querySelector('.step1-5').style.display = 'flex';
-          document.querySelector('.step1-2').style.display = 'none';
-          document.querySelector('.step1-3').style.display = 'none';
-        }, 1);
-      } else {
-        console.log('Services found, will show step 1.4 after form submission');
-        setTimeout(() => {
-          document.querySelector('.step1-4').style.display = 'flex';
-          document.querySelector('.step1-2').style.display = 'none';
-          document.querySelector('.step1-3').style.display = 'none';
-        }, 1);
-
-      }
-      document.getElementById('name').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      document.getElementById('Telephone').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-
-      formConfig = {
-      fields: {
-        Name: "#name",
-        MobilePhone: "#Telephone",
-        "Consultant": "#nameConsult1",
-        "WhatTypeOfPensionDoYouReceive": "#TypePension",
-        "SelectServiceStructureAtRetirement": "#StructuraWork",
-        "SpecifyYourPensionAmount": "#PensionSize",
-        "WhenWasYourPensionAssigned": "#pensionDate",
-        "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
-        "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
-        "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
-        "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
-        "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
-        "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
-        "Services": "#services",
-      },
-      contactFields: {
-        FullName: "#name",
-        Phone: "#Telephone",
-      },
-      customFields: { },
-      landingId: landingId,
-      serviceUrl:
-        "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-    };
-
-    createObjectConsult(formConfig);
-
-    var emailData = {
-      name: document.querySelector('#name').value || '',
-      phone: document.querySelector('#Telephone').value || '',
-      url: window.location.href
-    }
-    emailData = { ...emailData, ...getUTMParams() };
-    if (!emailData.utm_source) {
-      emailData.utm_source = "квіз сайт";
-    }
-    sendEmail(emailData);
-
-    }
-  });
-  const next1_4 = document.querySelector('#variant1 .step1-4 .next');
-  next1_4.addEventListener('click', (event) => {
-    if (document.cookie.includes('whoAreYou=1')) {
-      event.preventDefault();
-      console.log('customerName cookie NOT found, proceeding');
-      setTimeout(() => {
-        document.querySelector('.step1-4').style.display = 'none';
-        document.querySelector('.step1-5').style.display = 'none';
-        document.querySelector('.step1-6').style.display = 'flex';
-      }, 1);
-    }
-  });
-  const next1_5 = document.querySelector('#variant1 .step1-5 .next');
-  next1_5.addEventListener('click', (event) => {
-    if (document.cookie.includes('whoAreYou=1')) {
-      event.preventDefault();
-      console.log('customerName cookie NOT found, proceeding');
-      setTimeout(() => {
-        document.querySelector('.step1-4').style.display = 'none';
-        document.querySelector('.step1-5').style.display = 'none';
-        document.querySelector('.step1-6').style.display = 'flex';
-      }, 1);
-    }
-  });
-  const back1_4 = document.querySelector('#variant1 .step1-4 .back');
-  back1_4.addEventListener('click', (event) => {
+    
+    // ВАЖЛИВО: Автозаповнюємо поля з cookies, але НЕ пропускаємо валідацію
+    // Навігація та валідація відбувається через QuizNavigationModule
     if (document.cookie.includes('customerName=')) {
-      event.preventDefault();
-      document.querySelector('.step1-2').style.display = 'flex';
-      setTimeout(() => {
-        document.querySelector('.step1-3').style.display = 'none';
-        document.querySelector('.step1-4').style.display = 'none';
-      }, 1);
+      console.log('customerName cookie found, auto-filling fields from cookies');
+      
+      const nameField = document.querySelector('#name');
+      const phoneField = document.querySelector('#Telephone');
+      const consultField = document.querySelector("#nameConsult1");
+      
+      if (nameField && !nameField.value) {
+        nameField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      }
+      if (phoneField && !phoneField.value) {
+        phoneField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      }
+      if (consultField && !consultField.value) {
+        consultField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      }
     }
   });
-  const back1_5 = document.querySelector('#variant1 .step1-5 .back');
-  back1_5.addEventListener('click', (event) => {
-    if (document.cookie.includes('customerName=')) {
-      event.preventDefault();
-      document.querySelector('.step1-2').style.display = 'flex';
-      setTimeout(() => {
-        document.querySelector('.step1-3').style.display = 'none';
-        document.querySelector('.step1-4').style.display = 'none';
-        document.querySelector('.step1-5').style.display = 'none';
-      }, 1);
-    }
-  });
+  
+  // ВИДАЛЕНО: next1_4, next1_5, back1_4, back1_5 handlers
+  // Навігація повністю обробляється через QuizNavigationModule
   
 
   const next3_4 = document.querySelector('#variant3 .step3-4 .next');
   next3_4.addEventListener('click', () => {
-    const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
-    if (document.cookie.includes('completedCategory1=true') && document.cookie.includes('customerName=')) {
-      console.log('customerName cookie found, skipping form, proceeding to services, sending form with answers for "Військовослужбовець"');
-      document.cookie = `completedCategory3=true; path=/; max-age=86400`;
-
-      document.querySelector('#name-mylitary').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      document.querySelector('#Telephonemylitary').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      if (document.querySelector("#nameConsult3")) {
-        document.querySelector('#nameConsult3').value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      }
-
-
-      if (window.location.href.includes('consultant')) {
-        document.querySelector('.step3-5').style.display = 'flex';
-        setTimeout(() => {
-          document.querySelector('.step3-4').style.display = 'none';
-        }, 1);
-      } else {
-        if (filteredServices == '') {
-          document.querySelector('.step3-7').style.display = 'flex';
-          setTimeout(() => {
-            document.querySelector('.step3-4').style.display = 'none';
-            document.querySelector('.step3-5').style.display = 'none';
-          }, 1);
-        } else {
-          document.querySelector('.step3-6').style.display = 'flex';
-          setTimeout(() => {
-            document.querySelector('.step3-4').style.display = 'none';
-            document.querySelector('.step3-5').style.display = 'none';
-          }, 1);
-        }
-      }
-      document.querySelector('.step3-6 .next').style.display = 'none';
-      document.querySelector('.step3-7 .next').style.display = 'none';
-
-      formConfig = {
-        fields: {
-          Name: "#name-mylitary",
-          MobilePhone: "#Telephonemylitary",
-          "Consultant": "#nameConsult3",
-          "AreYouStillInServiceOrDischarged": "#Presence-in-military-service",
-          "SpecifyServiceStartDate": "#DateStartMilitary",
-          "DoYouHaveDifficultiesWithDischargeIfNeeded": "#Difficulties-with-dismissal",
-          "SpecifyServiceEndDate": "#DateFinishMilitary",
-          "SpecifyDateOfBirth": "#DateBirth",
-          "SelectFormOfService": "#Form-of-military-service",
-          "SelectServiceStructure": "#StructuraMilitary1",
-          "DidYouServeAtNightOrDuringQuarantine": "#night-shift",
-          "DoYouHaveServiceExperienceInTheStateFiscalService": "#experience-in-the-tax-police",
-          "DoYouHaveUnusedVacationDays": "#unusedVacationDays",
-          "DoYouHaveCombatantStatus": "#Status-UBD",
-          "DidYouParticipateDirectlyInCombat": "#combat-participation",
-          "DoYouHaveDisabilityOrPercentageOfWorkCapacityLoss": "#Establishment-of-disability",
-          "WhatWasTheCauseOfDisabilityOrLossOfWorkCapacity": "#cause-of-disability",
-          "DidYouReceiveInjuryDuringServiceOrRelatedToService": "#presenceInjury",
-          "WereYouTreatedInHealthcareInstitutionsAfterInjury": "#stayeTreatment",
-          "WhatPaymentsDidYouReceiveFromEmployerUponDischarge": "#CompensationMulti-hidden",
-          "DidYouReceiveRegularPaymentsFromEmployerByCourtDecisionInLastSixMonths": "#Treatment-after-injury-hidden",
-          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#courtDecisionsPpayments",
-          "DoYouHaveVlkOrEkopfoMedicalCertificateThatYouWantToAppeal": "#certificate-VLK",
-          "DidYouHaveOffensesDuringService": "#illegalActivity-hidden",
-          "Services": "#services",
-        },
-        contactFields: {
-          FullName: "#name-mylitary",
-          Phone: "#Telephonemylitary",
-        },
-        customFields: { },
-        landingId: landingId,
-        serviceUrl:
-          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-      };
-
-      createObjectConsult(formConfig);
-
-      var emailData = {
-        name: document.querySelector('#name-mylitary').value || '',
-        phone: document.querySelector('#Telephonemylitary').value || '',
-        url: window.location.href
-      }
-      emailData = { ...emailData, ...getUTMParams() };
-      if (!emailData.utm_source) {
-        emailData.utm_source = "квіз сайт";
-      }
-      sendEmail(emailData);
-    } 
-  });
-  const next3_6 = document.querySelector('#variant3 .step3-6 .next');
-  next3_6.addEventListener('click', (event) => {
-    event.preventDefault();
-    if (document.cookie.includes('whoAreYou=3')) {
-      setTimeout(() => {
-        document.querySelector('.step3-6').style.display = 'none';
-        document.querySelector('.step3-7').style.display = 'none';
-        document.querySelector('.step3-8').style.display = 'flex';
-      }, 1);
-    }
-  });
-  const back3_6 = document.querySelector('#variant3 .step3-6 .back');
-  back3_6.addEventListener('click', (event) => {
+    // ВАЖЛИВО: Автозаповнюємо поля з cookies, але НЕ пропускаємо валідацію
+    // Навігація та валідація відбувається через QuizNavigationModule
     if (document.cookie.includes('customerName=')) {
-      event.preventDefault();
-      document.querySelector('.step3-4').style.display = 'flex';
-      setTimeout(() => {
-        document.querySelector('.step3-5').style.display = 'none';
-        document.querySelector('.step3-6').style.display = 'none';
-      }, 1);
+      console.log('customerName cookie found, auto-filling fields from cookies');
+      
+      const nameField = document.querySelector('#name-mylitary');
+      const phoneField = document.querySelector('#Telephonemylitary');
+      const consultField = document.querySelector("#nameConsult3");
+      
+      if (nameField && !nameField.value) {
+        nameField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      }
+      if (phoneField && !phoneField.value) {
+        phoneField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      }
+      if (consultField && !consultField.value) {
+        consultField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+      }
     }
   });
+  
+  // ВИДАЛЕНО: next3_6, back3_6 handlers
+  // Навігація повністю обробляється через QuizNavigationModule
 
   function createObjectConsult(formConfig) {
     landing.createObjectFromLanding(formConfig); // MARK: ПОВЕРНУТИ
@@ -4954,17 +4704,70 @@ const QuizNavigationModule = (() => {
     const requiredInputs = step.querySelectorAll("[required]:not([type=hidden])");
     let allValid = true;
 
+    // Функція для перевірки, чи елемент дійсно видимий
+    const isElementVisible = (element) => {
+      if (!element) return false;
+      
+      // Перевіряємо offsetParent (null якщо елемент або батько display:none)
+      if (element.offsetParent === null && element !== document.body) {
+        return false;
+      }
+      
+      // Перевіряємо сам елемент та всіх батьків до кроку
+      let current = element;
+      while (current && current !== step && current !== document.body) {
+        const style = window.getComputedStyle(current);
+        if (style.display === 'none' || style.visibility === 'hidden') {
+          return false;
+        }
+        current = current.parentElement;
+      }
+      return true;
+    };
+
     requiredInputs.forEach(input => {
-      const wrapper = input.closest(".question-block, .question-variant_block") || input;
-      const style = window.getComputedStyle(wrapper);
+      // Перевіряємо видимість поля та його обгорток
+      if (!isElementVisible(input)) {
+        return; // Пропускаємо приховані поля
+      }
 
-      if (style.display === "none") return;
+      let value = input.value?.trim();
+      let isValid = false;
 
-      const value = input.value?.trim();
+      // Перевірка для різних типів полів
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        // Для checkbox/radio перевіряємо чи хоч один з групи вибраний
+        const name = input.name;
+        if (name) {
+          const checkedInput = document.querySelector(`input[name="${name}"]:checked`);
+          isValid = !!checkedInput && isElementVisible(checkedInput);
+        } else {
+          isValid = input.checked;
+        }
+      } else if (input.tagName === 'SELECT') {
+        // Для select перевіряємо чи вибрано не плейсхолдер
+        isValid = value && value !== '' && !value.toLowerCase().includes('оберіть') && !value.toLowerCase().includes('виберіть');
+      } else if (input.id && /^Telephone/.test(input.id)) {
+        // Для телефонів перевіряємо формат
+        isValid = /^\+380\d{9}$/.test(value);
+      } else if (input.id && /^name/.test(input.id)) {
+        // Для імен перевіряємо патерн
+        isValid = /^[a-zA-Zа-яА-ЯіІїЇєЄґҐ'\- ]{2,}$/.test(value);
+      } else {
+        // Для всіх інших полів просто перевіряємо наявність значення
+        isValid = value && value.length > 0;
+      }
 
-      if (!value) {
+      if (!isValid) {
         input.classList.add("invalid");
         allValid = false;
+        console.log('Validation failed for field:', {
+          id: input.id,
+          name: input.name,
+          type: input.type,
+          value: value,
+          tagName: input.tagName
+        });
       } else {
         input.classList.remove("invalid");
       }
@@ -5001,20 +4804,47 @@ const QuizNavigationModule = (() => {
     }
   };
 
-  const handleNextClick = () => {
-    if (!currentStep || !validateStep(currentStep)) return;
+  const handleNextClick = (event) => {
+    if (!currentStep) return;
+    
+    // Встановлюємо прапорець, що користувач спробував перейти далі
+    const variant = currentStep.closest('[id^="variant"]');
+    if (variant && window.ProgressTrackingModule) {
+      window.ProgressTrackingModule.setTriedToAdvance(variant.id, true);
+    }
+    
+    // Валідуємо поточний крок
+    if (!validateStep(currentStep)) {
+      return; // Не переходимо, якщо валідація не пройшла
+    }
 
     const next = getNextStep(currentStep);
     if (next) {
+      // Скидаємо прапорець для наступного кроку
+      if (variant && window.ProgressTrackingModule) {
+        window.ProgressTrackingModule.setTriedToAdvance(variant.id, false);
+      }
+      
       hideStep(currentStep);
       showStep(next);
       currentStep = next;
+      
+      // Оновлюємо видимість прогресів після переходу
+      if (window.ProgressTrackingModule && window.ProgressTrackingModule.toggleProgressVisibility) {
+        window.ProgressTrackingModule.toggleProgressVisibility();
+      }
     }
   };
 
   const handleBackClick = () => {
     const stepsInBlock = Array.from(currentStep.parentElement.querySelectorAll(".qwiz-step"));
     const isFirstStep = currentStep === stepsInBlock[0];
+    
+    // Скидаємо прапорець при поверненні назад
+    const variant = currentStep.closest('[id^="variant"]');
+    if (variant && window.ProgressTrackingModule) {
+      window.ProgressTrackingModule.setTriedToAdvance(variant.id, false);
+    }
 
     if (isFirstStep) {
       // Повертаємось до StartBlock
@@ -5023,7 +4853,7 @@ const QuizNavigationModule = (() => {
       });
 
       if (startBlock) {
-        startBlock.style.display = "flex";
+        startBlock.style.display = "block";
         startBlock.style.opacity = "0";
         setTimeout(() => startBlock.style.opacity = "1", 10);
       }
@@ -5040,6 +4870,11 @@ const QuizNavigationModule = (() => {
         hideStep(currentStep);
         showStep(prev);
         currentStep = prev;
+        
+        // Оновлюємо видимість прогресів після переходу
+        if (window.ProgressTrackingModule && window.ProgressTrackingModule.toggleProgressVisibility) {
+          window.ProgressTrackingModule.toggleProgressVisibility();
+        }
       }
     }
   };
@@ -5316,6 +5151,14 @@ const ConditionalLogicModule = (() => {
  */
 const ProgressTrackingModule = (() => {
   const VARIANT_IDS = ['variant1', 'variant2', 'variant3', 'variant4'];
+  
+  // Прапорці для відстеження спроби переходу (натискання "Далі")
+  const userTriedToAdvance = {
+    variant1: false,
+    variant2: false,
+    variant3: false,
+    variant4: false
+  };
 
   const ANKETA_CLASSES = [
     '.qwiz-step-anketa.qwiz-step.step1-3',
@@ -5335,13 +5178,6 @@ const ProgressTrackingModule = (() => {
     '.qwiz-popup.qwiz-step.step3-8',
     '.qwiz-popup.service.qwiz-step.step4-4',
     '.qwiz-popup.step4-5'
-  ];
-
-  const FORBIDDEN_STEPS = [
-    'step1-3', 'step1-4', 'step1-5', 'step1-6',
-    'step2-6', 'step2-7', 'step2-8',
-    'step3-5', 'step3-6', 'step3-7', 'step3-8',
-    'step4-3', 'step4-4', 'step4-5'
   ];
 
   const isVisible = (el) =>
@@ -5371,8 +5207,8 @@ const ProgressTrackingModule = (() => {
   const getVisibleRequired = (variant) => {
     const reqs = variant.querySelectorAll('[required]:not([type="hidden"])');
     return Array.from(reqs).filter(el => {
-      const wrapper = el.closest(".question-block, .question-variant_block") || el;
-      return isVisible(wrapper);
+      const wrap = el.closest('.question-block, .question-variant_block, .qwiz-step') || el;
+      return isVisible(wrap);
     });
   };
 
@@ -5380,13 +5216,15 @@ const ProgressTrackingModule = (() => {
 
   const initGlobalProgress = (variant) => {
     if (!document.querySelector('.quiz-global-progress')) {
-      const globalProgress = document.createElement('div');
-      globalProgress.className = 'quiz-global-progress';
-      globalProgress.innerHTML = `
-        <div class="quiz-global-fill"></div>
-        <div class="quiz-global-text"></div>
+      const globalWrap = document.createElement('div');
+      globalWrap.className = 'quiz-global-progress';
+      globalWrap.innerHTML = `
+        <div class="quiz-global-line" style="margin-bottom:6px;height:6px;background:#e6e6e6;border-radius:3px;overflow:hidden;">
+          <div class="quiz-global-fill" style="width:0%;height:100%;background:linear-gradient(90deg,#0077c8,#00b894);transition:width .3s ease;"></div>
+        </div>
+        <div class="quiz-global-text" style="font-weight:600;font-size:14px;">Прогрес тесту: 0%</div>
       `;
-      variant.insertBefore(globalProgress, variant.firstChild);
+      variant.prepend(globalWrap);
     }
   };
 
@@ -5396,32 +5234,45 @@ const ProgressTrackingModule = (() => {
     const globalBox = document.querySelector('.quiz-global-progress');
 
     const hiddenSteps = [...ANKETA_CLASSES, ...POPUP_CLASSES];
+
+    // шукаємо, чи активний хоч один із цих блоків
     const shouldHideBar = hiddenSteps.some(sel => {
-      const step = variant.querySelector(sel);
-      return step && isVisible(step);
+      const el = document.querySelector(sel);
+      return el && isVisible(el);
     });
 
+    // 🟩 Якщо ні анкета, ні попап → оновлюємо бар
     if (!shouldHideBar) {
-      const allBlocks = Array.from(variant.querySelectorAll(':scope > *')).filter(el =>
-        el.classList.contains('qwiz-step') || /блок/i.test(el.className)
-      );
+      // Вибираємо тільки блоки з питаннями (qwiz-step), виключаючи попапи, анкети та стартовий блок
+      const allSteps = Array.from(variant.querySelectorAll('.qwiz-step')).filter(el => {
+        // Виключаємо попапи (qwiz-popup), анкети (qwiz-step-anketa) та стартовий блок (startblock)
+        return !el.classList.contains('qwiz-popup') && 
+               !el.classList.contains('qwiz-step-anketa') &&
+               !el.classList.contains('startblock');
+      });
 
-      const visibleBlocks = allBlocks.filter(isVisible);
-      const total = visibleBlocks.length;
-      const current = visibleBlocks.findIndex(b => b === variant.querySelector('.qwiz-step[style*="flex"]')) + 1;
-      const pct = total ? Math.round((current / total) * 100) : 0;
+      const visibleBlock = allSteps.find(isVisible);
+      const visibleIndex = allSteps.indexOf(visibleBlock) + 1;
+      const totalBlocks = allSteps.length;
+      const globalPct = totalBlocks ? Math.round((visibleIndex / totalBlocks) * 100) : 0;
 
-      if (fill) fill.style.width = pct + '%';
-      if (txt) txt.textContent = total ? `Крок ${current} з ${total}` : '';
+      if (fill && txt) {
+        fill.style.width = globalPct + '%';
+        txt.textContent = `Прогрес тесту: ${globalPct}%`;
+      }
+
       if (globalBox) globalBox.style.display = 'block';
     } else {
-      if (fill) fill.style.width = '0%';
-      if (txt) txt.textContent = '';
+      // 🟥 Якщо анкета або попап → миттєво ховаємо
+      if (fill && txt) {
+        fill.style.width = '100%';
+        txt.textContent = 'Прогрес тесту: 100%';
+      }
       if (globalBox) globalBox.style.display = 'none';
     }
   };
 
-  const updateProgress = (variant) => {
+  const updateProgress = (variant, showErrors = false) => {
     const bar = variant.querySelector('.quiz-progress-fill');
     const txt = variant.querySelector('.quiz-progress-text');
     if (!bar || !txt) return;
@@ -5435,60 +5286,84 @@ const ProgressTrackingModule = (() => {
     txt.textContent = total ? `Питання ${valid} із ${total}` : '';
 
     const gmsg = variant.querySelector('.global-error-message');
+
+    // якщо зараз стартовий екран — не показуємо помилку
     const isStartScreen = variant.querySelector('.startblock');
-    
     if (isStartScreen && getComputedStyle(isStartScreen).display !== 'none') {
       if (gmsg) gmsg.style.display = 'none';
     } else {
-      if (gmsg) gmsg.style.display = pct === 100 ? 'none' : 'block';
+      // Показуємо помилку тільки якщо користувач спробував перейти далі (showErrors = true)
+      const variantId = variant.id;
+      if (gmsg) {
+        if (showErrors && userTriedToAdvance[variantId] && valid < total) {
+          gmsg.style.display = 'block';
+        } else {
+          gmsg.style.display = 'none';
+        }
+      }
     }
 
     updateGlobalProgress(variant);
-  };
-
-  const toggleProgressVisibility = () => {
-    document.querySelectorAll('.quiz-progress').forEach(prog => {
-      const step = prog.closest('.qwiz-step');
-      if (step && FORBIDDEN_STEPS.some(cls => step.classList.contains(cls))) {
-        prog.style.display = 'none';
-      } else {
-        prog.style.display = 'block';
-      }
-    });
   };
 
   const initVariant = (variant) => {
     initGlobalProgress(variant);
 
     if (!variant.querySelector('.quiz-progress')) {
-      const localProgress = document.createElement('div');
-      localProgress.className = 'quiz-progress';
-      localProgress.innerHTML = `
-        <div class="quiz-progress-fill"></div>
-        <div class="quiz-progress-text"></div>
+      const wrap = document.createElement('div');
+      wrap.className = 'quiz-progress';
+      wrap.innerHTML = `
+        <div class="quiz-progress-line">
+          <div class="quiz-progress-fill" style="width:0%;height:6px;background:#0077c8;border-radius:3px;transition:width .3s ease"></div>
+        </div>
+        <div class="quiz-progress-text" style="margin-top:4px;font-weight:500;">Крок 0 із 0</div>
       `;
-      variant.insertBefore(localProgress, variant.firstChild);
+      variant.prepend(wrap);
     }
 
+    const variantId = variant.id;
+
     variant.querySelectorAll('input, select, textarea').forEach(inp => {
-      ['input', 'change'].forEach(evt => {
-        inp.addEventListener(evt, () => {
-          setTimeout(() => updateProgress(variant), 50);
-        });
+      inp.addEventListener('input', () => {
+        inp.classList.remove('invalid');
+        updateProgress(variant, false); // Не показуємо помилки при введенні
+        toggleProgressVisibility();
+      });
+      inp.addEventListener('change', () => {
+        updateProgress(variant, false); // Не показуємо помилки при зміні
+        toggleProgressVisibility();
       });
     });
 
-    variant.querySelectorAll('.button_qwiz.next, .button_qwiz.back').forEach(btn => {
-      btn.addEventListener('click', () => {
-        setTimeout(() => {
-          updateProgress(variant);
-          toggleProgressVisibility();
-        }, 100);
-      });
-    });
-
-    updateProgress(variant);
+    // Обробники кнопок тепер в QuizNavigationModule, тут тільки оновлюємо прогрес
+    updateProgress(variant, false); // Початкове оновлення без помилок
     toggleProgressVisibility();
+  };
+
+  // Приховування локального прогресу на попапах та анкетах
+  const toggleProgressVisibility = () => {
+    // Перевіряємо чи зараз відображається анкета або попап
+    const isAnketaVisible = Array.from(document.querySelectorAll('.qwiz-step-anketa')).some(el => {
+      const disp = getComputedStyle(el).display;
+      return disp === 'block' || disp === 'flex';
+    });
+    
+    const isPopupVisible = Array.from(document.querySelectorAll('.qwiz-popup')).some(el => {
+      const disp = getComputedStyle(el).display;
+      return disp === 'block' || disp === 'flex';
+    });
+
+    const shouldHide = isAnketaVisible || isPopupVisible;
+
+    // Ховаємо локальний прогрес
+    document.querySelectorAll('.quiz-progress').forEach(prog => {
+      prog.style.display = shouldHide ? 'none' : 'block';
+    });
+    
+    // Ховаємо глобальний прогрес
+    document.querySelectorAll('.quiz-global-progress').forEach(prog => {
+      prog.style.display = shouldHide ? 'none' : 'block';
+    });
   };
 
   const init = () => {
@@ -5508,7 +5383,15 @@ const ProgressTrackingModule = (() => {
     setTimeout(startInit, 500);
   };
 
-  return { init };
+  const setTriedToAdvance = (variantId, value) => {
+    userTriedToAdvance[variantId] = value;
+    const variant = document.getElementById(variantId);
+    if (variant) {
+      updateProgress(variant, value);
+    }
+  };
+
+  return { init, setTriedToAdvance, toggleProgressVisibility };
 })();
 
 // ============================================================================
@@ -5527,6 +5410,9 @@ document.addEventListener("DOMContentLoaded", function () {
   QuizNavigationModule.init();
   ConditionalLogicModule.init();
   ProgressTrackingModule.init();
+  
+  // Робимо ProgressTrackingModule доступним глобально
+  window.ProgressTrackingModule = ProgressTrackingModule;
   
   console.log("Quiz modules initialized successfully");
 });
