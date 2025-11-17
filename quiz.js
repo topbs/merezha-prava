@@ -3965,6 +3965,9 @@ document.addEventListener('DOMContentLoaded', function() {
     window.quizHasServices = hasServices;
   }
 
+  // Робимо filterServices доступною глобально для QuizNavigationModule
+  window.filterServices = filterServices;
+
   // додаємо обробники подій для всіх запитань
   [whoAreYou, q11, q12, q13, q14, q15, q16, q161, q162, q17, q18, q21, q22, q221, q222, q223, q224, q23, q24, q25, q26, q27, q28, q29, q291, q292, q210, q211, q212, q2121, q213, q214, q215, q216, q217, q219, q31, q31_1, q31_2, q31_3, q32, q33, q34, q341, q342, q35, q36, q37, q38, q39, q310, q311, q312, q313, q314, q315, q41, q411, q42, q43, q44, q45, q46].forEach(element => {
     if (element) {
@@ -3973,7 +3976,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Функція для оновлення видимості кнопок на блоках результатів
-  function updateServiceStepButtons() {
+  window.updateServiceStepButtons = function() {
     // Підраховуємо кількість пройдених тестів
     const completedTests = ['completedCategory1', 'completedCategory2', 'completedCategory3', 'completedCategory4']
       .filter(key => document.cookie.includes(`${key}=true`));
@@ -4004,115 +4007,69 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     });
-  }
+  };
 
-  const send1 = document.querySelector('#variant1 .send');
-  const send2 = document.querySelector('#variant2 .send');
-  const send3 = document.querySelector('#variant3 .send');
-  const send4 = document.querySelector('#variant4 .send');
+  // Функція для підготовки даних перед відправкою форми з анкети
+  window.prepareFormDataBeforeSend = function() {
+    if (!answers || !answers.whoAreYou) {
+      console.log('No answers available, skipping form preparation');
+      return null;
+    }
 
-  [send1, send2, send3, send4].forEach(button => {
-    button.addEventListener('click', () => {
-      console.log(`Button "send" clicked with answers:`, answers);
+    console.log(`Preparing form data for category ${answers.whoAreYou}`);
 
-      if (answers.whoAreYou === "1") {
-        console.log('adding cookie for category 1');
-        document.cookie = `completedCategory1=true; path=/; max-age=86400`;
-      } else if (answers.whoAreYou === "2") {
-        console.log('adding cookie for category 2');
-        document.cookie = `completedCategory2=true; path=/; max-age=86400`;
-      } else if (answers.whoAreYou === "3") {
-        console.log('adding cookie for category 3');
-        document.cookie = `completedCategory3=true; path=/; max-age=86400`;
-      } else if (answers.whoAreYou === "4") {
-        console.log('adding cookie for category 4');
-        document.cookie = `completedCategory4=true; path=/; max-age=86400`;
-      } else {
-        console.log('no valid category selected, no cookie added');
-      }
-      
-      // Оновлюємо видимість кнопок на блоках з послугами після завершення тесту
-      updateServiceStepButtons();
+    // Зберігаємо cookie про завершення категорії
+    if (answers.whoAreYou === "1") {
+      console.log('adding cookie for category 1');
+      document.cookie = `completedCategory1=true; path=/; max-age=86400`;
+    } else if (answers.whoAreYou === "2") {
+      console.log('adding cookie for category 2');
+      document.cookie = `completedCategory2=true; path=/; max-age=86400`;
+    } else if (answers.whoAreYou === "3") {
+      console.log('adding cookie for category 3');
+      document.cookie = `completedCategory3=true; path=/; max-age=86400`;
+    } else if (answers.whoAreYou === "4") {
+      console.log('adding cookie for category 4');
+      document.cookie = `completedCategory4=true; path=/; max-age=86400`;
+    }
+    
+    // Оновлюємо видимість кнопок на блоках з послугами
+    if (window.updateServiceStepButtons) {
+      window.updateServiceStepButtons();
+    }
 
-      // Логіка переходу на блоки "без послуг" виконується ТІЛЬКИ після відправки анкети
-      // і ТІЛЬКИ якщо послуг не знайдено
-      const filteredServices = document.getElementById('services') ? document.getElementById('services').value : '';
-      
-      // Перевіряємо, чи ми відправляємо форму після заповнення питань (а не на блоці результатів)
-      // Перевіряємо, чи є активним блок з анкетою
-      const anketaSteps = ['.step1-3', '.step2-6', '.step3-5', '.step4-3'];
-      const isOnAnketaStep = anketaSteps.some(stepClass => {
-        const step = document.querySelector(stepClass);
-        return step && (step.style.display === 'flex' || step.style.display === 'block' || 
-                       (!step.style.display && step.offsetParent !== null));
-      });
-      
-      console.log('Is on anketa step:', isOnAnketaStep, 'Filtered services:', filteredServices);
-      
-      // Логіка переходу на "без послуг" тільки якщо ми на блоці анкети
-      if (isOnAnketaStep && filteredServices === '') {
-        // Якщо послуг немає, показуємо відповідний блок "без послуг" 
-        console.log('Переходимо на блок "без послуг"');
-        if (answers.whoAreYou === "1") {
-          document.querySelector('.step1-5').style.display = 'flex';
-          setTimeout(() => {
-            document.querySelector('.step1-4').style.display = 'none';
-          }, 1);
-        } else if (answers.whoAreYou === "2") {
-          document.querySelector('.step2-8').style.display = 'flex';
-          setTimeout(() => {
-            document.querySelector('.step2-7').style.display = 'none';
-          }, 1);
-        } else if (answers.whoAreYou === "3") {
-          document.querySelector('.step3-7').style.display = 'flex';
-          setTimeout(() => {
-            document.querySelector('.step3-6').style.display = 'none';
-          }, 1);
-        } else if (answers.whoAreYou === "4") {
-          document.querySelector('.step4-5').style.display = 'flex';
-          setTimeout(() => {
-            document.querySelector('.step4-4').style.display = 'none';
-          }, 1);
-        }
-      }
-
-      // функція для перетворення масивів в рядки для CRM
-      function convertArraysToStrings(elementIds) {
-        elementIds.forEach(id => {
-          const element = document.getElementById(id);
-          if (element && element.selectedOptions) {
-            const values = Array.from(element.selectedOptions).map(o => `"${o.value}"`);
-
-            // створюємо або оновлюємо приховане поле для відправки в CRM
-            let hiddenField = document.getElementById(`${id}-hidden`);
-            if (!hiddenField) {
-              hiddenField = document.createElement('input');
-              hiddenField.type = 'hidden';
-              hiddenField.id = `${id}-hidden`;
-              document.body.appendChild(hiddenField);
-            }
-            hiddenField.value = values.join(',');
+    // Функція для перетворення масивів в рядки для CRM
+    function convertArraysToStrings(elementIds) {
+      elementIds.forEach(id => {
+        const element = document.getElementById(id);
+        if (element && element.selectedOptions) {
+          const values = Array.from(element.selectedOptions).map(o => `"${o.value}"`);
+          let hiddenField = document.getElementById(`${id}-hidden`);
+          if (!hiddenField) {
+            hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.id = `${id}-hidden`;
+            document.body.appendChild(hiddenField);
           }
-        });
-      }
+          hiddenField.value = values.join(',');
+        }
+      });
+    }
 
-      // перетворюємо масиви множинного вибору в рядки
-      convertArraysToStrings([
-        'AdditionalPayments', // 1.7
-        'documentsAvailability', // 2.15
-        'Actual-pension-issue', // 2.16
-        'Getting-surcarges', // 2.17
-        'rejecting-PFU', // 2.18
-        'CompensationMulti', // 3.11
-        'Treatment-after-injury', // 3.12
-        'illegalActivity' // 3.15
-      ]);
+    // Перетворюємо масиви множинного вибору в рядки
+    convertArraysToStrings([
+      'AdditionalPayments', 'documentsAvailability', 'Actual-pension-issue',
+      'Getting-surcarges', 'rejecting-PFU', 'CompensationMulti',
+      'Treatment-after-injury', 'illegalActivity'
+    ]);
 
-      document.cookie = `quizAnswers=${encodeURIComponent(JSON.stringify(answers))}; path=/; max-age=86400`;
-      document.cookie = `whoAreYou=${encodeURIComponent(answers.whoAreYou)}; path=/; max-age=86400`;
+    document.cookie = `quizAnswers=${encodeURIComponent(JSON.stringify(answers))}; path=/; max-age=86400`;
+    document.cookie = `whoAreYou=${encodeURIComponent(answers.whoAreYou)}; path=/; max-age=86400`;
 
-      if (answers.whoAreYou === "1") {
-        console.log('sending form with answers for "Військовий пенсіонер"');
+    let formConfig, emailData;
+
+    if (answers.whoAreYou === "1") {
+      console.log('sending form with answers for "Військовий пенсіонер"');
         document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name").value)}; path=/; max-age=86400`;
         document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephone").value)}; path=/; max-age=86400`;
         if (document.querySelector("#nameConsult1")) {
@@ -4146,7 +4103,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
 
-        var emailData = {
+        emailData = {
           name: document.querySelector('#name').value || '',
           phone: document.querySelector('#Telephone').value || '',
           url: window.location.href
@@ -4155,7 +4112,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!emailData.utm_source) {
           emailData.utm_source = "квіз сайт";
         }
-        sendEmail(emailData); 
       } else if (answers.whoAreYou === "2") {
         console.log('sending form with answers for "Цивільний пенсіонер"');
         document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name--ivyl").value)}; path=/; max-age=86400`;
@@ -4207,7 +4163,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
 
-        var emailData = {
+        emailData = {
           name: document.querySelector('#name--ivyl').value || '',
           phone: document.querySelector('#TelephoneCivyl').value || '',
           url: window.location.href
@@ -4216,7 +4172,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!emailData.utm_source) {
           emailData.utm_source = "квіз сайт";
         }
-        sendEmail(emailData); 
       } else if (answers.whoAreYou === "3") {
         console.log('sending form with answers for "Військовослужбовець"');
         document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-mylitary").value)}; path=/; max-age=86400`;
@@ -4263,7 +4218,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
 
-        var emailData = {
+        emailData = {
           name: document.querySelector('#name-mylitary').value || '',
           phone: document.querySelector('#Telephonemylitary').value || '',
           url: window.location.href
@@ -4272,7 +4227,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!emailData.utm_source) {
           emailData.utm_source = "квіз сайт";
         }
-        sendEmail(emailData); 
       } else if (answers.whoAreYou === "4") {
         console.log('sending form with answers for "Родич військовослужбовця"');
         document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-family").value)}; path=/; max-age=86400`;
@@ -4305,7 +4259,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
         };
 
-        var emailData = {
+        emailData = {
           name: document.querySelector('#name-family').value || '',
           phone: document.querySelector('#Telephonefamily').value || '',
           url: window.location.href
@@ -4314,126 +4268,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!emailData.utm_source) {
           emailData.utm_source = "квіз сайт";
         }
-        sendEmail(emailData);
       }
-      createObjectConsult(formConfig);
-      
-      // Після відправки форми переходимо на наступний крок
-      setTimeout(() => {
-        console.log('Starting navigation after form submit for category:', answers.whoAreYou);
-        
-        const variant = document.querySelector(`#variant${answers.whoAreYou}`);
-        if (!variant) {
-          console.error('Variant not found:', `#variant${answers.whoAreYou}`);
-          return;
-        }
-        
-        let currentAnketa = null;
-        let nextStep = null;
-        
-        if (answers.whoAreYou === "1") {
-          currentAnketa = variant.querySelector('.step1-3');
-          console.log('Found anketa step1-3:', !!currentAnketa);
-          // Перевіряємо наявність послуг прямо
-          const servicesEl = document.getElementById('services');
-          const hasServices = servicesEl && servicesEl.value && servicesEl.value.length > 0;
-          console.log('Has services:', hasServices);
-          nextStep = hasServices ? variant.querySelector('.step1-4') : variant.querySelector('.step1-5');
-          console.log('Next step found:', nextStep ? nextStep.className : 'none');
-        } else if (answers.whoAreYou === "2") {
-          currentAnketa = variant.querySelector('.step2-6');
-          console.log('Found anketa step2-6:', !!currentAnketa);
-          const servicesEl = document.getElementById('services');
-          const hasServices = servicesEl && servicesEl.value && servicesEl.value.length > 0;
-          console.log('Has services:', hasServices);
-          nextStep = hasServices ? variant.querySelector('.step2-7') : variant.querySelector('.step2-8');
-          console.log('Next step found:', nextStep ? nextStep.className : 'none');
-        } else if (answers.whoAreYou === "3") {
-          currentAnketa = variant.querySelector('.step3-5');
-          console.log('Found anketa step3-5:', !!currentAnketa);
-          const servicesEl = document.getElementById('services');
-          const hasServices = servicesEl && servicesEl.value && servicesEl.value.length > 0;
-          console.log('Has services:', hasServices);
-          nextStep = hasServices ? variant.querySelector('.step3-6') : variant.querySelector('.step3-7');
-          console.log('Next step found:', nextStep ? nextStep.className : 'none');
-        } else if (answers.whoAreYou === "4") {
-          currentAnketa = variant.querySelector('.step4-3');
-          console.log('Found anketa step4-3:', !!currentAnketa);
-          const servicesEl = document.getElementById('services');
-          const hasServices = servicesEl && servicesEl.value && servicesEl.value.length > 0;
-          console.log('Has services:', hasServices);
-          nextStep = hasServices ? variant.querySelector('.step4-4') : variant.querySelector('.step4-5');
-          console.log('Next step found:', nextStep ? nextStep.className : 'none');
-        }
-        
-        if (currentAnketa && nextStep) {
-          currentAnketa.style.display = 'none';
-          nextStep.style.display = 'flex';
-          console.log(`Успішний перехід з ${currentAnketa.className} на ${nextStep.className}`);
-        } else {
-          console.error('Navigation failed - currentAnketa:', !!currentAnketa, 'nextStep:', !!nextStep);
-        }
-        
-        // Оновлюємо прогрес після переходу
-        const whoAreYouValue = answers.whoAreYou;
-        if (window.ProgressTrackingModule && whoAreYouValue) {
-          window.ProgressTrackingModule.forceUpdateProgress(`variant${whoAreYouValue}`);
-        }
-      }, 100); // Невелика затримка для завершення відправки
-    });
-  });
 
-  const next1_2 = document.querySelector('#variant1 .step1-2 .next');
-  next1_2.addEventListener('click', () => {
-    filterServices();
-    
-    // ВАЖЛИВО: Автозаповнюємо поля з cookies, але НЕ пропускаємо валідацію
-    // Навігація та валідація відбувається через QuizNavigationModule
-    if (document.cookie.includes('customerName=')) {
-      console.log('customerName cookie found, auto-filling fields from cookies');
-      
-      const nameField = document.querySelector('#name');
-      const phoneField = document.querySelector('#Telephone');
-      const consultField = document.querySelector("#nameConsult1");
-      
-      if (nameField && !nameField.value) {
-        nameField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      }
-      if (phoneField && !phoneField.value) {
-        phoneField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      }
-      if (consultField && !consultField.value) {
-        consultField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      }
-    }
-  });
+    // Повертаємо підготовлені дані
+    return { formConfig, emailData };
+  };
   
-  // ВИДАЛЕНО: next1_4, next1_5, back1_4, back1_5 handlers
-  // Навігація повністю обробляється через QuizNavigationModule
-  
-
-  const next3_4 = document.querySelector('#variant3 .step3-4 .next');
-  next3_4.addEventListener('click', () => {
-    // ВАЖЛИВО: Автозаповнюємо поля з cookies, але НЕ пропускаємо валідацію
-    // Навігація та валідація відбувається через QuizNavigationModule
-    if (document.cookie.includes('customerName=')) {
-      console.log('customerName cookie found, auto-filling fields from cookies');
-      
-      const nameField = document.querySelector('#name-mylitary');
-      const phoneField = document.querySelector('#Telephonemylitary');
-      const consultField = document.querySelector("#nameConsult3");
-      
-      if (nameField && !nameField.value) {
-        nameField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      }
-      if (phoneField && !phoneField.value) {
-        phoneField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      }
-      if (consultField && !consultField.value) {
-        consultField.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
-      }
-    }
-  });
+  // ВИДАЛЕНО: next1_2, next3_4 handlers
+  // Навігація повністю обробляється через QuizNavigationModule, включаючи показ анкет
   
   // ВИДАЛЕНО: next3_6, back3_6 handlers
   // Навігація повністю обробляється через QuizNavigationModule
@@ -4503,6 +4345,12 @@ document.addEventListener('DOMContentLoaded', function() {
     .catch(error => console.error("Помилка мережі:", error));
   }
 });
+
+// ============================================================================
+// MARK: - Global Helper Functions
+// ============================================================================
+
+// updateServiceStepButtons оголошена раніше в DOMContentLoaded listener
 
 // ============================================================================
 // MARK: - UI Components & Form Validation
@@ -4811,11 +4659,19 @@ const QuizNavigationModule = (() => {
   let startButton = null;
 
   const hideStep = (step) => {
-    if (step) step.style.display = "none";
+    if (step) {
+      console.log('hideStep called for:', step.className, 'display will be set to none');
+      step.style.display = "none";
+      console.log('hideStep completed, display is now:', step.style.display);
+    }
   };
 
   const showStep = (step) => {
-    if (step) step.style.display = "flex";
+    if (step) {
+      console.log('showStep called for:', step.className, 'display will be set to flex');
+      step.style.display = "flex";
+      console.log('showStep completed, display is now:', step.style.display);
+    }
   };
 
   const getNextStep = (current) => {
@@ -4927,9 +4783,16 @@ const QuizNavigationModule = (() => {
     currentStep = activeBlock.querySelector(".qwiz-step");
     showStep(currentStep);
 
-    // Скидаємо прогрес і всі поля при новому виборі розділу
+    // Ініціалізуємо прогрес-бари для варіанту (якщо ще не ініціалізовані)
     if (window.ProgressTrackingModule) {
+      // Спочатку ініціалізуємо варіант (створює глобальний і локальний прогрес)
+      if (typeof window.ProgressTrackingModule.initVariant === 'function') {
+        window.ProgressTrackingModule.initVariant(activeBlock);
+      }
+      
+      // Скидаємо прогрес і всі поля при новому виборі розділу
       window.ProgressTrackingModule.resetVariantProgress(activeBlock.id);
+      
       // Примусово оновлюємо прогрес після короткої затримки для відображення
       setTimeout(() => {
         window.ProgressTrackingModule.forceUpdateProgress(activeBlock.id);
@@ -4957,20 +4820,106 @@ const QuizNavigationModule = (() => {
       return; // Не переходимо, якщо валідація не пройшла
     }
 
+    // Якщо поточний крок - анкета, підготовлюємо дані для відправки
+    const isCurrentStepAnketa = currentStep.classList.contains('qwiz-step-anketa');
+    if (isCurrentStepAnketa && window.prepareFormDataBeforeSend) {
+      const formData = window.prepareFormDataBeforeSend();
+      if (formData) {
+        const { formConfig, emailData } = formData;
+        // Відправляємо форму в CRM після успішної валідації
+        setTimeout(() => {
+          if (formConfig && typeof createObjectConsult !== 'undefined') {
+            createObjectConsult(formConfig);
+          }
+          if (emailData && typeof sendEmail !== 'undefined') {
+            sendEmail(emailData);
+          }
+        }, 100);
+      }
+    }
+
     const next = getNextStep(currentStep);
     if (next) {
-      // Перевіряємо, чи це перехід на крок з послугами
+      // Перевіряємо, чи це перехід на анкету
+      const isAnketaStep = next.classList.contains('qwiz-step-anketa');
+      
+      // Перевіряємо, чи це перехід на крок з послугами (з анкети)
       const isServicesStep = next.classList.contains('step1-4') || 
                            next.classList.contains('step2-7') || 
                            next.classList.contains('step3-6') || 
                            next.classList.contains('step4-4');
       
-      if (isServicesStep) {
+      // Перевіряємо, чи ми зараз на блоці результатів і натискаємо "Далі"
+      const isOnResultsStep = currentStep.classList.contains('step1-4') || 
+                             currentStep.classList.contains('step1-5') ||
+                             currentStep.classList.contains('step2-7') || 
+                             currentStep.classList.contains('step2-8') ||
+                             currentStep.classList.contains('step3-6') || 
+                             currentStep.classList.contains('step3-7') ||
+                             currentStep.classList.contains('step4-4') || 
+                             currentStep.classList.contains('step4-5');
+      
+      if (isAnketaStep) {
+        // Завжди показуємо анкету, навіть якщо користувач вже проходив квіз
+        console.log('Showing anketa step');
+        
+        // Автозаповнюємо поля з cookies якщо вони є
+        if (document.cookie.includes('customerName=')) {
+          console.log('customerName cookie found, auto-filling fields from cookies');
+          
+          // Варіант 1
+          const nameField1 = document.querySelector('#name');
+          const phoneField1 = document.querySelector('#Telephone');
+          const consultField1 = document.querySelector("#nameConsult1");
+          
+          // Варіант 2
+          const nameField2 = document.querySelector('#name-civil');
+          const phoneField2 = document.querySelector('#TelephoneCivyl');
+          const consultField2 = document.querySelector("#nameConsult2");
+          
+          // Варіант 3
+          const nameField3 = document.querySelector('#name-mylitary');
+          const phoneField3 = document.querySelector('#Telephonemylitary');
+          const consultField3 = document.querySelector("#nameConsult3");
+          
+          // Варіант 4
+          const nameField4 = document.querySelector('#name-family');
+          const phoneField4 = document.querySelector('#Telephonefamily');
+          const consultField4 = document.querySelector("#nameConsult4");
+          
+          // Автозаповнення для всіх варіантів
+          [nameField1, nameField2, nameField3, nameField4].forEach(field => {
+            if (field && !field.value) {
+              field.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerName\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+            }
+          });
+          
+          [phoneField1, phoneField2, phoneField3, phoneField4].forEach(field => {
+            if (field && !field.value) {
+              field.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)customerPhone\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+            }
+          });
+          
+          [consultField1, consultField2, consultField3, consultField4].forEach(field => {
+            if (field && !field.value) {
+              field.value = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)consultant\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+            }
+          });
+        }
+        
+        hideStep(currentStep);
+        showStep(next);
+        currentStep = next;
+      } else if (isServicesStep) {
         // Фільтруємо послуги і перевіряємо результат
-        filterServices();
+        if (window.filterServices) {
+          window.filterServices();
+        } else {
+          console.error('filterServices is not available');
+        }
         
         const hasServices = window.quizHasServices || false;
-        const whoAreYouValue = whoAreYou?.value;
+        const whoAreYouValue = document.querySelector('#WhoAreYou')?.value;
         
         // Якщо немає послуг, перенаправляємо на відповідний блок
         if (!hasServices) {
@@ -4986,15 +4935,49 @@ const QuizNavigationModule = (() => {
           }
           
           if (noServicesStep) {
+            console.log('No services found, showing noServicesStep:', noServicesStep.className);
             hideStep(currentStep);
             showStep(noServicesStep);
             currentStep = noServicesStep;
+            console.log('currentStep updated to:', currentStep.className);
           }
         } else {
           // Є послуги, переходимо на крок з послугами
+          console.log('Services found, showing servicesStep:', next.className);
           hideStep(currentStep);
           showStep(next);
           currentStep = next;
+          console.log('currentStep updated to:', currentStep.className);
+        }
+      } else if (isOnResultsStep) {
+        // Якщо ми на блоці результатів, переходимо на фінальний крок
+        // Перевіряємо скільки тестів пройдено
+        const completedTests = ['completedCategory1', 'completedCategory2', 'completedCategory3', 'completedCategory4']
+          .filter(key => document.cookie.includes(`${key}=true`));
+        
+        if (completedTests.length >= 3) {
+          // Якщо пройдено 3+ тестів, не переходимо (кнопка має бути схована)
+          console.log('3+ тестів пройдено, перехід заблокований');
+          return;
+        }
+        
+        // Визначаємо фінальний крок
+        let finalStep = null;
+        if (currentStep.classList.contains('step1-4') || currentStep.classList.contains('step1-5')) {
+          finalStep = variant.querySelector('.step1-6');
+        } else if (currentStep.classList.contains('step2-7') || currentStep.classList.contains('step2-8')) {
+          finalStep = variant.querySelector('.step2-9');
+        } else if (currentStep.classList.contains('step3-6') || currentStep.classList.contains('step3-7')) {
+          finalStep = variant.querySelector('.step3-8');
+        } else if (currentStep.classList.contains('step4-4') || currentStep.classList.contains('step4-5')) {
+          finalStep = variant.querySelector('.step4-6');
+        }
+        
+        if (finalStep) {
+          hideStep(currentStep);
+          showStep(finalStep);
+          currentStep = finalStep;
+          console.log('Перехід на фінальний крок:', finalStep.className);
         }
       } else {
         // Звичайний перехід на наступний крок
@@ -5023,11 +5006,15 @@ const QuizNavigationModule = (() => {
   const handleBackClick = () => {
     if (!currentStep) return;
     
+    console.log('handleBackClick called, currentStep:', currentStep.className);
+    
     // Особлива обробка для блоків результатів
     const isResultStep = currentStep.classList.contains('step1-4') || currentStep.classList.contains('step1-5') ||
                         currentStep.classList.contains('step2-7') || currentStep.classList.contains('step2-8') ||
                         currentStep.classList.contains('step3-6') || currentStep.classList.contains('step3-7') ||
                         currentStep.classList.contains('step4-4') || currentStep.classList.contains('step4-5');
+    
+    console.log('isResultStep:', isResultStep);
     
     if (isResultStep) {
       // Якщо ми на блоці результатів, повертаємося на відповідний блок анкети
@@ -5042,10 +5029,15 @@ const QuizNavigationModule = (() => {
         anketaStep = currentStep.closest('[id^="variant"]').querySelector('.step4-3');
       }
       
+      console.log('Found anketa step:', anketaStep?.className);
+      
       if (anketaStep) {
+        console.log('About to hide currentStep:', currentStep.className);
         hideStep(currentStep);
+        console.log('About to show anketaStep:', anketaStep.className);
         showStep(anketaStep);
         currentStep = anketaStep;
+        console.log('currentStep updated to:', currentStep.className);
         
         // Оновлюємо прогрес після повернення
         const variant = currentStep.closest('[id^="variant"]');
@@ -5109,25 +5101,6 @@ const QuizNavigationModule = (() => {
     }
   };
 
-  const handleFormSubmit = () => {
-    const quizForm = document.querySelector("#wf-form-WhoAreYou");
-    if (!quizForm) return;
-
-    quizForm.addEventListener("submit", function () {
-      const parent = quizForm.closest(".variant1, .variant2, .variant3, .variant4");
-      if (!parent) return;
-
-      const step3 = parent.querySelector(".step1-3");
-      const step4 = parent.querySelector(".step1-4");
-
-      if (step3 && step4) {
-        hideStep(step3);
-        showStep(step4);
-        currentStep = step4;
-      }
-    });
-  };
-
   const init = () => {
     startBlock = document.querySelector(".startblock");
     selectWhoAreYou = document.querySelector("#WhoAreYou");
@@ -5137,6 +5110,14 @@ const QuizNavigationModule = (() => {
     VARIANT_BLOCKS["2"] = document.getElementById("variant2");
     VARIANT_BLOCKS["3"] = document.getElementById("variant3");
     VARIANT_BLOCKS["4"] = document.getElementById("variant4");
+    
+    // Блокуємо submit на всіх формах анкет - навігація тільки через кнопки Next
+    document.querySelectorAll('.qwiz-step-anketa form').forEach(form => {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('Form submit prevented, navigation should be via Next button');
+      });
+    });
 
     // Додаємо обробник для скидання прогресу при зміні whoAreYou
     if (selectWhoAreYou) {
@@ -5158,107 +5139,19 @@ const QuizNavigationModule = (() => {
     }
 
     document.querySelectorAll(".button_qwiz.next").forEach(button => {
-      // Спеціальна логіка для кнопок на блоках з послугами
-      const step = button.closest('.qwiz-step');
-      if (step && (step.classList.contains('step1-4') || 
-                   step.classList.contains('step2-7') || 
-                   step.classList.contains('step3-6') || 
-                   step.classList.contains('step4-4'))) {
-        
-        // Підраховуємо кількість пройдених тестів
-        const completedTests = ['completedCategory1', 'completedCategory2', 'completedCategory3', 'completedCategory4']
-          .filter(key => document.cookie.includes(`${key}=true`));
-        
-        if (completedTests.length >= 3) {
-          // Якщо пройдено 3+ тестів, ховаємо кнопку
-          button.style.display = 'none';
-        } else {
-          // Якщо немає інших пройдених тестів, кнопка веде на фінальний крок (step*-6)
-          button.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const currentStep = button.closest('.qwiz-step');
-            const variant = button.closest('[id^="variant"]');
-            let finalStep = null;
-            
-            // Визначаємо фінальний крок залежно від варіанту
-            if (currentStep.classList.contains('step1-4')) {
-              finalStep = variant.querySelector('.step1-6');
-            } else if (currentStep.classList.contains('step2-7')) {
-              finalStep = variant.querySelector('.step2-9'); // Припускаю, що є step2-9
-            } else if (currentStep.classList.contains('step3-6')) {
-              finalStep = variant.querySelector('.step3-8');
-            } else if (currentStep.classList.contains('step4-4')) {
-              finalStep = variant.querySelector('.step4-6');
-            }
-            
-            if (finalStep) {
-              // Ховаємо поточний крок
-              currentStep.style.display = 'none';
-              // Показуємо фінальний крок
-              finalStep.style.display = 'flex';
-              console.log(`Перехід на фінальний крок: ${finalStep.className}`);
-            } else {
-              console.error('Фінальний крок не знайдено');
-            }
-          });
-        }
-      } else if (step && (step.classList.contains('step1-5') || 
-                          step.classList.contains('step2-8') || 
-                          step.classList.contains('step3-7') || 
-                          step.classList.contains('step4-5'))) {
-        
-        // Спеціальна логіка для кнопок на блоках БЕЗ послуг
-        const completedTests = ['completedCategory1', 'completedCategory2', 'completedCategory3', 'completedCategory4']
-          .filter(key => document.cookie.includes(`${key}=true`));
-        
-        if (completedTests.length >= 3) {
-          // Якщо пройдено 3+ тестів, ховаємо кнопку
-          button.style.display = 'none';
-        } else {
-          // Якщо менше 3 тестів, кнопка веде на фінальний крок
-          button.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const currentStep = button.closest('.qwiz-step');
-            const variant = button.closest('[id^="variant"]');
-            let finalStep = null;
-            
-            // Визначаємо фінальний крок залежно від варіанту
-            if (currentStep.classList.contains('step1-5')) {
-              finalStep = variant.querySelector('.step1-6');
-            } else if (currentStep.classList.contains('step2-8')) {
-              finalStep = variant.querySelector('.step2-9');
-            } else if (currentStep.classList.contains('step3-7')) {
-              finalStep = variant.querySelector('.step3-8');
-            } else if (currentStep.classList.contains('step4-5')) {
-              finalStep = variant.querySelector('.step4-6');
-            }
-            
-            if (finalStep) {
-              // Ховаємо поточний крок
-              currentStep.style.display = 'none';
-              // Показуємо фінальний крок
-              finalStep.style.display = 'flex';
-              console.log(`Перехід на фінальний крок: ${finalStep.className}`);
-            } else {
-              console.error('Фінальний крок не знайдено');
-            }
-          });
-        }
-      } else {
-        // Звичайна логіка для інших кнопок
-        button.addEventListener("click", handleNextClick);
-      }
+      button.addEventListener("click", handleNextClick);
+    });
+    
+    // Кнопки .send на анкетах також викликають handleNextClick
+    document.querySelectorAll(".send").forEach(button => {
+      button.addEventListener("click", handleNextClick);
     });
 
     document.querySelectorAll(".button_qwiz.back").forEach(button => {
       button.addEventListener("click", handleBackClick);
     });
 
-    handleFormSubmit();
+    // ВИДАЛЕНО: handleFormSubmit() - навігація тепер повністю через handleNextClick
   };
 
   return { init };
@@ -5561,7 +5454,9 @@ const ProgressTrackingModule = (() => {
   const countValid = (fields) => fields.filter(isFieldValid).length;
 
   const initGlobalProgress = (variant) => {
+    console.log('Initializing global progress for variant:', variant.id);
     if (!document.querySelector('.quiz-global-progress')) {
+      console.log('Creating new global progress element');
       const globalWrap = document.createElement('div');
       globalWrap.className = 'quiz-global-progress';
       globalWrap.innerHTML = `
@@ -5571,6 +5466,9 @@ const ProgressTrackingModule = (() => {
         <div class="quiz-global-text" style="font-weight:600;font-size:14px;">Прогрес тесту: 0%</div>
       `;
       variant.prepend(globalWrap);
+      console.log('Global progress element created and added to variant');
+    } else {
+      console.log('Global progress element already exists');
     }
   };
 
@@ -5789,7 +5687,7 @@ const ProgressTrackingModule = (() => {
     }
   };
 
-  return { init, setTriedToAdvance, toggleProgressVisibility, resetVariantProgress, forceUpdateProgress };
+  return { init, setTriedToAdvance, toggleProgressVisibility, resetVariantProgress, forceUpdateProgress, initVariant };
 })();
 
 // ============================================================================
@@ -5813,7 +5711,9 @@ document.addEventListener("DOMContentLoaded", function () {
   window.ProgressTrackingModule = ProgressTrackingModule;
   
   // Ініціалізуємо кнопки на блоках з послугами при завантаженні
-  updateServiceStepButtons();
+  if (window.updateServiceStepButtons) {
+    window.updateServiceStepButtons();
+  }
   
   console.log("Quiz modules initialized successfully");
 });
