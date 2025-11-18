@@ -4070,205 +4070,208 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (answers.whoAreYou === "1") {
       console.log('sending form with answers for "Військовий пенсіонер"');
-        document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name").value)}; path=/; max-age=86400`;
-        document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephone").value)}; path=/; max-age=86400`;
-        if (document.querySelector("#nameConsult1")) {
-          document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult1").value)}; path=/; max-age=86400`;
-        }
-
-        formConfig = {
-          fields: {
-            Name: "#name",
-            MobilePhone: "#Telephone",
-            "Consultant": "#nameConsult1",
-            "WhatTypeOfPensionDoYouReceive": "#TypePension",
-            "SelectServiceStructureAtRetirement": "#StructuraWork",
-            "SpecifyYourPensionAmount": "#PensionSize",
-            "WhenWasYourPensionAssigned": "#pensionDate",
-            "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
-            "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
-            "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
-            "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
-            "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
-            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
-            "Services": "#services",
-          },
-          contactFields: {
-            FullName: "#name",
-            Phone: "#Telephone",
-          },
-          customFields: { },
-          landingId: landingId,
-          serviceUrl:
-            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-        };
-
-        emailData = {
-          name: document.querySelector('#name').value || '',
-          phone: document.querySelector('#Telephone').value || '',
-          url: window.location.href
-        }
-        emailData = { ...emailData, ...getUTMParams() };
-        if (!emailData.utm_source) {
-          emailData.utm_source = "квіз сайт";
-        }
-      } else if (answers.whoAreYou === "2") {
-        console.log('sending form with answers for "Цивільний пенсіонер"');
-        document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name--ivyl").value)}; path=/; max-age=86400`;
-        document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#TelephoneCivyl").value)}; path=/; max-age=86400`;
-        if (document.querySelector("#nameConsult2")) {
-          document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult2").value)}; path=/; max-age=86400`;
-        }
-
-        formConfig = {
-          fields: {
-            Name: "#name--ivyl",
-            MobilePhone: "#TelephoneCivyl",
-            "Consultant": "#nameConsult2",
-            "WhatIsYourCurrentPensionStatus": "#PensionStatusCyvil",
-            "WhatTypeOfPensionDoYouReceive": "#PensionTypeCyvil",
-            "WhoWasTheBreadwinnerAtTheTimeOfDeath": "#WhoBreadwinner",
-            "WhatWasTheCauseOfBreadwinnersDeath": "#CauseDeath",
-            "InWhichStructureDidTheBreadwinnerServe": "#StructuraWorkMilitary",
-            "WhenWasTheBreadwinnersPensionAssigned": "#pensionDateBreadwinner",
-            "WhenWasYourPensionLastAssigned": "#pensionDateLast",
-            "SpecifyYourPensionAmount": "#PensionSizeCyvil",
-            "SpecifyYourYearOfBirth": "#yearBirth1",
-            "WhatIsYourGender": "#Gender",
-            "DidYouSwitchFromOneTypeOfPensionToAnother": "#ChangePension",
-            "WhatIsYourTotalWorkExperience": "#workExperience",
-            "WhatIsYourProfessionalOrWorkExperience": "#professionalExperience",
-            "HowManyYearsOfCivilServiceExperienceDoYouHave": "#lengthPublicCyvil",
-            "WereYouOnSimplifiedTaxSystem": "#simplifiedSystem",
-            "DoYouHaveWorkExperienceAbroad": "#ExperienceAbroad",
-            "AreYouCurrentlyEmployed": "#workNowZaKordonom",
-            "DoYouHaveChernobylCertificate": "#ChornoblCertificate",
-            "WhatTypeOfCertificateDoYouHave": "#Type-Chornobl-sertificate",
-            "DoYouHaveCombatantStatus": "#StatusUBD",
-            "AreYouAnHeirOfAPensioner": "#heir",
-            "WhichOfTheFollowingDocumentsDoYouHave": "#documentsAvailability-hidden",
-            "WhatPensionIssueIsRelevantToYouOrForWhichYouAlreadyAppliedToPFU": "#Actual-pension-issue-hidden",
-            "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#Getting-surcarges-hidden",
-            "HaveYouReceivedRefusalsFromPFU": "#rejecting-PFU-hidden",
-            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#existence-judicial-decision",
-            "Services": "#services",
-          },
-          contactFields: {
-            FullName: "#name--ivyl",
-            Phone: "#TelephoneCivyl",
-          },
-          customFields: { },
-          landingId: landingId,
-          serviceUrl:
-            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-        };
-
-        emailData = {
-          name: document.querySelector('#name--ivyl').value || '',
-          phone: document.querySelector('#TelephoneCivyl').value || '',
-          url: window.location.href
-        }
-        emailData = { ...emailData, ...getUTMParams() };
-        if (!emailData.utm_source) {
-          emailData.utm_source = "квіз сайт";
-        }
-      } else if (answers.whoAreYou === "3") {
-        console.log('sending form with answers for "Військовослужбовець"');
-        document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-mylitary").value)}; path=/; max-age=86400`;
-        document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephonemylitary").value)}; path=/; max-age=86400`;
-        if (document.querySelector("#nameConsult3")) {
-          document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult3").value)}; path=/; max-age=86400`;
-        }
-
-        formConfig = {
-          fields: {
-            Name: "#name-mylitary",
-            MobilePhone: "#Telephonemylitary",
-            "Consultant": "#nameConsult3",
-            "AreYouStillInServiceOrDischarged": "#Presence-in-military-service",
-            "SpecifyServiceStartDate": "#DateStartMilitary",
-            "DoYouHaveDifficultiesWithDischargeIfNeeded": "#Difficulties-with-dismissal",
-            "SpecifyServiceEndDate": "#DateFinishMilitary",
-            "SpecifyDateOfBirth": "#DateBirth",
-            "SelectFormOfService": "#Form-of-military-service",
-            "SelectServiceStructure": "#StructuraMilitary1",
-            "DidYouServeAtNightOrDuringQuarantine": "#night-shift",
-            "DoYouHaveServiceExperienceInTheStateFiscalService": "#experience-in-the-tax-police",
-            "DoYouHaveUnusedVacationDays": "#unusedVacationDays",
-            "DoYouHaveCombatantStatus": "#Status-UBD",
-            "DidYouParticipateDirectlyInCombat": "#combat-participation",
-            "DoYouHaveDisabilityOrPercentageOfWorkCapacityLoss": "#Establishment-of-disability",
-            "WhatWasTheCauseOfDisabilityOrLossOfWorkCapacity": "#cause-of-disability",
-            "DidYouReceiveInjuryDuringServiceOrRelatedToService": "#presenceInjury",
-            "WereYouTreatedInHealthcareInstitutionsAfterInjury": "#stayeTreatment",
-            "WhatPaymentsDidYouReceiveFromEmployerUponDischarge": "#CompensationMulti-hidden",
-            "DidYouReceiveRegularPaymentsFromEmployerByCourtDecisionInLastSixMonths": "#Treatment-after-injury-hidden",
-            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#courtDecisionsPpayments",
-            "DoYouHaveVlkOrEkopfoMedicalCertificateThatYouWantToAppeal": "#certificate-VLK",
-            "DidYouHaveOffensesDuringService": "#illegalActivity-hidden",
-            "Services": "#services",
-          },
-          contactFields: {
-            FullName: "#name-mylitary",
-            Phone: "#Telephonemylitary",
-          },
-          customFields: { },
-          landingId: landingId,
-          serviceUrl:
-            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-        };
-
-        emailData = {
-          name: document.querySelector('#name-mylitary').value || '',
-          phone: document.querySelector('#Telephonemylitary').value || '',
-          url: window.location.href
-        }
-        emailData = { ...emailData, ...getUTMParams() };
-        if (!emailData.utm_source) {
-          emailData.utm_source = "квіз сайт";
-        }
-      } else if (answers.whoAreYou === "4") {
-        console.log('sending form with answers for "Родич військовослужбовця"');
-        document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-family").value)}; path=/; max-age=86400`;
-        document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephonefamily").value)}; path=/; max-age=86400`;
-        if (document.querySelector("#nameConsult4")) {
-          document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult4").value)}; path=/; max-age=86400`;
-        }
-
-        formConfig = {
-          fields: {
-            Name: "#name-family",
-            MobilePhone: "#Telephonefamily",
-            "Consultant": "#nameConsult4",
-            "WhoAreYouToTheServiceman": "#family-connection",
-            "DoYouHaveCourtEstablishedFactOfCohabitationWithTheDeceasedServicemanWithoutMarriageRegistration": "#FACT-of-cohabitation",
-            "WhatHappenedToTheServiceman": "#What-happened",
-            "InWhichStructureDidHeServe": "#StructuraMilitaryRelative",
-            "ServicemanIsMissingButThereAreReasonsToBelieveHeDied": "#Killed-or-missin",
-            "DoYouHaveDocumentaryProofOfServicemanDeath": "#documentary-proof-of-death",
-            "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#payments-from-government-agencies",
-            "Services": "#services",
-          },
-          contactFields: {
-            FullName: "#name-family",
-            Phone: "#Telephonefamily",
-          },
-          customFields: { },
-          landingId: landingId,
-          serviceUrl:
-            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-        };
-
-        emailData = {
-          name: document.querySelector('#name-family').value || '',
-          phone: document.querySelector('#Telephonefamily').value || '',
-          url: window.location.href
-        }
-        emailData = { ...emailData, ...getUTMParams() };
-        if (!emailData.utm_source) {
-          emailData.utm_source = "квіз сайт";
-        }
+      document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name").value)}; path=/; max-age=86400`;
+      document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephone").value)}; path=/; max-age=86400`;
+      if (document.querySelector("#nameConsult1")) {
+        document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult1").value)}; path=/; max-age=86400`;
       }
+
+      formConfig = {
+        fields: {
+          Name: "#name",
+          MobilePhone: "#Telephone",
+          "Consultant": "#nameConsult1",
+          "WhatTypeOfPensionDoYouReceive": "#TypePension",
+          "SelectServiceStructureAtRetirement": "#StructuraWork",
+          "SpecifyYourPensionAmount": "#PensionSize",
+          "WhenWasYourPensionAssigned": "#pensionDate",
+          "HowManyYearsOfCalendarServiceDoYouHave": "#YearJob",
+          "DoYouHaveChernobylCertificate": "#AvailabilityChernobylCertificate",
+          "WhatTypeOfCertificateDoYouHave": "#CertificateTypeChornobl",
+          "CurrentlyLivingInRadioactiveContaminationZone": "#LiveInChornobl",
+          "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#AdditionalPayments-hidden",
+          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#CourtJudgment",
+          "Services": "#services",
+        },
+        contactFields: {
+          FullName: "#name",
+          Phone: "#Telephone",
+        },
+        customFields: { },
+        landingId: landingId,
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      };
+
+      emailData = {
+        name: document.querySelector('#name').value || '',
+        phone: document.querySelector('#Telephone').value || '',
+        url: window.location.href
+      }
+      emailData = { ...emailData, ...getUTMParams() };
+      if (!emailData.utm_source) {
+        emailData.utm_source = "квіз сайт";
+      }
+    } else if (answers.whoAreYou === "2") {
+      console.log('sending form with answers for "Цивільний пенсіонер"');
+      document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name--ivyl").value)}; path=/; max-age=86400`;
+      document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#TelephoneCivyl").value)}; path=/; max-age=86400`;
+      if (document.querySelector("#nameConsult2")) {
+        document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult2").value)}; path=/; max-age=86400`;
+      }
+
+      formConfig = {
+        fields: {
+          Name: "#name--ivyl",
+          MobilePhone: "#TelephoneCivyl",
+          "Consultant": "#nameConsult2",
+          "WhatIsYourCurrentPensionStatus": "#PensionStatusCyvil",
+          "WhatTypeOfPensionDoYouReceive": "#PensionTypeCyvil",
+          "WhoWasTheBreadwinnerAtTheTimeOfDeath": "#WhoBreadwinner",
+          "WhatWasTheCauseOfBreadwinnersDeath": "#CauseDeath",
+          "InWhichStructureDidTheBreadwinnerServe": "#StructuraWorkMilitary",
+          "WhenWasTheBreadwinnersPensionAssigned": "#pensionDateBreadwinner",
+          "WhenWasYourPensionLastAssigned": "#pensionDateLast",
+          "SpecifyYourPensionAmount": "#PensionSizeCyvil",
+          "SpecifyYourYearOfBirth": "#yearBirth1",
+          "WhatIsYourGender": "#Gender",
+          "DidYouSwitchFromOneTypeOfPensionToAnother": "#ChangePension",
+          "WhatIsYourTotalWorkExperience": "#workExperience",
+          "WhatIsYourProfessionalOrWorkExperience": "#professionalExperience",
+          "HowManyYearsOfCivilServiceExperienceDoYouHave": "#lengthPublicCyvil",
+          "WereYouOnSimplifiedTaxSystem": "#simplifiedSystem",
+          "DoYouHaveWorkExperienceAbroad": "#ExperienceAbroad",
+          "AreYouCurrentlyEmployed": "#workNowZaKordonom",
+          "DoYouHaveChernobylCertificate": "#ChornoblCertificate",
+          "WhatTypeOfCertificateDoYouHave": "#Type-Chornobl-sertificate",
+          "DoYouHaveCombatantStatus": "#StatusUBD",
+          "AreYouAnHeirOfAPensioner": "#heir",
+          "WhichOfTheFollowingDocumentsDoYouHave": "#documentsAvailability-hidden",
+          "WhatPensionIssueIsRelevantToYouOrForWhichYouAlreadyAppliedToPFU": "#Actual-pension-issue-hidden",
+          "HaveYouPreviouslyReceivedPermanentPensionSupplementsByCourtDecision": "#Getting-surcarges-hidden",
+          "HaveYouReceivedRefusalsFromPFU": "#rejecting-PFU-hidden",
+          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#existence-judicial-decision",
+          "Services": "#services",
+        },
+        contactFields: {
+          FullName: "#name--ivyl",
+          Phone: "#TelephoneCivyl",
+        },
+        customFields: { },
+        landingId: landingId,
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      };
+
+      emailData = {
+        name: document.querySelector('#name--ivyl').value || '',
+        phone: document.querySelector('#TelephoneCivyl').value || '',
+        url: window.location.href
+      }
+      emailData = { ...emailData, ...getUTMParams() };
+      if (!emailData.utm_source) {
+        emailData.utm_source = "квіз сайт";
+      }
+    } else if (answers.whoAreYou === "3") {
+      console.log('sending form with answers for "Військовослужбовець"');
+      document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-mylitary").value)}; path=/; max-age=86400`;
+      document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephonemylitary").value)}; path=/; max-age=86400`;
+      if (document.querySelector("#nameConsult3")) {
+        document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult3").value)}; path=/; max-age=86400`;
+      }
+
+      formConfig = {
+        fields: {
+          Name: "#name-mylitary",
+          MobilePhone: "#Telephonemylitary",
+          "Consultant": "#nameConsult3",
+          "AreYouStillInServiceOrDischarged": "#Presence-in-military-service",
+          "SpecifyServiceStartDate": "#DateStartMilitary",
+          "DoYouHaveDifficultiesWithDischargeIfNeeded": "#Difficulties-with-dismissal",
+          "SpecifyServiceEndDate": "#DateFinishMilitary",
+          "SpecifyDateOfBirth": "#DateBirth",
+          "SelectFormOfService": "#Form-of-military-service",
+          "SelectServiceStructure": "#StructuraMilitary1",
+          "DidYouServeAtNightOrDuringQuarantine": "#night-shift",
+          "DoYouHaveServiceExperienceInTheStateFiscalService": "#experience-in-the-tax-police",
+          "DoYouHaveUnusedVacationDays": "#unusedVacationDays",
+          "DoYouHaveCombatantStatus": "#Status-UBD",
+          "DidYouParticipateDirectlyInCombat": "#combat-participation",
+          "DoYouHaveDisabilityOrPercentageOfWorkCapacityLoss": "#Establishment-of-disability",
+          "WhatWasTheCauseOfDisabilityOrLossOfWorkCapacity": "#cause-of-disability",
+          "DidYouReceiveInjuryDuringServiceOrRelatedToService": "#presenceInjury",
+          "WereYouTreatedInHealthcareInstitutionsAfterInjury": "#stayeTreatment",
+          "WhatPaymentsDidYouReceiveFromEmployerUponDischarge": "#CompensationMulti-hidden",
+          "DidYouReceiveRegularPaymentsFromEmployerByCourtDecisionInLastSixMonths": "#Treatment-after-injury-hidden",
+          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#courtDecisionsPpayments",
+          "DoYouHaveVlkOrEkopfoMedicalCertificateThatYouWantToAppeal": "#certificate-VLK",
+          "DidYouHaveOffensesDuringService": "#illegalActivity-hidden",
+          "Services": "#services",
+        },
+        contactFields: {
+          FullName: "#name-mylitary",
+          Phone: "#Telephonemylitary",
+        },
+        customFields: { },
+        landingId: landingId,
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      };
+
+      emailData = {
+        name: document.querySelector('#name-mylitary').value || '',
+        phone: document.querySelector('#Telephonemylitary').value || '',
+        url: window.location.href
+      }
+      emailData = { ...emailData, ...getUTMParams() };
+      if (!emailData.utm_source) {
+        emailData.utm_source = "квіз сайт";
+      }
+    } else if (answers.whoAreYou === "4") {
+      console.log('sending form with answers for "Родич військовослужбовця"');
+      document.cookie = `customerName=${encodeURIComponent(document.querySelector("#name-family").value)}; path=/; max-age=86400`;
+      document.cookie = `customerPhone=${encodeURIComponent(document.querySelector("#Telephonefamily").value)}; path=/; max-age=86400`;
+      if (document.querySelector("#nameConsult4")) {
+        document.cookie = `consultant=${encodeURIComponent(document.querySelector("#nameConsult4").value)}; path=/; max-age=86400`;
+      }
+
+      formConfig = {
+        fields: {
+          Name: "#name-family",
+          MobilePhone: "#Telephonefamily",
+          "Consultant": "#nameConsult4",
+          "WhoAreYouToTheServiceman": "#family-connection",
+          "DoYouHaveCourtEstablishedFactOfCohabitationWithTheDeceasedServicemanWithoutMarriageRegistration": "#FACT-of-cohabitation",
+          "WhatHappenedToTheServiceman": "#What-happened",
+          "InWhichStructureDidHeServe": "#StructuraMilitaryRelative",
+          "ServicemanIsMissingButThereAreReasonsToBelieveHeDied": "#Killed-or-missin",
+          "DoYouHaveDocumentaryProofOfServicemanDeath": "#documentary-proof-of-death",
+          "DoYouHaveCourtDecisionsOnPaymentsFromStateBodiesThatCameIntoForceButWereNotExecuted": "#payments-from-government-agencies",
+          "Services": "#services",
+        },
+        contactFields: {
+          FullName: "#name-family",
+          Phone: "#Telephonefamily",
+        },
+        customFields: { },
+        landingId: landingId,
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      };
+
+      emailData = {
+        name: document.querySelector('#name-family').value || '',
+        phone: document.querySelector('#Telephonefamily').value || '',
+        url: window.location.href
+      }
+      emailData = { ...emailData, ...getUTMParams() };
+      if (!emailData.utm_source) {
+        emailData.utm_source = "квіз сайт";
+      }
+    }
+
+    // createObjectConsult(formConfig);
+    // sendEmail(emailData);
 
     // Повертаємо підготовлені дані
     return { formConfig, emailData };
@@ -4280,16 +4283,50 @@ document.addEventListener('DOMContentLoaded', function() {
   // ВИДАЛЕНО: next3_6, back3_6 handlers
   // Навігація повністю обробляється через QuizNavigationModule
 
-  function createObjectConsult(formConfig) {
+  // Робимо createObjectConsult глобальною для використання в handleNextClick
+  window.createObjectConsult = function(formConfig) {
     if (typeof landing !== 'undefined' && landing.createObjectFromLanding) {
-      landing.createObjectFromLanding(formConfig); // MARK: ПОВЕРНУТИ
+      landing.createObjectFromLanding(formConfig);
     } else {
-      console.log('Обєкт landing не доступний, форма не відправлена');
+      
+      // Fallback: відправка напряму
+      // if (formConfig && formConfig.serviceUrl) {
+      //   const payload = {
+      //     formData: {},
+      //     LandingId: formConfig.landingId
+      //   };
+        
+      //   // Додаємо всі поля
+      //   Object.entries(formConfig.fields || {}).forEach(([key, selector]) => {
+      //     const el = document.querySelector(selector);
+      //     if (el) payload.formData[key] = el.value;
+      //   });
+        
+      //   Object.entries(formConfig.contactFields || {}).forEach(([key, selector]) => {
+      //     const el = document.querySelector(selector);
+      //     if (el) payload.formData[key] = el.value;
+      //   });
+        
+      //   Object.assign(payload.formData, formConfig.customFields || {});
+        
+      //   fetch(formConfig.serviceUrl, {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json' },
+      //     body: JSON.stringify(payload)
+      //   })
+      //   .then(r => r.ok ? console.log('✅ Sent via fallback') : console.error('❌ Fallback failed'))
+      //   .catch(e => console.error('❌ Network error:', e));
+      // }
+
+      console.log('landing.createObjectFromLanding is not available.');
     }
-  }
-  function initLanding(formConfig) {
-    landing.initLanding(formConfig);
-  }
+  };
+  
+  window.initLanding = function(formConfig) {
+    if (typeof landing !== 'undefined' && landing.initLanding) {
+      landing.initLanding(formConfig);
+    }
+  };
 
   function getUTMParams() {
     // спочатку намагаємось отримати UTM параметри з URL
@@ -4327,7 +4364,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     return currentUTM;
   }
-  function sendEmail(emailData) {
+  
+  // Робимо sendEmail глобальною
+  window.sendEmail = function(emailData) {
     fetch("https://api.topb.dev/merezhaprava/mail", { 
       method: "POST",
       headers: {
@@ -4343,7 +4382,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     })
     .catch(error => console.error("Помилка мережі:", error));
-  }
+  };
 });
 
 // ============================================================================
@@ -4822,17 +4861,18 @@ const QuizNavigationModule = (() => {
 
     // Якщо поточний крок - анкета, підготовлюємо дані для відправки
     const isCurrentStepAnketa = currentStep.classList.contains('qwiz-step-anketa');
+    console.log("isCurrentStepAnketa ==> ", isCurrentStepAnketa);
     if (isCurrentStepAnketa && window.prepareFormDataBeforeSend) {
       const formData = window.prepareFormDataBeforeSend();
       if (formData) {
         const { formConfig, emailData } = formData;
         // Відправляємо форму в CRM після успішної валідації
         setTimeout(() => {
-          if (formConfig && typeof createObjectConsult !== 'undefined') {
-            createObjectConsult(formConfig);
+          if (window.createObjectConsult) {
+            window.createObjectConsult(formConfig);
           }
-          if (emailData && typeof sendEmail !== 'undefined') {
-            sendEmail(emailData);
+          if (window.sendEmail) {
+            window.sendEmail(emailData);
           }
         }, 100);
       }
