@@ -441,6 +441,76 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   });
 
+  for (let i = 1; i <= 6; i++) {
+    $(`#banner-form-${i}`).on("submit", function () {
+      var consultFormConfig = {
+        fields: {
+          Name: `.banner-input-name-${i}`,
+          MobilePhone: `.banner-input-phone-${i}`,
+        },
+        contactFields: {
+          FullName: `.banner-input-name-${i}`,
+          Phone: `.banner-input-phone-${i}`,
+        },
+        customFields: {},
+        landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+        redirectUrl: "https://merezha-prava.ua/success",
+      };
+
+      const form = $(this);
+      var emailData = {
+        name: form.find(`.banner-input-name-${i}`).val() || '',
+        phone: form.find(`.banner-input-phone-${i}`).val() || '',
+        url: window.location.href
+      };
+      emailData = { ...emailData, ...getUTMParams() };
+      sendEmail(emailData);
+
+      function createObjectConsult() {
+        landing.createObjectFromLanding(consultFormConfig);
+      }
+
+      createObjectConsult();
+      return false;
+    });
+  }
+
+  $(`.form_under_banner`).on("submit", function () {
+    var consultFormConfig = {
+      fields: {
+        Name: `.field_under_banner_name`,
+        MobilePhone: `.field_under_banner_phone`,
+      },
+      contactFields: {
+        FullName: `.field_under_banner_name`,
+        Phone: `.field_under_banner_phone`,
+      },
+      customFields: {},
+      landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
+      serviceUrl:
+        "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      redirectUrl: "https://merezha-prava.ua/success",
+    };
+
+    const form = $(this);
+    var emailData = {
+      name: form.find(`.field_under_banner_name`).val() || '',
+      phone: form.find(`.field_under_banner_phone`).val() || '',
+      url: window.location.href
+    };
+    emailData = { ...emailData, ...getUTMParams() };
+    sendEmail(emailData);
+
+    function createObjectConsult() {
+      landing.createObjectFromLanding(consultFormConfig);
+    }
+
+    createObjectConsult();
+    return false;
+  });
+
   $("#popUpForm,#wf-form-").on("submit", function () {
     function setUTMSource() { 
       const urlParams = new URLSearchParams(window.location.search);
@@ -473,9 +543,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const form = $(this);
     var emailData = {
-      name: form.find('.contact_name').val() || '',
-      phone: form.find('.contact_phone').val() || '',
-      city: form.find('.contact_address').val() || '',
+      name: form.find('#popUpName').val() || '',
+      phone: form.find('#popUpPhone').val() || '',
+      // city: form.find('.contact_address').val() || '',
       url: window.location.href
     }
     emailData = { ...emailData, ...getUTMParams() };
