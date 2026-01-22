@@ -444,6 +444,7 @@ document.addEventListener("DOMContentLoaded", function () {
   for (let i = 1; i <= 6; i++) {
     $(`#banner-form-${i}`).on("submit", (function(index) {
       return function() {
+        console.log(`Banner form ${index} submitted`);
         var consultFormConfig = {
           fields: {
             Name: `.banner-input-name-${index}`,
