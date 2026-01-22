@@ -417,18 +417,12 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    console.log(`Processed ${forms.length} banner forms`);
-
     $(document).on("submit", 'form[data-uniq-form="1"]', function(e) {
       e.preventDefault();
-      
-      console.log('Banner form submitted');
       
       const form = $(this);
       const formId = this.id;
       const index = formId.replace('banner-form-', '');
-      
-      console.log(`Form ID: ${formId}, Index: ${index}`);
       
       var consultFormConfig = {
         fields: {
@@ -449,8 +443,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const nameValue = form.find(`.banner-input-name-${index}`).val();
       const phoneValue = form.find(`.banner-input-phone-${index}`).val();
       
-      console.log(`Name: "${nameValue}", Phone: "${phoneValue}"`);
-      
       var emailData = {
         name: nameValue || '',
         phone: phoneValue || '',
@@ -469,7 +461,6 @@ document.addEventListener("DOMContentLoaded", function () {
       let lastPart = urlParts[urlParts.length - 1];
       
       consultFormConfig.landingId = landingIdMapping[lastPart] || defaultLandingId;
-      console.log('Final landingId:', consultFormConfig.landingId);
 
       createObjectConsult();
       return false;
@@ -530,76 +521,6 @@ document.addEventListener("DOMContentLoaded", function () {
     createObjectConsult();
     return false;
   });
-
-  for (let i = 1; i <= 6; i++) {
-    console.log(`Attempting to attach handler to #banner-form-${i}`);
-    const formElement = $(`#banner-form-${i}`);
-    console.log(`Form element found:`, formElement.length > 0, formElement);
-    
-    $(`#banner-form-${i}`).on("submit", (function(index) {
-      console.log(`Handler created for banner-form-${index}`);
-      return function(e) {
-        console.log(`Banner form ${index} submitted`);
-        console.log('Event object:', e);
-        console.log('Form element:', this);
-        
-        e.preventDefault(); // Добавляем preventDefault
-        
-        var consultFormConfig = {
-          fields: {
-            Name: `.banner-input-name-${index}`,
-            MobilePhone: `.banner-input-phone-${index}`,
-          },
-          contactFields: {
-            FullName: `.banner-input-name-${index}`,
-            Phone: `.banner-input-phone-${index}`,
-          },
-          customFields: {},
-          landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
-          serviceUrl:
-            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-          redirectUrl: "https://merezha-prava.ua/success",
-        };
-
-        const form = $(this);
-        console.log('jQuery form object:', form);
-        
-        const nameValue = form.find(`.banner-input-name-${index}`).val();
-        const phoneValue = form.find(`.banner-input-phone-${index}`).val();
-        
-        console.log(`Name input value: "${nameValue}"`);
-        console.log(`Phone input value: "${phoneValue}"`);
-        
-        var emailData = {
-          name: nameValue || '',
-          phone: phoneValue || '',
-          url: window.location.href
-        };
-        
-        console.log('Email data before UTM:', emailData);
-        emailData = { ...emailData, ...getUTMParams() };
-        console.log('Email data after UTM:', emailData);
-        
-        sendEmail(emailData);
-
-        function createObjectConsult() {
-          console.log('Calling landing.createObjectFromLanding with config:', consultFormConfig);
-          landing.createObjectFromLanding(consultFormConfig);
-        }
-
-        let currentUrl = window.location.href;
-        let urlParts = currentUrl.split("/");
-        let lastPart = urlParts[urlParts.length - 1];
-        console.log('URL last part:', lastPart);
-        
-        consultFormConfig.landingId = landingIdMapping[lastPart] || defaultLandingId;
-        console.log('Final landingId:', consultFormConfig.landingId);
-
-        createObjectConsult();
-        return false;
-      };
-    })(i));
-  }
 
   $(`.form_under_banner`).on("submit", function () {
     var consultFormConfig = {
