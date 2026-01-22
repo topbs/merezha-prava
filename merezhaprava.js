@@ -442,9 +442,19 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   for (let i = 1; i <= 6; i++) {
+    console.log(`Attempting to attach handler to #banner-form-${i}`);
+    const formElement = $(`#banner-form-${i}`);
+    console.log(`Form element found:`, formElement.length > 0, formElement);
+    
     $(`#banner-form-${i}`).on("submit", (function(index) {
-      return function() {
+      console.log(`Handler created for banner-form-${index}`);
+      return function(e) {
         console.log(`Banner form ${index} submitted`);
+        console.log('Event object:', e);
+        console.log('Form element:', this);
+        
+        e.preventDefault(); // Добавляем preventDefault
+        
         var consultFormConfig = {
           fields: {
             Name: `.banner-input-name-${index}`,
@@ -462,22 +472,38 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         const form = $(this);
+        console.log('jQuery form object:', form);
+        
+        const nameValue = form.find(`.banner-input-name-${index}`).val();
+        const phoneValue = form.find(`.banner-input-phone-${index}`).val();
+        
+        console.log(`Name input value: "${nameValue}"`);
+        console.log(`Phone input value: "${phoneValue}"`);
+        
         var emailData = {
-          name: form.find(`.banner-input-name-${index}`).val() || '',
-          phone: form.find(`.banner-input-phone-${index}`).val() || '',
+          name: nameValue || '',
+          phone: phoneValue || '',
           url: window.location.href
         };
+        
+        console.log('Email data before UTM:', emailData);
         emailData = { ...emailData, ...getUTMParams() };
+        console.log('Email data after UTM:', emailData);
+        
         sendEmail(emailData);
 
         function createObjectConsult() {
+          console.log('Calling landing.createObjectFromLanding with config:', consultFormConfig);
           landing.createObjectFromLanding(consultFormConfig);
         }
 
         let currentUrl = window.location.href;
         let urlParts = currentUrl.split("/");
         let lastPart = urlParts[urlParts.length - 1];
+        console.log('URL last part:', lastPart);
+        
         consultFormConfig.landingId = landingIdMapping[lastPart] || defaultLandingId;
+        console.log('Final landingId:', consultFormConfig.landingId);
 
         createObjectConsult();
         return false;
