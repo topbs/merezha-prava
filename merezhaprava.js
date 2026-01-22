@@ -388,6 +388,96 @@ document.addEventListener("DOMContentLoaded", function () {
     "advokat": "4236d051-1242-45ef-8a65-0e88646e7610",
   };
 
+  function initBannerForms() {
+    const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+    
+    if (!isHomePage) {
+      console.log('Not home page, skipping banner forms initialization');
+      return;
+    }
+
+    console.log('Initializing banner forms on home page');
+    
+    const forms = document.querySelectorAll('form[data-uniq-form="1"]');
+    
+    forms.forEach((form, i) => {
+      const n = i + 1;
+
+      if (!form.id) form.id = `banner-form-${n}`;
+      form.classList.add(`banner-form-${n}`);
+
+      form.querySelectorAll('input[type="text"]').forEach((el) => {
+        el.classList.add(`banner-input-name-${n}`);
+      });
+      form.querySelectorAll('input[type="tel"]').forEach((el) => {
+        el.classList.add(`banner-input-phone-${n}`);
+      });
+      form.querySelectorAll("label[for]").forEach((label) => {
+        label.setAttribute("for", `${label.getAttribute("for")}--${n}`);
+      });
+    });
+
+    console.log(`Processed ${forms.length} banner forms`);
+
+    $(document).on("submit", 'form[data-uniq-form="1"]', function(e) {
+      e.preventDefault();
+      
+      console.log('Banner form submitted');
+      
+      const form = $(this);
+      const formId = this.id;
+      const index = formId.replace('banner-form-', '');
+      
+      console.log(`Form ID: ${formId}, Index: ${index}`);
+      
+      var consultFormConfig = {
+        fields: {
+          Name: `.banner-input-name-${index}`,
+          MobilePhone: `.banner-input-phone-${index}`,
+        },
+        contactFields: {
+          FullName: `.banner-input-name-${index}`,
+          Phone: `.banner-input-phone-${index}`,
+        },
+        customFields: {},
+        landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
+        serviceUrl:
+          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+        redirectUrl: "https://merezha-prava.ua/success",
+      };
+
+      const nameValue = form.find(`.banner-input-name-${index}`).val();
+      const phoneValue = form.find(`.banner-input-phone-${index}`).val();
+      
+      console.log(`Name: "${nameValue}", Phone: "${phoneValue}"`);
+      
+      var emailData = {
+        name: nameValue || '',
+        phone: phoneValue || '',
+        url: window.location.href
+      };
+      
+      emailData = { ...emailData, ...getUTMParams() };
+      sendEmail(emailData);
+
+      function createObjectConsult() {
+        landing.createObjectFromLanding(consultFormConfig);
+      }
+
+      let currentUrl = window.location.href;
+      let urlParts = currentUrl.split("/");
+      let lastPart = urlParts[urlParts.length - 1];
+      
+      consultFormConfig.landingId = landingIdMapping[lastPart] || defaultLandingId;
+      console.log('Final landingId:', consultFormConfig.landingId);
+
+      createObjectConsult();
+      return false;
+    });
+  }
+
+  initBannerForms();
+
   $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function () {
     var consultFormConfig = {
       fields: {
