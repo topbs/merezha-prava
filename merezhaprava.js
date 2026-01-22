@@ -442,39 +442,46 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   for (let i = 1; i <= 6; i++) {
-    $(`#banner-form-${i}`).on("submit", function () {
-      var consultFormConfig = {
-        fields: {
-          Name: `.banner-input-name-${i}`,
-          MobilePhone: `.banner-input-phone-${i}`,
-        },
-        contactFields: {
-          FullName: `.banner-input-name-${i}`,
-          Phone: `.banner-input-phone-${i}`,
-        },
-        customFields: {},
-        landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
-        serviceUrl:
-          "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-        redirectUrl: "https://merezha-prava.ua/success",
+    $(`#banner-form-${i}`).on("submit", (function(index) {
+      return function() {
+        var consultFormConfig = {
+          fields: {
+            Name: `.banner-input-name-${index}`,
+            MobilePhone: `.banner-input-phone-${index}`,
+          },
+          contactFields: {
+            FullName: `.banner-input-name-${index}`,
+            Phone: `.banner-input-phone-${index}`,
+          },
+          customFields: {},
+          landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
+          serviceUrl:
+            "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+          redirectUrl: "https://merezha-prava.ua/success",
+        };
+
+        const form = $(this);
+        var emailData = {
+          name: form.find(`.banner-input-name-${index}`).val() || '',
+          phone: form.find(`.banner-input-phone-${index}`).val() || '',
+          url: window.location.href
+        };
+        emailData = { ...emailData, ...getUTMParams() };
+        sendEmail(emailData);
+
+        function createObjectConsult() {
+          landing.createObjectFromLanding(consultFormConfig);
+        }
+
+        let currentUrl = window.location.href;
+        let urlParts = currentUrl.split("/");
+        let lastPart = urlParts[urlParts.length - 1];
+        consultFormConfig.landingId = landingIdMapping[lastPart] || defaultLandingId;
+
+        createObjectConsult();
+        return false;
       };
-
-      const form = $(this);
-      var emailData = {
-        name: form.find(`.banner-input-name-${i}`).val() || '',
-        phone: form.find(`.banner-input-phone-${i}`).val() || '',
-        url: window.location.href
-      };
-      emailData = { ...emailData, ...getUTMParams() };
-      sendEmail(emailData);
-
-      function createObjectConsult() {
-        landing.createObjectFromLanding(consultFormConfig);
-      }
-
-      createObjectConsult();
-      return false;
-    });
+    })(i));
   }
 
   $(`.form_under_banner`).on("submit", function () {
