@@ -3949,7 +3949,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // показуємо відповідні DOM елементи
     services.forEach(service => {
-      const h3Element = service.querySelector('h3.qwiz-service_h3');
+      const h3Element = service.querySelector('div.qwiz-service_h3');
       if (h3Element && filteredServiceNames.includes(h3Element.textContent.trim())) {
         service.style.display = 'block';
       }
