@@ -99,6 +99,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Функція для видалення utm_source="сайт поп-ап" з усіх посилань
+  function removePopupUTMFromLinks() {
+    try {
+      const currentDomain = window.location.hostname;
+      const links = document.querySelectorAll('a[href]');
+      
+      links.forEach(link => {
+        const href = link.getAttribute('href');
+        
+        // Перевіряємо, чи є посилання внутрішнім
+        if (href && (href.startsWith('/') || href.includes(currentDomain)) && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+          try {
+            const url = new URL(href, window.location.origin);
+            
+            // Видаляємо utm_source якщо це "сайт поп-ап"
+            if (url.searchParams.get('utm_source') === 'сайт поп-ап') {
+              url.searchParams.delete('utm_source');
+              link.setAttribute('href', url.toString());
+            }
+          } catch (error) {
+            // Ігноруємо помилки для некоректних URL
+          }
+        }
+      });
+      
+      console.log('UTM мітка "сайт поп-ап" видалена з посилань');
+    } catch (error) {
+      console.error('Помилка при видаленні UTM параметрів з посилань:', error);
+    }
+  }
+
   // Додаємо UTM параметри до посилань після завантаження DOM
   setTimeout(addUTMToInternalLinks, 100);
   
@@ -675,6 +706,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Видаляємо UTM мітку після відправки з затримкою, щоб дані встигли потрапити в CRM
     setTimeout(function() {
       removePopupUTMSource();
+      removePopupUTMFromLinks();
     }, 1500);
     
     return false;
@@ -800,6 +832,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Видаляємо UTM мітку після відправки з затримкою, щоб дані встигли потрапити в CRM
     setTimeout(function() {
       removePopupUTMSource();
+      removePopupUTMFromLinks();
     }, 1500);
     
     return false;
