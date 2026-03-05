@@ -672,8 +672,10 @@ document.addEventListener("DOMContentLoaded", function () {
     addLink();
     createObject();
     
-    // Видаляємо UTM мітку після відправки
-    removePopupUTMSource();
+    // Видаляємо UTM мітку після відправки з затримкою, щоб дані встигли потрапити в CRM
+    setTimeout(function() {
+      removePopupUTMSource();
+    }, 1500);
     
     return false;
   });
@@ -795,8 +797,10 @@ document.addEventListener("DOMContentLoaded", function () {
     addLink();
     createObject();
     
-    // Видаляємо UTM мітку після відправки
-    removePopupUTMSource();
+    // Видаляємо UTM мітку після відправки з затримкою, щоб дані встигли потрапити в CRM
+    setTimeout(function() {
+      removePopupUTMSource();
+    }, 1500);
     
     return false;
   });
