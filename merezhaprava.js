@@ -99,6 +99,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Функція для додавання utm_source="сайт поп-ап" при відкритті попапу
+  function setPopupUTMSource() {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (!urlParams.has("utm_source")) {
+      urlParams.set("utm_source", "сайт поп-ап");
+      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+      
+      window.history.replaceState({}, "", newUrl);
+      console.log('UTM мітка "сайт поп-ап" додана');
+      
+      // Додаємо мітку до посилань на сторінці
+      addUTMToInternalLinks();
+    }
+  }
+
   // Функція для видалення utm_source="сайт поп-ап" з усіх посилань
   function removePopupUTMFromLinks() {
     try {
@@ -130,6 +146,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Функція для видалення utm_source="сайт поп-ап" з URL
+  function removePopupUTMSource() {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.get("utm_source") === "сайт поп-ап") {
+      urlParams.delete("utm_source");
+      const newUrl = urlParams.toString() 
+        ? `${window.location.pathname}?${urlParams.toString()}`
+        : window.location.pathname;
+      
+      window.history.replaceState({}, "", newUrl);
+      console.log('UTM мітка "сайт поп-ап" видалена з URL');
+    }
+  }
+
   // Додаємо UTM параметри до посилань після завантаження DOM
   setTimeout(addUTMToInternalLinks, 100);
   
@@ -138,6 +169,9 @@ document.addEventListener("DOMContentLoaded", function () {
     link.addEventListener("click", function (event) {
       event.preventDefault();
       console.log("link clicked");
+
+      // Додаємо UTM мітку при відкритті попапу
+      setPopupUTMSource();
 
       const popup = document.querySelector(".pop-up-div");
       if (popup) {
@@ -588,31 +622,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#popUpForm,#wf-form-").on("submit", function () {
-    function setUTMSource() { 
-      const urlParams = new URLSearchParams(window.location.search);
-      
-      if (!urlParams.has("utm_source")) {
-        urlParams.set("utm_source", "сайт поп-ап");
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        
-        window.history.replaceState({}, "", newUrl);
-      }
-    }
-    
-    function removePopupUTMSource() {
-      const urlParams = new URLSearchParams(window.location.search);
-      
-      if (urlParams.get("utm_source") === "сайт поп-ап") {
-        urlParams.delete("utm_source");
-        const newUrl = urlParams.toString() 
-          ? `${window.location.pathname}?${urlParams.toString()}`
-          : window.location.pathname;
-        
-        window.history.replaceState({}, "", newUrl);
-      }
-    }
-    
-    setUTMSource();
     let popUpFormConfig = {
       fields: {
         Name: "#popUpName", // Имя посетителя, заполнившего форму
@@ -713,31 +722,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#popup-time").on("submit", function () {
-    function setUTMSource() { 
-      const urlParams = new URLSearchParams(window.location.search);
-      
-      if (!urlParams.has("utm_source")) {
-        urlParams.set("utm_source", "сайт поп-ап");
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        
-        window.history.replaceState({}, "", newUrl);
-      }
-    }
-    
-    function removePopupUTMSource() {
-      const urlParams = new URLSearchParams(window.location.search);
-      
-      if (urlParams.get("utm_source") === "сайт поп-ап") {
-        urlParams.delete("utm_source");
-        const newUrl = urlParams.toString() 
-          ? `${window.location.pathname}?${urlParams.toString()}`
-          : window.location.pathname;
-        
-        window.history.replaceState({}, "", newUrl);
-      }
-    }
-    
-    setUTMSource();
     let popUpFormConfig = {
       fields: {
         Name: "#popUpTimeName", // Имя посетителя, заполнившего форму
