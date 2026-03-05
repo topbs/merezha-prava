@@ -567,6 +567,20 @@ document.addEventListener("DOMContentLoaded", function () {
         window.history.replaceState({}, "", newUrl);
       }
     }
+    
+    function removePopupUTMSource() {
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      if (urlParams.get("utm_source") === "сайт поп-ап") {
+        urlParams.delete("utm_source");
+        const newUrl = urlParams.toString() 
+          ? `${window.location.pathname}?${urlParams.toString()}`
+          : window.location.pathname;
+        
+        window.history.replaceState({}, "", newUrl);
+      }
+    }
+    
     setUTMSource();
     let popUpFormConfig = {
       fields: {
@@ -657,6 +671,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addLink();
     createObject();
+    
+    // Видаляємо UTM мітку після відправки
+    removePopupUTMSource();
+    
     return false;
   });
 
@@ -671,6 +689,20 @@ document.addEventListener("DOMContentLoaded", function () {
         window.history.replaceState({}, "", newUrl);
       }
     }
+    
+    function removePopupUTMSource() {
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      if (urlParams.get("utm_source") === "сайт поп-ап") {
+        urlParams.delete("utm_source");
+        const newUrl = urlParams.toString() 
+          ? `${window.location.pathname}?${urlParams.toString()}`
+          : window.location.pathname;
+        
+        window.history.replaceState({}, "", newUrl);
+      }
+    }
+    
     setUTMSource();
     let popUpFormConfig = {
       fields: {
@@ -762,6 +794,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addLink();
     createObject();
+    
+    // Видаляємо UTM мітку після відправки
+    removePopupUTMSource();
+    
     return false;
   });
 
