@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
   saveUTMParams();
 
   // Додаємо UTM параметри до всіх внутрішніх посилань
-  function addUTMToInternalLinks() {
+  window.addUTMToInternalLinks = function() {
     try {
       const savedData = localStorage.getItem('utmParams');
       if (!savedData) return;
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Функція для додавання utm_source="сайт поп-ап" при відкритті попапу
-  function setPopupUTMSource() {
+  window.setPopupUTMSource = function() {
     const urlParams = new URLSearchParams(window.location.search);
     
     if (!urlParams.has("utm_source")) {
@@ -111,12 +111,12 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log('UTM мітка "сайт поп-ап" додана');
       
       // Додаємо мітку до посилань на сторінці
-      addUTMToInternalLinks();
+      window.addUTMToInternalLinks();
     }
   }
 
   // Функція для видалення utm_source="сайт поп-ап" з усіх посилань
-  function removePopupUTMFromLinks() {
+  window.removePopupUTMFromLinks = function() {
     try {
       const currentDomain = window.location.hostname;
       const links = document.querySelectorAll('a[href]');
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Функція для видалення utm_source="сайт поп-ап" з URL
-  function removePopupUTMSource() {
+  window.removePopupUTMSource = function() {
     const urlParams = new URLSearchParams(window.location.search);
     
     if (urlParams.get("utm_source") === "сайт поп-ап") {
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Додаємо UTM параметри до посилань після завантаження DOM
-  setTimeout(addUTMToInternalLinks, 100);
+  setTimeout(window.addUTMToInternalLinks, 100);
   
   const links = document.querySelectorAll('a[rel="open-popup"]');
   links.forEach(function (link) {
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("link clicked");
 
       // Додаємо UTM мітку при відкритті попапу
-      setPopupUTMSource();
+      window.setPopupUTMSource();
 
       const popup = document.querySelector(".pop-up-div");
       if (popup) {
@@ -714,8 +714,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Видаляємо UTM мітку після відправки з затримкою, щоб дані встигли потрапити в CRM
     setTimeout(function() {
-      removePopupUTMSource();
-      removePopupUTMFromLinks();
+      window.removePopupUTMSource();
+      window.removePopupUTMFromLinks();
     }, 1500);
     
     return false;
@@ -815,8 +815,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Видаляємо UTM мітку після відправки з затримкою, щоб дані встигли потрапити в CRM
     setTimeout(function() {
-      removePopupUTMSource();
-      removePopupUTMFromLinks();
+      window.removePopupUTMSource();
+      window.removePopupUTMFromLinks();
     }, 1500);
     
     return false;
