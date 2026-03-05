@@ -591,13 +591,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Phone: "#popUpPhone", // Contact's mobile phone
         BpmRef: ".current-url",
       },
-      customFields: {
-        utm_source: utmParams.utm_source,
-        utm_medium: utmParams.utm_medium,
-        utm_campaign: utmParams.utm_campaign,
-        utm_term: utmParams.utm_term,
-        utm_content: utmParams.utm_content
-      },
+      customFields: {},
       landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
       serviceUrl:
         "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
@@ -712,13 +706,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Phone: "#popUpTimePhone", // Contact's mobile phone
         BpmRef: ".current-url",
       },
-      customFields: {
-        utm_source: utmParams.utm_source,
-        utm_medium: utmParams.utm_medium,
-        utm_campaign: utmParams.utm_campaign,
-        utm_term: utmParams.utm_term,
-        utm_content: utmParams.utm_content
-      },
+      customFields: {},
       // landingId: "7f00f650-4103-4e26-9684-8171d606af1d",
       landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
       serviceUrl:
