@@ -568,18 +568,36 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
     setUTMSource();
+    
+    // Отримуємо UTM параметри
+    const utmParams = getUTMParams();
+    if (!utmParams.utm_source) {
+      utmParams.utm_source = "сайт поп-ап";
+    }
+    
     let popUpFormConfig = {
       fields: {
         Name: "#popUpName", // Имя посетителя, заполнившего форму
         MobilePhone: "#popUpPhone", // Телефон посетителя
         BpmRef: ".current-url",
+        utm_source: utmParams.utm_source,
+        utm_medium: utmParams.utm_medium,
+        utm_campaign: utmParams.utm_campaign,
+        utm_term: utmParams.utm_term,
+        utm_content: utmParams.utm_content
       },
       contactFields: {
         FullName: "#popUpName", // Name of a contact
         Phone: "#popUpPhone", // Contact's mobile phone
         BpmRef: ".current-url",
       },
-      customFields: {},
+      customFields: {
+        utm_source: utmParams.utm_source,
+        utm_medium: utmParams.utm_medium,
+        utm_campaign: utmParams.utm_campaign,
+        utm_term: utmParams.utm_term,
+        utm_content: utmParams.utm_content
+      },
       landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
       serviceUrl:
         "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
@@ -593,16 +611,15 @@ document.addEventListener("DOMContentLoaded", function () {
       // city: form.find('.contact_address').val() || '',
       url: window.location.href
     }
-    emailData = { ...emailData, ...getUTMParams() };
-    if (!emailData.utm_source) {
-      emailData.utm_source = "сайт поп-ап";
-    }
+    emailData = { ...emailData, ...utmParams };
     sendEmail(emailData);
 
     function createObject() {
+      console.log('UTM параметри перед відправкою в CRM:', utmParams);
+      console.log('Конфігурація форми:', popUpFormConfig);
       landing.createObjectFromLanding(popUpFormConfig);
-      console.log("object created");
-    }
+      console.log("object created");    
+    }    
 
     function initLanding() {
       landing.initLanding(popUpFormConfig);
@@ -672,18 +689,36 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
     setUTMSource();
+    
+    // Отримуємо UTM параметри
+    const utmParams = getUTMParams();
+    if (!utmParams.utm_source) {
+      utmParams.utm_source = "сайт поп-ап";
+    }
+    
     let popUpFormConfig = {
       fields: {
         Name: "#popUpTimeName", // Имя посетителя, заполнившего форму
         MobilePhone: "#popUpTimePhone", // Телефон посетителя
         BpmRef: ".current-url",
+        utm_source: utmParams.utm_source,
+        utm_medium: utmParams.utm_medium,
+        utm_campaign: utmParams.utm_campaign,
+        utm_term: utmParams.utm_term,
+        utm_content: utmParams.utm_content
       },
       contactFields: {
         FullName: "#popUpTimeName", // Name of a contact
         Phone: "#popUpTimePhone", // Contact's mobile phone
         BpmRef: ".current-url",
       },
-      customFields: {},
+      customFields: {
+        utm_source: utmParams.utm_source,
+        utm_medium: utmParams.utm_medium,
+        utm_campaign: utmParams.utm_campaign,
+        utm_term: utmParams.utm_term,
+        utm_content: utmParams.utm_content
+      },
       // landingId: "7f00f650-4103-4e26-9684-8171d606af1d",
       landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
       serviceUrl:
@@ -698,10 +733,7 @@ document.addEventListener("DOMContentLoaded", function () {
       category: form.find('#field-14').val() || '',
       url: window.location.href
     }
-    emailData = { ...emailData, ...getUTMParams() };
-    if (!emailData.utm_source) {
-      emailData.utm_source = "сайт поп-ап";
-    }
+    emailData = { ...emailData, ...utmParams };
     sendEmail(emailData); 
 
     function createObject() {
@@ -799,6 +831,9 @@ document.addEventListener("DOMContentLoaded", function () {
       utm_content: urlParams.get('utm_content') || ''
     };
     
+    console.log('UTM з URL:', currentUTM);
+    console.log('Поточний URL:', window.location.href);
+    
     // Если в URL нет UTM параметров, пытаемся получить их из localStorage
     const hasCurrentUTM = Object.values(currentUTM).some(value => value !== '');
     
@@ -808,6 +843,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (savedData) {
           const utmData = JSON.parse(savedData);
           const utmParams = utmData.params || utmData; // Поддержка старого и нового формата
+          
+          console.log('UTM з localStorage:', utmParams);
           
           return {
             utm_source: utmParams.utm_source || '',
@@ -822,6 +859,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
     
+    console.log('UTM які повертаються:', currentUTM);
     return currentUTM;
   }
 
