@@ -672,7 +672,7 @@ document.addEventListener("DOMContentLoaded", function () {
       landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
       serviceUrl:
         "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-      redirectUrl: "https://merezha-prava.ua/success",
+      redirectUrl: "https://merezha-prava.ua/success?utm_source=test",
     };
 
     const form = $(this);
