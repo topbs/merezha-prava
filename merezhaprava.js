@@ -557,22 +557,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#popUpForm,#wf-form-").on("submit", function () {
-    function setUTMSource() { 
-      const urlParams = new URLSearchParams(window.location.search);
-      
-      if (!urlParams.has("utm_source")) {
-        urlParams.set("utm_source", "сайт поп-ап");
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        
-        window.history.replaceState({}, "", newUrl);
-      }
-    }
-    setUTMSource();
     let popUpFormConfig = {
       fields: {
         Name: "#popUpName", // Имя посетителя, заполнившего форму
         MobilePhone: "#popUpPhone", // Телефон посетителя
-        BpmRef: ".current-url",
       },
       contactFields: {
         FullName: "#popUpName", // Name of a contact
@@ -594,9 +582,6 @@ document.addEventListener("DOMContentLoaded", function () {
       url: window.location.href
     }
     emailData = { ...emailData, ...getUTMParams() };
-    if (!emailData.utm_source) {
-      emailData.utm_source = "сайт поп-ап";
-    }
     sendEmail(emailData);
 
     function createObject() {
@@ -676,7 +661,6 @@ document.addEventListener("DOMContentLoaded", function () {
       fields: {
         Name: "#popUpTimeName", // Имя посетителя, заполнившего форму
         MobilePhone: "#popUpTimePhone", // Телефон посетителя
-        BpmRef: ".current-url",
       },
       contactFields: {
         FullName: "#popUpTimeName", // Name of a contact
@@ -756,7 +740,7 @@ document.addEventListener("DOMContentLoaded", function () {
       hiddenInput.className = "current-url";
       hiddenInput.value = currentUrl;
 
-      document.querySelector("#popUpForm,#wf-form-").appendChild(hiddenInput);
+      document.querySelector("#popup-time").appendChild(hiddenInput);
       console.log("Приховане посилання було створено:", currentUrl);
     }
 
