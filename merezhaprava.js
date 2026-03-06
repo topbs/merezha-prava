@@ -665,14 +665,14 @@ document.addEventListener("DOMContentLoaded", function () {
       contactFields: {
         FullName: "#popUpTimeName", // Name of a contact
         Phone: "#popUpTimePhone", // Contact's mobile phone
-        BpmRef: ".current-url",
+        
       },
       customFields: {},
       // landingId: "7f00f650-4103-4e26-9684-8171d606af1d",
       landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
       serviceUrl:
         "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-      redirectUrl: "https://merezha-prava.ua/success?utm_source=test",
+      redirectUrl: "https://merezha-prava.ua/success",
     };
 
     const form = $(this);
