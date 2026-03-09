@@ -768,9 +768,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $(document).ready(function () {
-    $(".phone, .contact_phone").mask("380000000000", {
+    $(".phone, .contact_phone").mask("380999999999?", {
       onPaste: function(val) {
-        return val.replace(/^380/, '');
+          return val.replace(/^380/, '');
       }
     });
     $(".mask-date").mask("99.99.9999");
