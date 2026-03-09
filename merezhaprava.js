@@ -768,8 +768,11 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $(document).ready(function () {
-    $(".phone").mask("380999999999?");
-    $(".contact_phone").mask("380999999999?");
+    $(".phone, .contact_phone").mask("380000000000", {
+      onPaste: function(val) {
+        return val.replace(/^380/, '');
+      }
+    });
     $(".mask-date").mask("99.99.9999");
     $(".mask-date").mask("99.99.9999 99:99");
   });
