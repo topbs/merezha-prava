@@ -557,17 +557,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#popUpForm,#wf-form-").on("submit", function () {
-    function setUTMSource() { 
-      const urlParams = new URLSearchParams(window.location.search);
-      
-      if (!urlParams.has("utm_source")) {
-        urlParams.set("utm_source", "сайт поп-ап");
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        
-        window.history.replaceState({}, "", newUrl);
-      }
-    }
-    setUTMSource();
     let popUpFormConfig = {
       fields: {
         Name: "#popUpName", // Имя посетителя, заполнившего форму
@@ -594,9 +583,6 @@ document.addEventListener("DOMContentLoaded", function () {
       url: window.location.href
     }
     emailData = { ...emailData, ...getUTMParams() };
-    if (!emailData.utm_source) {
-      emailData.utm_source = "сайт поп-ап";
-    }
     sendEmail(emailData);
 
     function createObject() {
@@ -661,17 +647,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#popup-time").on("submit", function () {
-    function setUTMSource() { 
-      const urlParams = new URLSearchParams(window.location.search);
-      
-      if (!urlParams.has("utm_source")) {
-        urlParams.set("utm_source", "сайт поп-ап");
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        
-        window.history.replaceState({}, "", newUrl);
-      }
-    }
-    setUTMSource();
     let popUpFormConfig = {
       fields: {
         Name: "#popUpTimeName", // Имя посетителя, заполнившего форму
@@ -701,9 +676,6 @@ document.addEventListener("DOMContentLoaded", function () {
       url: window.location.href
     }
     emailData = { ...emailData, ...getUTMParams() };
-    if (!emailData.utm_source) {
-      emailData.utm_source = "сайт поп-ап";
-    }
     sendEmail(emailData); 
 
     function createObject() {
