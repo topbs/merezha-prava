@@ -768,13 +768,38 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $(document).ready(function () {
-    $(".phone, .contact_phone").mask("380999999999?", {
-      onBeforePaste: function (value) {
-        value = value.replace(/\D/g, "");
-        if (value.startsWith("380")) {
-          value = value.slice(3);
+    var $phones = $(".phone, .contact_phone");
+
+    $phones.mask("380999999999");
+
+    $phones.on("focus", function () {
+      if (!this.value) {
+        this.value = "380";
+      }
+    });
+
+    $phones.on("input paste", function () {
+      var el = this;
+
+      setTimeout(function () {
+        var val = el.value.replace(/\D/g, "");
+
+        if (val.startsWith("380")) {
+          val = val.slice(0, 12);
+        } else {
+          val = "380" + val;
+          val = val.slice(0, 12);
         }
-        return value;
+
+        el.value = val;
+      }, 0);
+    });
+
+    $phones.on("keydown", function (e) {
+      var pos = this.selectionStart;
+
+      if ((e.key === "Backspace" && pos <= 3) || (e.key === "Delete" && pos < 3)) {
+        e.preventDefault();
       }
     });
 
