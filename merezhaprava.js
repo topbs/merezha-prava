@@ -778,21 +778,29 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    $phones.on("input paste", function () {
-      var el = this;
+    $phones.on("paste", function (e) {
+      e.preventDefault();
 
-      setTimeout(function () {
-        var val = el.value.replace(/\D/g, "");
+      var pasted = (e.originalEvent || e).clipboardData.getData("text");
+      var digits = pasted.replace(/\D/g, "");
 
-        if (val.startsWith("380")) {
-          val = val.slice(0, 12);
-        } else {
-          val = "380" + val;
-          val = val.slice(0, 12);
-        }
+      if (digits.startsWith("380")) {
+        digits = digits.slice(0, 12);
+      } else {
+        digits = ("380" + digits).slice(0, 12);
+      }
 
-        el.value = val;
-      }, 0);
+      $(this).val(digits).trigger("input");
+    });
+
+    $phones.on("input", function () {
+      var digits = this.value.replace(/\D/g, "");
+
+      if (!digits.startsWith("380")) {
+        digits = "380" + digits.replace(/^380/, "");
+      }
+
+      this.value = digits.slice(0, 12);
     });
 
     $phones.on("keydown", function (e) {
