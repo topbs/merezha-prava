@@ -769,10 +769,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $(document).ready(function () {
     $(".phone, .contact_phone").mask("380999999999?", {
-      onPaste: function(val) {
-          return val.replace(/^380/, '');
+      onBeforePaste: function (value) {
+        value = value.replace(/\D/g, "");
+        if (value.startsWith("380")) {
+          value = value.slice(3);
+        }
+        return value;
       }
     });
+
     $(".mask-date").mask("99.99.9999");
     $(".mask-date").mask("99.99.9999 99:99");
   });
