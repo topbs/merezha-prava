@@ -758,6 +758,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (digits.startsWith("380")) {
         digits = digits.slice(0, 12);
+      } else if (digits.startsWith("0") && digits.length === 10) {
+        digits = "38" + digits;
       } else {
         digits = ("380" + digits).slice(0, 12);
       }
