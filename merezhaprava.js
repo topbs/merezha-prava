@@ -13,6 +13,44 @@ document.addEventListener("DOMContentLoaded", function () {
   window.main = new Main();
   main.init("main js loaded");
 
+  // Функція перевірки можливості відправки форми
+  function canSubmitForm() {
+    // Перевірка на адміна (через localStorage або URL параметр)
+    const isAdmin = localStorage.getItem('isAdmin') === 'true' || 
+                     new URLSearchParams(window.location.search).has('admin');
+    
+    if (isAdmin) {
+      // Зберігаємо статус адміна в localStorage при першій перевірці
+      if (!localStorage.getItem('isAdmin')) {
+        localStorage.setItem('isAdmin', 'true');
+      }
+      return { allowed: true };
+    }
+    
+    // Перевірка часу останньої відправки
+    const lastSubmitTime = localStorage.getItem('lastFormSubmitTime');
+    const currentTime = Date.now();
+    const oneMinute = 60 * 1000; // 1 хвилина в мілісекундах
+    
+    if (lastSubmitTime) {
+      const timeDiff = currentTime - parseInt(lastSubmitTime);
+      if (timeDiff < oneMinute) {
+        const remainingSeconds = Math.ceil((oneMinute - timeDiff) / 1000);
+        return { 
+          allowed: false, 
+          remainingSeconds: remainingSeconds 
+        };
+      }
+    }
+    
+    return { allowed: true };
+  }
+
+  // Функція запису часу відправки
+  function recordFormSubmit() {
+    localStorage.setItem('lastFormSubmitTime', Date.now().toString());
+  }
+
   function saveUTMParams() {
     const urlParams = new URLSearchParams(window.location.search);
     const utmParams = {};
@@ -420,6 +458,13 @@ document.addEventListener("DOMContentLoaded", function () {
     $(document).on("submit", 'form[data-uniq-form="1"]', function(e) {
       e.preventDefault();
       
+      // Перевірка можливості відправки форми
+      const submitCheck = canSubmitForm();
+      if (!submitCheck.allowed) {
+        alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
+        return false;
+      }
+      
       const form = $(this);
       const formId = this.id;
       const index = formId.replace('banner-form-', '');
@@ -463,6 +508,7 @@ document.addEventListener("DOMContentLoaded", function () {
       consultFormConfig.landingId = landingIdMapping[lastPart] || defaultLandingId;
 
       createObjectConsult();
+      recordFormSubmit(); // Записуємо час відправки
       return false;
     });
   }
@@ -470,6 +516,13 @@ document.addEventListener("DOMContentLoaded", function () {
   initBannerForms();
 
   $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function () {
+    // Перевірка можливості відправки форми
+    const submitCheck = canSubmitForm();
+    if (!submitCheck.allowed) {
+      alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
+      return false;
+    }
+    
     var consultFormConfig = {
       fields: {
         Name: ".contact_name", // Имя посетителя, заполнившего форму
@@ -519,10 +572,18 @@ document.addEventListener("DOMContentLoaded", function () {
       landingIdMapping[lastPart] || defaultLandingId;
 
     createObjectConsult();
+    recordFormSubmit(); // Записуємо час відправки
     return false;
   });
 
   $(`.form_under_banner`).on("submit", function () {
+    // Перевірка можливості відправки форми
+    const submitCheck = canSubmitForm();
+    if (!submitCheck.allowed) {
+      alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
+      return false;
+    }
+    
     var consultFormConfig = {
       fields: {
         Name: `.field_under_banner_name`,
@@ -553,10 +614,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     createObjectConsult();
+    recordFormSubmit(); // Записуємо час відправки
     return false;
   });
 
   $("#popUpForm,#wf-form-").on("submit", function () {
+    // Перевірка можливості відправки форми
+    const submitCheck = canSubmitForm();
+    if (!submitCheck.allowed) {
+      alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
+      return false;
+    }
+    
     let popUpFormConfig = {
       fields: {
         Name: "#popUpName", // Имя посетителя, заполнившего форму
@@ -643,10 +712,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addLink();
     createObject();
+    recordFormSubmit(); // Записуємо час відправки
     return false;
   });
 
   $("#popup-time").on("submit", function () {
+    // Перевірка можливості відправки форми
+    const submitCheck = canSubmitForm();
+    if (!submitCheck.allowed) {
+      alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
+      return false;
+    }
+    
     let popUpFormConfig = {
       fields: {
         Name: "#popUpTimeName", // Имя посетителя, заполнившего форму
@@ -736,6 +813,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addLink();
     createObject();
+    recordFormSubmit(); // Записуємо час відправки
     return false;
   });
 
