@@ -461,6 +461,8 @@ document.addEventListener("DOMContentLoaded", function () {
       // Перевірка можливості відправки форми
       const submitCheck = canSubmitForm();
       if (!submitCheck.allowed) {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
         return false;
       }
@@ -515,10 +517,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   initBannerForms();
 
-  $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function () {
+  $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function (e) {
     // Перевірка можливості відправки форми
     const submitCheck = canSubmitForm();
     if (!submitCheck.allowed) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      }
       alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
       return false;
     }
@@ -576,10 +583,15 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   });
 
-  $(`.form_under_banner`).on("submit", function () {
+  $(`.form_under_banner`).on("submit", function (e) {
     // Перевірка можливості відправки форми
     const submitCheck = canSubmitForm();
     if (!submitCheck.allowed) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      }
       alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
       return false;
     }
@@ -618,10 +630,15 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   });
 
-  $("#popUpForm,#wf-form-").on("submit", function () {
+  $("#popUpForm,#wf-form-").on("submit", function (e) {
     // Перевірка можливості відправки форми
     const submitCheck = canSubmitForm();
     if (!submitCheck.allowed) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      }
       alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
       return false;
     }
@@ -716,10 +733,15 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   });
 
-  $("#popup-time").on("submit", function () {
+  $("#popup-time").on("submit", function (e) {
     // Перевірка можливості відправки форми
     const submitCheck = canSubmitForm();
     if (!submitCheck.allowed) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      }
       alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
       return false;
     }
