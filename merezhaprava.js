@@ -510,7 +510,13 @@ document.addEventListener("DOMContentLoaded", function () {
       consultFormConfig.landingId = landingIdMapping[lastPart] || defaultLandingId;
 
       createObjectConsult();
-      recordFormSubmit(); // Записуємо час відправки
+      recordFormSubmit();
+      
+      // Редирект на success сторінку
+      setTimeout(function() {
+        window.location.href = '/success';
+      }, 500);
+      
       return false;
     });
   }
@@ -579,7 +585,13 @@ document.addEventListener("DOMContentLoaded", function () {
       landingIdMapping[lastPart] || defaultLandingId;
 
     createObjectConsult();
-    recordFormSubmit(); // Записуємо час відправки
+    recordFormSubmit();
+    
+    // Редирект на success сторінку
+    setTimeout(function() {
+      window.location.href = '/success';
+    }, 500);
+    
     return false;
   });
 
@@ -626,7 +638,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     createObjectConsult();
-    recordFormSubmit(); // Записуємо час відправки
+    recordFormSubmit();
+    
+    // Редирект на success сторінку
+    setTimeout(function() {
+      window.location.href = '/success';
+    }, 500);
+    
     return false;
   });
 
@@ -729,7 +747,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addLink();
     createObject();
-    recordFormSubmit(); // Записуємо час відправки
+    recordFormSubmit();
+    
+    // Редирект на success сторінку
+    setTimeout(function() {
+      window.location.href = '/success';
+    }, 500);
+    
     return false;
   });
 
@@ -835,7 +859,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addLink();
     createObject();
-    recordFormSubmit(); // Записуємо час відправки
+    recordFormSubmit();
+    
+    // Редирект на success сторінку
+    setTimeout(function() {
+      window.location.href = '/success';
+    }, 500);
+    
     return false;
   });
 
