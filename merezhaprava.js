@@ -895,16 +895,23 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       $(this).val(digits).trigger("input");
+
+      // On mobile, e.preventDefault() may be silently ignored and the browser
+      // also inserts the clipboard text, producing a garbled value.
+      // The setTimeout fires after all synchronous paste/input handlers and
+      // restores the correct value if it was overwritten.
+      var expected = digits;
+      var self = this;
+      setTimeout(function () {
+        var current = self.value.replace(/\D/g, "");
+        if (current !== expected) {
+          self.value = expected;
+        }
+      }, 0);
     });
 
     $phones.on("input", function () {
       var digits = this.value.replace(/\D/g, "");
-
-      // On mobile, paste may not be intercepted and the existing "380" prefix
-      // gets concatenated with the pasted "+380…" number producing "380380…"
-      if (digits.startsWith("380380")) {
-        digits = digits.slice(3);
-      }
 
       if (!digits.startsWith("380")) {
         digits = "380" + digits.replace(/^380/, "");
