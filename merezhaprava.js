@@ -872,12 +872,27 @@ document.addEventListener("DOMContentLoaded", function () {
   $(document).ready(function () {
     var $phones = $(".phone, .contact_phone");
 
-    $phones.mask("380999999999");
-
     $phones.on("focus", function () {
       if (!this.value) {
         this.value = "380";
       }
+    });
+
+    $phones.on("input", function () {
+      var digits = this.value.replace(/\D/g, "");
+
+      // On mobile, e.preventDefault() on paste is ignored, so the browser
+      // inserts raw clipboard text on top of the existing "380" prefix,
+      // producing "380380...". Detect and collapse the doubled prefix.
+      if (digits.startsWith("380380")) {
+        digits = digits.slice(3);
+      }
+
+      if (!digits.startsWith("380")) {
+        digits = "380" + digits.replace(/^380/, "");
+      }
+
+      this.value = digits.slice(0, 12);
     });
 
     $phones.on("paste", function (e) {
@@ -895,29 +910,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       $(this).val(digits).trigger("input");
-
-      // On mobile, e.preventDefault() may be silently ignored and the browser
-      // also inserts the clipboard text, producing a garbled value.
-      // The setTimeout fires after all synchronous paste/input handlers and
-      // restores the correct value if it was overwritten.
-      var expected = digits;
-      var self = this;
-      setTimeout(function () {
-        var current = self.value.replace(/\D/g, "");
-        if (current !== expected) {
-          self.value = expected;
-        }
-      }, 0);
-    });
-
-    $phones.on("input", function () {
-      var digits = this.value.replace(/\D/g, "");
-
-      if (!digits.startsWith("380")) {
-        digits = "380" + digits.replace(/^380/, "");
-      }
-
-      this.value = digits.slice(0, 12);
     });
 
     $phones.on("keydown", function (e) {
