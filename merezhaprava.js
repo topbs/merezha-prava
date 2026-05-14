@@ -900,6 +900,12 @@ document.addEventListener("DOMContentLoaded", function () {
     $phones.on("input", function () {
       var digits = this.value.replace(/\D/g, "");
 
+      // On mobile, paste may not be intercepted and the existing "380" prefix
+      // gets concatenated with the pasted "+380…" number producing "380380…"
+      if (digits.startsWith("380380")) {
+        digits = digits.slice(3);
+      }
+
       if (!digits.startsWith("380")) {
         digits = "380" + digits.replace(/^380/, "");
       }
