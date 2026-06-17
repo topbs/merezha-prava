@@ -154,6 +154,55 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  function initPererahunokServiceQuizPopup() {
+    const targetPath = "/services/pererahunok-pislya-perehodu-z-pensiyi-za-vislugu-rokiv-na-pensiyu-za-vikom";
+    const currentPath = window.location.pathname.replace(/\/$/, "");
+
+    if (currentPath !== targetPath) {
+      return;
+    }
+
+    const pererahunokQuizOpenBtn = document.querySelector('.quiz-open-form');
+    const pererahunokQuizPopup = document.querySelector('.pop-up_quiz');
+    const pererahunokQuizCloseBtn = document.querySelector('.pop-up_quiz .close-div');
+
+    if (!pererahunokQuizOpenBtn || !pererahunokQuizPopup) {
+      return;
+    }
+
+    function openPererahunokQuizPopup(event) {
+      event.preventDefault();
+      pererahunokQuizPopup.style.display = 'flex';
+
+      setTimeout(function () {
+        pererahunokQuizPopup.classList.add('is-open');
+      }, 10);
+    }
+
+    function closePererahunokQuizPopup() {
+      pererahunokQuizPopup.classList.remove('is-open');
+
+      setTimeout(function () {
+        pererahunokQuizPopup.style.display = 'none';
+      }, 250);
+    }
+
+    pererahunokQuizOpenBtn.addEventListener('click', openPererahunokQuizPopup);
+
+    if (pererahunokQuizCloseBtn) {
+      pererahunokQuizCloseBtn.addEventListener('click', closePererahunokQuizPopup);
+    }
+
+    pererahunokQuizPopup.addEventListener('click', function (event) {
+      if (event.target === pererahunokQuizPopup) {
+        closePererahunokQuizPopup();
+      }
+    });
+  }
+
+  initPererahunokServiceQuizPopup();
+
   // Default landing ID
   const defaultLandingId = "842376e7-2bef-4205-8a16-db0a2cc0c458";
   const blogPostsLandingId = "af173b2b-6afb-4261-8533-50936a300e19";
@@ -994,5 +1043,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch(error => console.error("Помилка мережі:", error));
   }
+
+  
   
 });
