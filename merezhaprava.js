@@ -156,13 +156,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function initPererahunokServiceQuizPopup() {
-    const targetPath = "/services/pererahunok-pislya-perehodu-z-pensiyi-za-vislugu-rokiv-na-pensiyu-za-vikom";
-    const currentPath = window.location.pathname.replace(/\/$/, "");
-
-    if (currentPath !== targetPath) {
-      return;
-    }
-
     const pererahunokQuizOpenBtn = document.querySelector('.quiz-open-form');
     const pererahunokQuizPopup = document.querySelector('.pop-up_quiz');
     const pererahunokQuizCloseBtn = document.querySelector('.pop-up_quiz .close-div');
