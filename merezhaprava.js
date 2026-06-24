@@ -911,6 +911,71 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   });
 
+  $("#popUpFormQwiz").on("submit", function (e) {
+    const submitCheck = canSubmitForm();
+    if (!submitCheck.allowed) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      }
+      alert(`Будь ласка, зачекайте ${submitCheck.remainingSeconds} секунд перед наступною відправкою форми.`);
+      return false;
+    }
+
+    let popUpFormConfig = {
+      fields: {
+        Name: "#popUpNameQwiz",
+        MobilePhone: "#popUpPhoneQwiz",
+        BpmRef: ".current-url",
+      },
+      contactFields: {
+        FullName: "#popUpNameQwiz",
+        Phone: "#popUpPhoneQwiz",
+        BpmRef: ".current-url",
+      },
+      customFields: {},
+      landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
+      serviceUrl:
+        "https://merezha-prava.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+      redirectUrl: "https://merezha-prava.ua/success",
+    };
+
+    const form = $(this);
+    var emailData = {
+      name: form.find('#popUpNameQwiz').val() || '',
+      phone: form.find('#popUpPhoneQwiz').val() || '',
+      url: window.location.href
+    };
+    emailData = { ...emailData, ...getUTMParams() };
+    sendEmail(emailData);
+
+    function createObject() {
+      landing.createObjectFromLanding(popUpFormConfig);
+      console.log("object created");
+    }
+
+    function addLink() {
+      const currentUrl = window.location.href;
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.className = "current-url";
+      hiddenInput.value = currentUrl;
+      document.querySelector("#popUpFormQwiz").appendChild(hiddenInput);
+      console.log("Приховане посилання було створено:", currentUrl);
+    }
+
+    addLink();
+    createObject();
+    recordFormSubmit();
+
+    setTimeout(function() {
+      window.location.href = '/success';
+    }, 500);
+
+    return false;
+  });
+
   $(document).ready(function () {
     var $phones = $(".phone, .contact_phone");
 
