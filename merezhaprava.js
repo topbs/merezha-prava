@@ -108,6 +108,49 @@ document.addEventListener("DOMContentLoaded", function () {
     hiddenInput.value = window.location.href;
   }
 
+  let pendingEmails = 0;
+
+  // Перед редиректом чекаємо, поки завершаться запити в CRM, Webflow ($.active) і на пошту,
+  // інакше перехід на /success може обірвати запит, що ще не дійшов. Не довше 5 секунд.
+  function redirectToSuccess() {
+    const startedAt = Date.now();
+    (function check() {
+      const elapsed = Date.now() - startedAt;
+      const done = $.active === 0 && pendingEmails === 0;
+      if ((done && elapsed >= 500) || elapsed >= 5000) {
+        window.location.href = '/success';
+      } else {
+        setTimeout(check, 100);
+      }
+    })();
+  }
+
+  // Обгортка для обробників форм. Webflow отримує кожну заявку (його обробник висить на
+  // document і спрацьовує після нашого), а наш скрипт лише додає відправку в CRM і на пошту/ТГ.
+  // Подію зупиняємо тільки якщо обробник явно відхилив заявку (повертає false: невалідні дані,
+  // таймаут між відправками). Помилка в нашому коді не повинна заважати відправці у Webflow.
+  function leadSubmitHandler(handler) {
+    return function (e) {
+      e.preventDefault();
+      try {
+        if (handler.call(this, e) === false) {
+          e.stopPropagation();
+          return false;
+        }
+      } catch (error) {
+        console.error("Помилка обробки форми, заявка піде тільки у Webflow:", error);
+      }
+    };
+  }
+
+  function sendToCrm(config) {
+    try {
+      landing.createObjectFromLanding(config);
+    } catch (error) {
+      console.error("Помилка відправки в CRM:", error);
+    }
+  }
+
   // Останній сегмент шляху без query-параметрів (?ssId=, utm_* тощо)
   function getPageSlug() {
     const parts = window.location.pathname.split("/").filter(Boolean);
@@ -560,9 +603,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    $(document).on("submit", 'form[data-uniq-form="1"]', function(e) {
-      e.preventDefault();
-
+    // Обробник вішаємо прямо на форми, а не на document, щоб він спрацьовував раніше за Webflow
+    $(forms).on("submit", leadSubmitHandler(function (e) {
       if (!validateLeadFields(this.querySelector('input[type="text"]'), this.querySelector('input[type="tel"]'))) {
         return false;
       }
@@ -609,21 +651,15 @@ document.addEventListener("DOMContentLoaded", function () {
       sendEmail(emailData);
 
       function createObjectConsult() {
-        landing.createObjectFromLanding(consultFormConfig);
+        sendToCrm(consultFormConfig);
       }
 
       consultFormConfig.landingId = landingIdMapping[getPageSlug()] || defaultLandingId;
 
       createObjectConsult();
       recordFormSubmit();
-      
-      // Редирект на success сторінку
-      setTimeout(function() {
-        window.location.href = '/success';
-      }, 500);
-      
-      return false;
-    });
+      redirectToSuccess();
+    }));
   }
 
   initBannerForms();
@@ -635,9 +671,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const $consultForms = $("#bigForm,#wf-form--5,#wf-form--2")
     .add($wfFormEmptyId.has(".contact_name").not($popUpForms));
 
-  $consultForms.on("submit", function (e) {
-    e.preventDefault();
-
+  $consultForms.on("submit", leadSubmitHandler(function (e) {
     if (!validateLeadFields(this.querySelector(".contact_name"), this.querySelector(".contact_phone"))) {
       return false;
     }
@@ -684,7 +718,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sendEmail(emailData);
 
     function createObjectConsult() {
-      landing.createObjectFromLanding(consultFormConfig);
+      sendToCrm(consultFormConfig);
     }
 
     function initLanding() {
@@ -703,17 +737,11 @@ document.addEventListener("DOMContentLoaded", function () {
     createObjectConsult();
     recordFormSubmit();
     
-    // Редирект на success сторінку
-    setTimeout(function() {
-      window.location.href = '/success';
-    }, 500);
+    redirectToSuccess();
     
-    return false;
-  });
+    }));
 
-  $(`.form_under_banner`).on("submit", function (e) {
-    e.preventDefault();
-
+  $(`.form_under_banner`).on("submit", leadSubmitHandler(function (e) {
     if (!validateLeadFields(this.querySelector(".field_under_banner_name"), this.querySelector(".field_under_banner_phone"))) {
       return false;
     }
@@ -757,23 +785,17 @@ document.addEventListener("DOMContentLoaded", function () {
     sendEmail(emailData);
 
     function createObjectConsult() {
-      landing.createObjectFromLanding(consultFormConfig);
+      sendToCrm(consultFormConfig);
     }
 
     createObjectConsult();
     recordFormSubmit();
     
-    // Редирект на success сторінку
-    setTimeout(function() {
-      window.location.href = '/success';
-    }, 500);
+    redirectToSuccess();
     
-    return false;
-  });
+    }));
 
-  $popUpForms.on("submit", function (e) {
-    e.preventDefault();
-
+  $popUpForms.on("submit", leadSubmitHandler(function (e) {
     if (!validateLeadFields(this.querySelector("#popUpName"), this.querySelector("#popUpPhone"))) {
       return false;
     }
@@ -820,7 +842,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sendEmail(emailData);
 
     function createObject() {
-      landing.createObjectFromLanding(popUpFormConfig);
+      sendToCrm(popUpFormConfig);
       console.log("object created");
     }
 
@@ -866,17 +888,11 @@ document.addEventListener("DOMContentLoaded", function () {
     createObject();
     recordFormSubmit();
     
-    // Редирект на success сторінку
-    setTimeout(function() {
-      window.location.href = '/success';
-    }, 500);
+    redirectToSuccess();
     
-    return false;
-  });
+    }));
 
-  $("#popup-time").on("submit", function (e) {
-    e.preventDefault();
-
+  $("#popup-time").on("submit", leadSubmitHandler(function (e) {
     if (!validateLeadFields(this.querySelector("#popUpTimeName"), this.querySelector("#popUpTimePhone"))) {
       return false;
     }
@@ -926,7 +942,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sendEmail(emailData); 
 
     function createObject() {
-      landing.createObjectFromLanding(popUpFormConfig);
+      sendToCrm(popUpFormConfig);
       console.log("object created");
     }
 
@@ -972,17 +988,11 @@ document.addEventListener("DOMContentLoaded", function () {
     createObject();
     recordFormSubmit();
     
-    // Редирект на success сторінку
-    setTimeout(function() {
-      window.location.href = '/success';
-    }, 500);
+    redirectToSuccess();
     
-    return false;
-  });
+    }));
 
-  $("#popUpFormQwiz").on("submit", function (e) {
-    e.preventDefault();
-
+  $("#popUpFormQwiz").on("submit", leadSubmitHandler(function (e) {
     if (!validateLeadFields(this.querySelector("#popUpNameQwiz"), this.querySelector("#popUpPhoneQwiz"))) {
       return false;
     }
@@ -1027,7 +1037,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sendEmail(emailData);
 
     function createObject() {
-      landing.createObjectFromLanding(popUpFormConfig);
+      sendToCrm(popUpFormConfig);
       console.log("object created");
     }
 
@@ -1035,12 +1045,9 @@ document.addEventListener("DOMContentLoaded", function () {
     createObject();
     recordFormSubmit();
 
-    setTimeout(function() {
-      window.location.href = '/success';
-    }, 500);
+    redirectToSuccess();
 
-    return false;
-  });
+    }));
 
   $(document).ready(function () {
     var $phones = $(".phone, .contact_phone");
@@ -1151,7 +1158,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function sendEmail(emailData) {
-    fetch("https://api.topb.dev/merezhaprava/mail", { 
+    pendingEmails++;
+    fetch("https://api.topb.dev/merezhaprava/mail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -1165,7 +1173,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Помилка під час надсилання даних");
       }
     })
-    .catch(error => console.error("Помилка мережі:", error));
+    .catch(error => console.error("Помилка мережі:", error))
+    .finally(() => pendingEmails--);
   }
 
   
