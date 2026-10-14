@@ -51,6 +51,69 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem('lastFormSubmitTime', Date.now().toString());
   }
 
+  function showFieldError(input, message) {
+    input.setCustomValidity(message);
+    input.reportValidity();
+    input.addEventListener("input", function () {
+      input.setCustomValidity("");
+    }, { once: true });
+  }
+
+  // Перевірка імені та телефону перед відправкою форми
+  function validateLeadFields(nameInput, phoneInput) {
+    if (!nameInput || !phoneInput) {
+      console.error("Поля форми не знайдені", nameInput, phoneInput);
+      return false;
+    }
+
+    const name = nameInput.value.trim().replace(/\s+/g, " ");
+    const letters = name.match(/\p{L}/gu) || [];
+    if (!/^[\p{L}\s'’ʼ`.-]+$/u.test(name) || letters.length < 2) {
+      showFieldError(nameInput, "Введіть ім'я літерами (без цифр)");
+      return false;
+    }
+
+    let phone = phoneInput.value.replace(/\D/g, "");
+    if (phone.length === 10 && phone.startsWith("0")) {
+      phone = "38" + phone;
+    }
+    if (!/^380\d{9}$/.test(phone)) {
+      showFieldError(phoneInput, "Введіть повний номер телефону у форматі 380XXXXXXXXX");
+      return false;
+    }
+
+    nameInput.value = name;
+    phoneInput.value = phone;
+    return true;
+  }
+
+  // На сторінках є кілька форм з однаковим id, а landing.createObjectFromLanding
+  // бере перший елемент за селектором, тому даємо кожній формі унікальний селектор
+  let leadFormCounter = 0;
+  function getFormScope(form) {
+    if (!form.dataset.leadForm) {
+      form.dataset.leadForm = String(++leadFormCounter);
+    }
+    return `form[data-lead-form="${form.dataset.leadForm}"]`;
+  }
+
+  function setCurrentUrlInput(form) {
+    let hiddenInput = form.querySelector(".current-url");
+    if (!hiddenInput) {
+      hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.className = "current-url";
+      form.appendChild(hiddenInput);
+    }
+    hiddenInput.value = window.location.href;
+  }
+
+  // Останній сегмент шляху без query-параметрів (?ssId=, utm_* тощо)
+  function getPageSlug() {
+    const parts = window.location.pathname.split("/").filter(Boolean);
+    return parts[parts.length - 1] || "";
+  }
+
   function saveUTMParams() {
     const urlParams = new URLSearchParams(window.location.search);
     const utmParams = {};
@@ -499,7 +562,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $(document).on("submit", 'form[data-uniq-form="1"]', function(e) {
       e.preventDefault();
-      
+
+      if (!validateLeadFields(this.querySelector('input[type="text"]'), this.querySelector('input[type="tel"]'))) {
+        return false;
+      }
+
       // Перевірка можливості відправки форми
       const submitCheck = canSubmitForm();
       if (!submitCheck.allowed) {
@@ -545,11 +612,7 @@ document.addEventListener("DOMContentLoaded", function () {
         landing.createObjectFromLanding(consultFormConfig);
       }
 
-      let currentUrl = window.location.href;
-      let urlParts = currentUrl.split("/");
-      let lastPart = urlParts[urlParts.length - 1];
-      
-      consultFormConfig.landingId = landingIdMapping[lastPart] || defaultLandingId;
+      consultFormConfig.landingId = landingIdMapping[getPageSlug()] || defaultLandingId;
 
       createObjectConsult();
       recordFormSubmit();
@@ -566,6 +629,12 @@ document.addEventListener("DOMContentLoaded", function () {
   initBannerForms();
 
   $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function (e) {
+    e.preventDefault();
+
+    if (!validateLeadFields(this.querySelector(".contact_name"), this.querySelector(".contact_phone"))) {
+      return false;
+    }
+
     // Перевірка можливості відправки форми
     const submitCheck = canSubmitForm();
     if (!submitCheck.allowed) {
@@ -614,17 +683,15 @@ document.addEventListener("DOMContentLoaded", function () {
     function initLanding() {
       landing.initLanding(consultFormConfig);
     }
-    let formId = this.id;
-    consultFormConfig.fields["Name"] = "#" + formId + " .contact_name";
-    consultFormConfig.contactFields["FullName"] =
-      "#" + formId + " .contact_name";
-    consultFormConfig.fields["MobilePhone"] = "#" + formId + " .contact_phone";
-    consultFormConfig.contactFields["Phone"] = "#" + formId + " .contact_phone";
-    let currentUrl = window.location.href;
-    let urlParts = currentUrl.split("/");
-    let lastPart = urlParts[urlParts.length - 1];
+    const scope = getFormScope(this);
+    consultFormConfig.fields["Name"] = scope + " .contact_name";
+    consultFormConfig.contactFields["FullName"] = scope + " .contact_name";
+    consultFormConfig.fields["MobilePhone"] = scope + " .contact_phone";
+    consultFormConfig.contactFields["Phone"] = scope + " .contact_phone";
+    consultFormConfig.fields["City"] = scope + " .contact_address";
+    consultFormConfig.contactFields["City"] = scope + " .contact_address";
     consultFormConfig.landingId =
-      landingIdMapping[lastPart] || defaultLandingId;
+      landingIdMapping[getPageSlug()] || defaultLandingId;
 
     createObjectConsult();
     recordFormSubmit();
@@ -638,6 +705,12 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $(`.form_under_banner`).on("submit", function (e) {
+    e.preventDefault();
+
+    if (!validateLeadFields(this.querySelector(".field_under_banner_name"), this.querySelector(".field_under_banner_phone"))) {
+      return false;
+    }
+
     // Перевірка можливості відправки форми
     const submitCheck = canSubmitForm();
     if (!submitCheck.allowed) {
@@ -650,14 +723,15 @@ document.addEventListener("DOMContentLoaded", function () {
       return false;
     }
     
+    const scope = getFormScope(this);
     var consultFormConfig = {
       fields: {
-        Name: `.field_under_banner_name`,
-        MobilePhone: `.field_under_banner_phone`,
+        Name: `${scope} .field_under_banner_name`,
+        MobilePhone: `${scope} .field_under_banner_phone`,
       },
       contactFields: {
-        FullName: `.field_under_banner_name`,
-        Phone: `.field_under_banner_phone`,
+        FullName: `${scope} .field_under_banner_name`,
+        Phone: `${scope} .field_under_banner_phone`,
       },
       customFields: {},
       landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
@@ -690,7 +764,14 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   });
 
-  $("#popUpForm,#wf-form-").on("submit", function (e) {
+  // .form_under_banner теж має id="wf-form-" і обробляється окремо вище
+  $("#popUpForm,#wf-form-").not(".form_under_banner").on("submit", function (e) {
+    e.preventDefault();
+
+    if (!validateLeadFields(this.querySelector("#popUpName"), this.querySelector("#popUpPhone"))) {
+      return false;
+    }
+
     // Перевірка можливості відправки форми
     const submitCheck = canSubmitForm();
     if (!submitCheck.allowed) {
@@ -703,16 +784,17 @@ document.addEventListener("DOMContentLoaded", function () {
       return false;
     }
     
+    const scope = getFormScope(this);
     let popUpFormConfig = {
       fields: {
         Name: "#popUpName", // Имя посетителя, заполнившего форму
         MobilePhone: "#popUpPhone", // Телефон посетителя
-        BpmRef: ".current-url",
+        BpmRef: scope + " .current-url",
       },
       contactFields: {
         FullName: "#popUpName", // Name of a contact
         Phone: "#popUpPhone", // Contact's mobile phone
-        BpmRef: ".current-url",
+        BpmRef: scope + " .current-url",
       },
       customFields: {},
       landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
@@ -774,20 +856,7 @@ document.addEventListener("DOMContentLoaded", function () {
     categoryUpdate;
     console.log("landingID після апдейту: ", popUpFormConfig.landingId);
 
-    function addLink() {
-      const currentUrl = window.location.href;
-      console.log(currentUrl);
-
-      const hiddenInput = document.createElement("input");
-      hiddenInput.type = "hidden";
-      hiddenInput.className = "current-url";
-      hiddenInput.value = currentUrl;
-
-      document.querySelector("#popUpForm,#wf-form-").appendChild(hiddenInput);
-      console.log("Приховане посилання було створено:", currentUrl);
-    }
-
-    addLink();
+    setCurrentUrlInput(this);
     createObject();
     recordFormSubmit();
     
@@ -800,6 +869,12 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#popup-time").on("submit", function (e) {
+    e.preventDefault();
+
+    if (!validateLeadFields(this.querySelector("#popUpTimeName"), this.querySelector("#popUpTimePhone"))) {
+      return false;
+    }
+
     // Перевірка можливості відправки форми
     const submitCheck = canSubmitForm();
     if (!submitCheck.allowed) {
@@ -812,18 +887,19 @@ document.addEventListener("DOMContentLoaded", function () {
       return false;
     }
     
+    const scope = getFormScope(this);
     let popUpFormConfig = {
       fields: {
         Name: "#popUpTimeName", // Имя посетителя, заполнившего форму
         MobilePhone: "#popUpTimePhone", // Телефон посетителя
-        BpmRef: ".current-url",
-        BpmHref: ".current-url",
+        BpmRef: scope + " .current-url",
+        BpmHref: scope + " .current-url",
       },
       contactFields: {
         FullName: "#popUpTimeName", // Name of a contact
         Phone: "#popUpTimePhone", // Contact's mobile phone
-        BpmRef: ".current-url",
-        BpmHref: ".current-url",
+        BpmRef: scope + " .current-url",
+        BpmHref: scope + " .current-url",
       },
       customFields: {},
       // landingId: "7f00f650-4103-4e26-9684-8171d606af1d",
@@ -886,20 +962,7 @@ document.addEventListener("DOMContentLoaded", function () {
     categoryUpdate;
     console.log("landingID після апдейту: ", popUpFormConfig.landingId);
 
-    function addLink() {
-      const currentUrl = window.location.href;
-      console.log(currentUrl);
-
-      const hiddenInput = document.createElement("input");
-      hiddenInput.type = "hidden";
-      hiddenInput.className = "current-url";
-      hiddenInput.value = currentUrl;
-
-      document.querySelector("#popUpForm,#wf-form-").appendChild(hiddenInput);
-      console.log("Приховане посилання було створено:", currentUrl);
-    }
-
-    addLink();
+    setCurrentUrlInput(this);
     createObject();
     recordFormSubmit();
     
@@ -912,6 +975,12 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#popUpFormQwiz").on("submit", function (e) {
+    e.preventDefault();
+
+    if (!validateLeadFields(this.querySelector("#popUpNameQwiz"), this.querySelector("#popUpPhoneQwiz"))) {
+      return false;
+    }
+
     const submitCheck = canSubmitForm();
     if (!submitCheck.allowed) {
       if (e) {
@@ -923,16 +992,17 @@ document.addEventListener("DOMContentLoaded", function () {
       return false;
     }
 
+    const scope = getFormScope(this);
     let popUpFormConfig = {
       fields: {
         Name: "#popUpNameQwiz",
         MobilePhone: "#popUpPhoneQwiz",
-        BpmRef: ".current-url",
+        BpmRef: scope + " .current-url",
       },
       contactFields: {
         FullName: "#popUpNameQwiz",
         Phone: "#popUpPhoneQwiz",
-        BpmRef: ".current-url",
+        BpmRef: scope + " .current-url",
       },
       customFields: {},
       landingId: "842376e7-2bef-4205-8a16-db0a2cc0c458",
@@ -955,17 +1025,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("object created");
     }
 
-    function addLink() {
-      const currentUrl = window.location.href;
-      const hiddenInput = document.createElement("input");
-      hiddenInput.type = "hidden";
-      hiddenInput.className = "current-url";
-      hiddenInput.value = currentUrl;
-      document.querySelector("#popUpFormQwiz").appendChild(hiddenInput);
-      console.log("Приховане посилання було створено:", currentUrl);
-    }
-
-    addLink();
+    setCurrentUrlInput(this);
     createObject();
     recordFormSubmit();
 
