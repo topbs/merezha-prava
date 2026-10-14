@@ -628,7 +628,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   initBannerForms();
 
-  $("#bigForm,#wf-form--5,#wf-form--2").on("submit", function (e) {
+  // id="wf-form-" у Webflow мають різні форми (попап, форма під банером, велика форма),
+  // тому розподіляємо їх за полями всередині, а не за id
+  const $wfFormEmptyId = $('form[id="wf-form-"]').not(".form_under_banner");
+  const $popUpForms = $("#popUpForm").add($wfFormEmptyId.has("#popUpName"));
+  const $consultForms = $("#bigForm,#wf-form--5,#wf-form--2")
+    .add($wfFormEmptyId.has(".contact_name").not($popUpForms));
+
+  $consultForms.on("submit", function (e) {
     e.preventDefault();
 
     if (!validateLeadFields(this.querySelector(".contact_name"), this.querySelector(".contact_phone"))) {
@@ -764,8 +771,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   });
 
-  // .form_under_banner теж має id="wf-form-" і обробляється окремо вище
-  $("#popUpForm,#wf-form-").not(".form_under_banner").on("submit", function (e) {
+  $popUpForms.on("submit", function (e) {
     e.preventDefault();
 
     if (!validateLeadFields(this.querySelector("#popUpName"), this.querySelector("#popUpPhone"))) {
